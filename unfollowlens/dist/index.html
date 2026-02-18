@@ -1,0 +1,2161 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="title">UnfollowLens - 인스타그램 언팔 체커</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="인스타그램 맞팔 확인, 언팔 대상 찾기. 무료 온라인 도구로 나를 팔로우하지 않는 계정을 쉽게 찾아보세요.">
+    <meta name="keywords" content="인스타그램, 언팔, 맞팔, 팔로워 분석, Instagram unfollow">
+    <meta name="author" content="UnfollowLens">
+    <meta name="robots" content="index, follow">
+    <meta name="google-site-verification" content="4Nar2uZqlAK2UO6HWD54Gbk2-23lOeTICy16407WKmg" />
+    <meta name="naver-site-verification" content="3781c15de7bbcab595064ae3e86e9c559995391d" />
+    <meta name="naver-site-verification" content="03c81f90acfff22752b604002e8ea31a5b83f01d" />
+    <meta name="msvalidate.01" content="238C57A11708F0B00143172E7CC297BE" />
+    <meta name="google-adsense-account" content="ca-pub-2330803849133692">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://unfollowlens.com">
+    <meta property="og:title" content="UnfollowLens - 인스타그램 언팔 체커">
+    <meta property="og:description" content="나를 팔로우하지 않는 계정을 찾아보세요.">
+    <meta property="og:locale" content="ko_KR">
+    <meta property="og:image" content="https://unfollowlens.com/static/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="UnfollowLens - 인스타그램 언팔 체커">
+    <meta name="twitter:description" content="나를 팔로우하지 않는 계정을 찾아보세요.">
+    <meta name="twitter:image" content="https://unfollowlens.com/static/og-image.png">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">
+
+    <!-- Canonical & Alternates -->
+    <link rel="canonical" href="https://unfollowlens.com">
+    <link rel="alternate" hreflang="ko" href="https://unfollowlens.com?lang=ko">
+    <link rel="alternate" hreflang="en" href="https://unfollowlens.com?lang=en">
+    <link rel="alternate" hreflang="ja" href="https://unfollowlens.com?lang=ja">
+    <link rel="alternate" hreflang="zh" href="https://unfollowlens.com?lang=zh">
+    <link rel="alternate" hreflang="es" href="https://unfollowlens.com?lang=es">
+
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2330803849133692" crossorigin="anonymous"></script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Noto+Sans+KR:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #FDFCFA;
+            --bg-alt: #F5F3EF;
+            --text: #1A1A1A;
+            --text-secondary: #666666;
+            --text-muted: #999999;
+            --accent: #E63946;
+            --accent-hover: #D62839;
+            --border: #E8E6E1;
+            --border-dark: #D4D1CA;
+            --card-shadow: 0 2px 40px rgba(0,0,0,0.06);
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'DM Sans', 'Noto Sans KR', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        ::selection {
+            background: var(--accent);
+            color: white;
+        }
+
+        /* Container */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header */
+        .header {
+            padding: 80px 0 60px;
+            text-align: center;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .logo {
+            margin-bottom: 24px;
+        }
+
+        .logo__text {
+            font-family: 'DM Sans', 'Noto Sans KR', sans-serif;
+            font-size: clamp(2.5rem, 8vw, 4rem);
+            font-weight: 600;
+            letter-spacing: -0.03em;
+            color: var(--text);
+            line-height: 1.1;
+        }
+
+        .logo__dot {
+            color: var(--accent);
+        }
+
+        .tagline {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            font-weight: 300;
+            letter-spacing: 0.01em;
+        }
+
+        .privacy-notice {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 8px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Section */
+        .section {
+            margin-bottom: 48px;
+            animation: fadeIn 0.8s ease-out backwards;
+        }
+
+        .section--delay-1 { animation-delay: 0.1s; }
+        .section--delay-2 { animation-delay: 0.2s; }
+
+        /* Card */
+        .card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            border-color: var(--border-dark);
+            box-shadow: 0 4px 50px rgba(0,0,0,0.08);
+        }
+
+        /* Guide Section */
+        .guide-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            padding: 4px 0;
+        }
+
+        .guide-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .guide-title__icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #833AB4, #E1306C, #F77737);
+            color: white;
+            border-radius: 8px;
+            font-size: 0.85rem;
+        }
+
+        .guide-toggle {
+            width: 36px;
+            height: 36px;
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            background: transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .guide-toggle:hover {
+            border-color: var(--text);
+        }
+
+        .guide-toggle svg {
+            width: 14px;
+            height: 14px;
+            transition: transform 0.3s ease;
+        }
+
+        .guide-toggle.open svg {
+            transform: rotate(180deg);
+        }
+
+        .guide-content {
+            display: none;
+            margin-top: 28px;
+            padding-top: 28px;
+            border-top: 1px solid var(--border);
+        }
+
+        .guide-content.show {
+            display: block;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Platform Tabs */
+        .platform-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 28px;
+        }
+
+        .platform-tab {
+            flex: 1;
+            padding: 14px 20px;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .platform-tab:hover {
+            border-color: var(--text);
+            color: var(--text);
+        }
+
+        .platform-tab.active {
+            background: var(--text);
+            border-color: var(--text);
+            color: white;
+        }
+
+        .platform-content {
+            display: none;
+        }
+
+        .platform-content.show {
+            display: block;
+        }
+
+        /* Steps */
+        .steps {
+            list-style: none;
+            counter-reset: step;
+        }
+
+        .step {
+            position: relative;
+            padding-left: 48px;
+            padding-bottom: 24px;
+            margin-bottom: 24px;
+            border-bottom: 1px solid var(--border);
+            counter-increment: step;
+        }
+
+        .step:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .step::before {
+            content: counter(step);
+            position: absolute;
+            left: 0;
+            top: 2px;
+            width: 28px;
+            height: 28px;
+            background: var(--bg-alt);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .step__title {
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--text);
+        }
+
+        .step__desc {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        .step__highlight {
+            background: linear-gradient(120deg, rgba(230, 57, 70, 0.1) 0%, rgba(230, 57, 70, 0.05) 100%);
+            padding: 2px 8px;
+            border-radius: 4px;
+            color: var(--accent);
+            font-weight: 500;
+        }
+
+        .guide-note {
+            background: var(--bg-alt);
+            border-radius: 10px;
+            padding: 16px 20px;
+            margin-top: 24px;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .guide-note__icon {
+            font-size: 1.2rem;
+            line-height: 1.4;
+        }
+
+        .guide-note__text {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Upload Section */
+        .upload-section {
+            text-align: center;
+        }
+
+        .upload-area {
+            border: 2px dashed var(--border);
+            border-radius: 16px;
+            padding: 60px 40px;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .upload-area:hover {
+            border-color: var(--accent);
+            background: rgba(230, 57, 70, 0.02);
+        }
+
+        .upload-area.dragover {
+            border-color: var(--accent);
+            background: rgba(230, 57, 70, 0.05);
+            transform: scale(1.01);
+        }
+
+        .upload-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 20px;
+            background: var(--bg-alt);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            transition: var(--transition);
+        }
+
+        .upload-area:hover .upload-icon {
+            background: rgba(230, 57, 70, 0.1);
+        }
+
+        .upload-text {
+            font-family: 'DM Sans', 'Noto Sans KR', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+
+        .upload-hint {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .file-selected {
+            display: none;
+            margin-top: 20px;
+            padding: 12px 20px;
+            background: var(--bg-alt);
+            border-radius: 8px;
+            color: var(--text);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .file-selected.show {
+            display: inline-block;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        /* Button */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 28px;
+            padding: 18px 48px;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 600;
+            color: white;
+            background: var(--text);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn:hover:not(:disabled) {
+            background: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(230, 57, 70, 0.25);
+        }
+
+        .btn:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        .btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        /* Error */
+        .error-message {
+            display: none;
+            margin-top: 20px;
+            padding: 16px 20px;
+            background: rgba(230, 57, 70, 0.08);
+            border: 1px solid rgba(230, 57, 70, 0.2);
+            border-radius: 10px;
+            color: var(--accent);
+            font-size: 0.9rem;
+        }
+
+        /* Loading */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 80px 20px;
+        }
+
+        .loading__spinner {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 24px;
+            border: 2px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading__text {
+            font-family: 'DM Sans', 'Noto Sans KR', sans-serif;
+            font-size: 1.25rem;
+            margin-bottom: 8px;
+            animation: blink 1.5s ease-in-out infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .loading__subtext {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Results */
+        .results {
+            display: none;
+        }
+
+        /* Stats */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .stat {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px 16px;
+            text-align: center;
+            transition: var(--transition);
+            animation: fadeIn 0.6s ease-out backwards;
+        }
+
+        .stat:nth-child(1) { animation-delay: 0.1s; }
+        .stat:nth-child(2) { animation-delay: 0.15s; }
+        .stat:nth-child(3) { animation-delay: 0.2s; }
+        .stat:nth-child(4) { animation-delay: 0.25s; }
+
+        .stat:hover {
+            border-color: var(--border-dark);
+            transform: translateY(-4px);
+            box-shadow: var(--card-shadow);
+        }
+
+        .stat__number {
+            font-family: 'DM Sans', 'Noto Sans KR', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: var(--text);
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .stat__label {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Account Section */
+        .account-section {
+            animation: fadeIn 0.6s ease-out backwards;
+            animation-delay: 0.3s;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section-header__icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .section-header__icon--active {
+            background: linear-gradient(135deg, #833AB4, #E1306C, #F77737);
+            color: white;
+            border-radius: 8px;
+        }
+
+        .section-header__icon--inactive {
+            background: var(--bg-alt);
+        }
+
+        .section-header__title {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .sort-buttons {
+            display: flex;
+            gap: 6px;
+            margin-left: auto;
+        }
+
+        .sort-btn {
+            padding: 4px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: inherit;
+        }
+
+        .sort-btn:hover {
+            border-color: var(--border-dark);
+        }
+
+        .sort-btn.active {
+            background: var(--text);
+            color: white;
+            border-color: var(--text);
+        }
+
+        .account-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .account-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 16px;
+            background: var(--bg-alt);
+            border-radius: 10px;
+            transition: var(--transition);
+        }
+
+        .account-item:hover {
+            background: #EDEBE6;
+        }
+
+        .account-info {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .account-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: var(--text);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .account-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .account-avatar--inactive {
+            background: var(--border-dark);
+            color: var(--text-muted);
+        }
+
+        .account-username {
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .follow-date {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 400;
+            margin-top: 2px;
+        }
+
+        .private-badge {
+            display: inline-block;
+            margin-left: 8px;
+            padding: 2px 8px;
+            background: rgba(230, 57, 70, 0.1);
+            color: var(--accent);
+            font-size: 0.7rem;
+            font-weight: 600;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .unverified-badge {
+            display: inline-block;
+            margin-left: 8px;
+            padding: 2px 8px;
+            background: rgba(255, 165, 0, 0.12);
+            color: #d48800;
+            font-size: 0.7rem;
+            font-weight: 600;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .account-actions {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .account-link {
+            padding: 8px 16px;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .account-link:hover {
+            background: var(--text);
+            border-color: var(--text);
+            color: white;
+        }
+
+        .inactive-badge {
+            padding: 6px 12px;
+            background: var(--border);
+            border-radius: 6px;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        .copy-id-btn {
+            cursor: pointer;
+            font-family: inherit;
+            border: 1px solid var(--border);
+        }
+
+        .copy-btn--copied {
+            background: var(--accent) !important;
+            border-color: var(--accent) !important;
+            color: white !important;
+        }
+
+        .empty-message {
+            text-align: center;
+            padding: 48px 20px;
+            color: var(--text-secondary);
+        }
+
+        .inactive-section .account-item {
+            opacity: 0.6;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 60px 20px 40px;
+            margin-top: 40px;
+            border-top: 1px solid var(--border);
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .footer-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .footer-link:hover {
+            color: var(--accent);
+        }
+
+        .copyright {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        /* Language Selector */
+        .lang-selector {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            display: flex;
+            gap: 4px;
+            padding: 6px;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            z-index: 100;
+        }
+
+        .lang-btn {
+            padding: 8px 12px;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            color: var(--text-muted);
+            font-family: inherit;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .lang-btn:hover {
+            background: var(--bg-alt);
+            color: var(--text);
+        }
+
+        .lang-btn.active {
+            background: var(--text);
+            color: white;
+        }
+
+        /* Support */
+        .support-buttons {
+            position: fixed;
+            left: 24px;
+            bottom: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 99;
+        }
+
+        .support-btn {
+            width: 44px;
+            height: 44px;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .support-btn:hover {
+            border-color: var(--text);
+            transform: translateY(-2px);
+            box-shadow: var(--card-shadow);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            max-width: 640px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+        }
+
+        .modal-header {
+            position: sticky;
+            top: 0;
+            background: white;
+            padding: 24px 28px 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1;
+        }
+
+        .modal-title {
+            font-family: 'DM Sans', 'Noto Sans KR', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            width: 36px;
+            height: 36px;
+            background: var(--bg-alt);
+            border: none;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            background: var(--accent);
+            color: white;
+        }
+
+        .modal-body {
+            padding: 24px 28px 32px;
+        }
+
+        .modal-lang-switch {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+
+        .modal-lang-btn {
+            padding: 10px 20px;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-family: inherit;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .modal-lang-btn:hover {
+            border-color: var(--text);
+        }
+
+        .modal-lang-btn.active {
+            background: var(--text);
+            border-color: var(--text);
+            color: white;
+        }
+
+        .privacy-content {
+            display: none;
+            line-height: 1.8;
+        }
+
+        .privacy-content.show {
+            display: block;
+        }
+
+        .privacy-content h2 {
+            font-family: 'DM Sans', 'Noto Sans KR', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text);
+            margin: 28px 0 12px;
+        }
+
+        .privacy-content h2:first-child {
+            margin-top: 0;
+        }
+
+        .privacy-content p {
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+
+        .privacy-content ul {
+            padding-left: 20px;
+            margin-bottom: 16px;
+        }
+
+        .privacy-content li {
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .privacy-content a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .privacy-content a:hover {
+            text-decoration: underline;
+        }
+
+        .privacy-highlight {
+            background: var(--bg-alt);
+            padding: 16px 20px;
+            border-radius: 10px;
+            margin-bottom: 24px;
+            border-left: 3px solid var(--accent);
+        }
+
+        .privacy-highlight p {
+            margin: 0;
+            color: var(--text);
+        }
+
+        .last-updated {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+        }
+
+        /* Responsive - Tablet */
+        @media (max-width: 768px) {
+            .container { padding: 0 20px; }
+            .header { padding: 60px 0 48px; }
+            .tagline { font-size: 1rem; }
+            .card { padding: 28px 24px; }
+            .guide-title { font-size: 1.1rem; }
+            .upload-area { padding: 48px 32px; }
+            .upload-icon { width: 56px; height: 56px; font-size: 24px; }
+            .upload-text { font-size: 1.1rem; }
+            .btn { padding: 16px 40px; font-size: 0.95rem; }
+            .modal-content { max-width: 90%; }
+            .modal-body { padding: 20px 24px 28px; }
+        }
+
+        /* Responsive - Mobile */
+        @media (max-width: 640px) {
+            .container { padding: 0 16px; }
+            .header { padding: 48px 0 36px; }
+            .logo__text { font-size: 2.2rem; }
+            .tagline { font-size: 0.95rem; }
+            .section { margin-bottom: 32px; }
+            .card { padding: 24px 20px; }
+            .guide-title { font-size: 1rem; gap: 10px; }
+            .guide-title__icon { width: 24px; height: 24px; }
+            .guide-content { margin-top: 20px; padding-top: 20px; }
+            .platform-tabs { flex-direction: column; gap: 8px; }
+            .platform-tab { padding: 12px 16px; }
+            .step { padding-left: 40px; padding-bottom: 20px; margin-bottom: 20px; }
+            .step::before { width: 24px; height: 24px; font-size: 0.75rem; }
+            .step__title { font-size: 0.95rem; }
+            .step__desc { font-size: 0.9rem; }
+            .upload-area { padding: 40px 20px; }
+            .upload-icon { width: 48px; height: 48px; font-size: 20px; border-radius: 12px; }
+            .upload-text { font-size: 1rem; }
+            .upload-hint { font-size: 0.85rem; }
+            .btn { width: 100%; padding: 16px 32px; }
+            .stats { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+            .stat { padding: 20px 12px; }
+            .stat__number { font-size: 1.8rem; }
+            .stat__label { font-size: 0.75rem; }
+            .section-header { gap: 10px; margin-bottom: 16px; padding-bottom: 12px; flex-wrap: wrap; }
+            .section-header__icon { width: 28px; height: 28px; font-size: 12px; }
+            .section-header__title { font-size: 1rem; }
+            .sort-buttons { width: 100%; margin-left: 0; margin-top: 4px; }
+            .sort-btn { font-size: 0.75rem; padding: 3px 10px; }
+            .account-item { padding: 12px 14px; flex-wrap: wrap; gap: 12px; }
+            .account-info { gap: 12px; }
+            .account-avatar { width: 36px; height: 36px; font-size: 0.85rem; }
+            .account-username { font-size: 0.9rem; }
+            .account-link { padding: 6px 12px; font-size: 0.8rem; }
+            .footer { padding: 40px 16px 32px; margin-top: 32px; }
+            .footer-links { flex-direction: column; gap: 12px; align-items: center; }
+            .footer-link { font-size: 0.85rem; }
+            .lang-selector {
+                bottom: 16px;
+                right: 16px;
+                padding: 4px;
+                gap: 2px;
+            }
+            .lang-btn { padding: 6px 8px; font-size: 0.7rem; }
+            .support-buttons { left: 16px; bottom: 16px; }
+            .support-btn { width: 40px; height: 40px; font-size: 1rem; }
+            .modal-content {
+                max-width: 100%;
+                max-height: 100vh;
+                border-radius: 0;
+                height: 100%;
+            }
+            .modal-header { padding: 20px; }
+            .modal-title { font-size: 1.1rem; }
+            .modal-body { padding: 16px 20px 24px; }
+            .modal-lang-switch { flex-wrap: wrap; gap: 6px; }
+            .modal-lang-btn { padding: 8px 14px; font-size: 0.85rem; }
+            .privacy-content h2 { font-size: 0.95rem; margin: 24px 0 10px; }
+            .privacy-content p, .privacy-content li { font-size: 0.9rem; }
+            .privacy-highlight { padding: 14px 16px; }
+        }
+
+        /* Responsive - Small Mobile */
+        @media (max-width: 400px) {
+            .container { padding: 0 12px; }
+            .header { padding: 40px 0 28px; }
+            .logo__text { font-size: 1.8rem; }
+            .tagline { font-size: 0.85rem; }
+            .card { padding: 20px 16px; border-radius: 12px; }
+            .guide-header { padding: 2px 0; }
+            .guide-title { font-size: 0.9rem; }
+            .guide-toggle { width: 32px; height: 32px; }
+            .step { padding-left: 32px; }
+            .step::before { width: 22px; height: 22px; font-size: 0.7rem; }
+            .step__title { font-size: 0.9rem; }
+            .step__desc { font-size: 0.85rem; line-height: 1.6; }
+            .step__highlight { padding: 1px 6px; font-size: 0.85rem; }
+            .guide-note { padding: 12px 14px; gap: 10px; flex-direction: column; text-align: center; }
+            .upload-area { padding: 32px 16px; border-radius: 12px; }
+            .upload-icon { width: 44px; height: 44px; font-size: 18px; }
+            .upload-text { font-size: 0.9rem; }
+            .upload-hint { font-size: 0.8rem; }
+            .file-selected { font-size: 0.8rem; padding: 10px 14px; }
+            .btn { padding: 14px 24px; font-size: 0.9rem; border-radius: 10px; }
+            .loading { padding: 60px 16px; }
+            .loading__spinner { width: 40px; height: 40px; }
+            .loading__text { font-size: 1.1rem; }
+            .loading__subtext { font-size: 0.85rem; }
+            .stats { gap: 8px; }
+            .stat { padding: 16px 8px; border-radius: 10px; }
+            .stat__number { font-size: 1.5rem; }
+            .stat__label { font-size: 0.7rem; letter-spacing: 0.03em; }
+            .account-item { padding: 10px 12px; border-radius: 8px; }
+            .account-avatar { width: 32px; height: 32px; font-size: 0.8rem; border-radius: 8px; }
+            .account-username { font-size: 0.85rem; }
+            .private-badge, .unverified-badge { font-size: 0.65rem; padding: 2px 6px; margin-left: 6px; }
+            .account-link { padding: 5px 10px; font-size: 0.75rem; }
+            .inactive-badge { padding: 4px 8px; font-size: 0.75rem; }
+            .footer { padding: 32px 12px 24px; }
+            .copyright { font-size: 0.75rem; }
+            .lang-selector {
+                bottom: 12px;
+                right: 12px;
+                flex-wrap: wrap;
+                max-width: 140px;
+                justify-content: center;
+            }
+            .lang-btn { padding: 5px 6px; font-size: 0.65rem; }
+            .support-buttons { left: 12px; bottom: 12px; gap: 8px; }
+            .support-btn { width: 36px; height: 36px; font-size: 0.9rem; border-radius: 10px; }
+            .error-message { padding: 12px 14px; font-size: 0.85rem; }
+        }
+
+        /* Responsive - Extra Small Mobile */
+        @media (max-width: 340px) {
+            .logo__text { font-size: 1.6rem; }
+            .stats { grid-template-columns: 1fr 1fr; gap: 6px; }
+            .stat { padding: 14px 6px; }
+            .stat__number { font-size: 1.3rem; }
+            .stat__label { font-size: 0.65rem; }
+            .lang-selector { max-width: 120px; }
+        }
+
+        /* Touch device optimizations */
+        @media (hover: none) and (pointer: coarse) {
+            .card:hover { border-color: var(--border); box-shadow: var(--card-shadow); }
+            .stat:hover { transform: none; box-shadow: none; }
+            .account-item:hover { background: var(--bg-alt); }
+            .btn:hover:not(:disabled) { transform: none; box-shadow: none; }
+            .support-btn:hover { transform: none; box-shadow: none; }
+        }
+
+        /* Landscape mode for mobile */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .header { padding: 24px 0 16px; }
+            .logo__text { font-size: 1.8rem; }
+            .section { margin-bottom: 24px; }
+            .upload-area { padding: 24px 20px; }
+            .upload-icon { width: 40px; height: 40px; margin-bottom: 12px; }
+            .modal-content { max-height: 100vh; }
+            .modal-body { max-height: calc(100vh - 80px); overflow-y: auto; }
+        }
+    </style>
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "UnfollowLens",
+        "url": "https://unfollowlens.com",
+        "description": "인스타그램 맞팔 확인, 언팔 대상 찾기. 무료 온라인 도구로 나를 팔로우하지 않는 계정을 쉽게 찾아보세요.",
+        "applicationCategory": "SocialNetworkingApplication",
+        "operatingSystem": "Any",
+        "browserRequirements": "Requires JavaScript",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "KRW"
+        },
+        "author": {
+            "@type": "Organization",
+            "name": "UnfollowLens"
+        }
+    }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" integrity="sha512-XMVd28F1oH/O71fzwBnV7HucLxVwtxf26XV8P4wPk26EDxuGZ91N8bsOttmnomcCD3CS5ZMRL50H0GgOHvegtg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <h1 class="logo__text">UnfollowLens<span class="logo__dot">.</span></h1>
+            </div>
+            <p class="tagline" data-i18n="subtitle">나를 팔로우하지 않는 계정을 찾아보세요</p>
+            <p class="privacy-notice" data-i18n="privacyNotice">업로드된 파일은 서버에 저장되지 않으며, 브라우저에서만 처리됩니다.</p>
+        </header>
+
+        <!-- Guide -->
+        <section class="section section--delay-1">
+            <div class="card">
+                <div class="guide-header" id="guideHeader">
+                    <div class="guide-title">
+                        <span class="guide-title__icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="white" stroke="none"/></svg></span>
+                        <span data-i18n="guideTitle">Instagram 데이터 다운로드 방법</span>
+                    </div>
+                    <button class="guide-toggle" id="guideToggle">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M6 9l6 6 6-6"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="guide-content" id="guideContent">
+                    <div class="platform-tabs">
+                        <button class="platform-tab active" data-platform="mobile" data-i18n="platformMobile">모바일 앱</button>
+                        <button class="platform-tab" data-platform="web" data-i18n="platformWeb">웹 브라우저</button>
+                    </div>
+
+                    <div class="platform-content show" id="mobileGuide">
+                        <ol class="steps">
+                            <li class="step">
+                                <div class="step__title" data-i18n="mobileStep1Title">Instagram 앱 실행</div>
+                                <div class="step__desc" data-i18n="mobileStep1Desc">Instagram 앱을 열고 <span class="step__highlight">프로필</span> 탭 → <span class="step__highlight">☰ 메뉴</span>를 탭합니다.</div>
+                            </li>
+                            <li class="step">
+                                <div class="step__title" data-i18n="mobileStep2Title">계정 센터 접속</div>
+                                <div class="step__desc" data-i18n="mobileStep2Desc"><span class="step__highlight">설정 및 활동</span> → <span class="step__highlight">계정 센터</span> → <span class="step__highlight">내 정보 및 권한</span>을 탭합니다.</div>
+                            </li>
+                            <li class="step">
+                                <div class="step__title" data-i18n="mobileStep3Title">정보 다운로드 선택</div>
+                                <div class="step__desc" data-i18n="mobileStep3Desc"><span class="step__highlight">내 정보 다운로드</span> → <span class="step__highlight">정보 다운로드</span>를 선택합니다.</div>
+                            </li>
+                            <li class="step">
+                                <div class="step__title" data-i18n="mobileStep4Title">다운로드할 정보 선택</div>
+                                <div class="step__desc" data-i18n="mobileStep4Desc"><span class="step__highlight">일부 정보</span>를 선택하고, <span class="step__highlight">팔로워 및 팔로잉</span>만 체크합니다.</div>
+                            </li>
+                            <li class="step">
+                                <div class="step__title" data-i18n="mobileStep5Title">형식 및 기간 설정</div>
+                                <div class="step__desc" data-i18n="mobileStep5Desc">형식: <span class="step__highlight">JSON</span>, 기간: <span class="step__highlight">전체 기간</span> 선택 후 <span class="step__highlight">파일 생성</span>을 탭합니다.</div>
+                            </li>
+                            <li class="step">
+                                <div class="step__title" data-i18n="mobileStep6Title">파일 다운로드</div>
+                                <div class="step__desc" data-i18n="mobileStep6Desc">이메일로 다운로드 링크가 도착하면 ZIP 파일을 다운로드합니다.</div>
+                            </li>
+                        </ol>
+                    </div>
+
+                    <div class="platform-content" id="webGuide">
+                        <ol class="steps">
+                            <li class="step">
+                                <div class="step__title" data-i18n="webStep1Title">Instagram 웹사이트 접속</div>
+                                <div class="step__desc" data-i18n="webStep1Desc"><span class="step__highlight">instagram.com</span>에 로그인 → <span class="step__highlight">더 보기</span> → <span class="step__highlight">설정</span>을 클릭합니다.</div>
+                            </li>
+                            <li class="step">
+                                <div class="step__title" data-i18n="webStep2Title">계정 센터 이동</div>
+                                <div class="step__desc" data-i18n="webStep2Desc"><span class="step__highlight">계정 센터</span> → <span class="step__highlight">내 정보 및 권한</span> → <span class="step__highlight">내 정보 다운로드</span>를 클릭합니다.</div>
+                            </li>
+                            <li class="step">
+                                <div class="step__title" data-i18n="webStep3Title">다운로드 요청</div>
+                                <div class="step__desc" data-i18n="webStep3Desc"><span class="step__highlight">일부 정보</span> 선택 → <span class="step__highlight">팔로워 및 팔로잉</span>만 체크합니다.</div>
+                            </li>
+                            <li class="step">
+                                <div class="step__title" data-i18n="webStep4Title">형식 설정 및 요청</div>
+                                <div class="step__desc" data-i18n="webStep4Desc">형식: <span class="step__highlight">JSON</span>, 기간: <span class="step__highlight">전체 기간</span> 선택 후 <span class="step__highlight">파일 생성</span>을 클릭합니다.</div>
+                            </li>
+                            <li class="step">
+                                <div class="step__title" data-i18n="webStep5Title">이메일 확인 및 다운로드</div>
+                                <div class="step__desc" data-i18n="webStep5Desc">등록된 이메일로 다운로드 링크가 발송됩니다.</div>
+                            </li>
+                        </ol>
+                    </div>
+
+                    <div class="guide-note">
+                        <span class="guide-note__icon">💡</span>
+                        <span class="guide-note__text" data-i18n="guideNoteText">데이터 준비에는 몇 분에서 최대 24시간이 소요될 수 있습니다.</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Upload -->
+        <section class="section section--delay-2">
+            <div class="card">
+                <div class="upload-section">
+                    <div class="upload-area" id="uploadArea">
+                        <div class="upload-icon">📁</div>
+                        <div class="upload-text" data-i18n="uploadText">ZIP 파일을 드래그하거나 클릭하세요</div>
+                        <div class="upload-hint" data-i18n="uploadHint">Instagram에서 다운로드한 데이터 파일</div>
+                    </div>
+                    <input type="file" id="fileInput" accept=".zip">
+                    <div class="file-selected" id="fileSelected"></div>
+                    <button class="btn" id="analyzeBtn" disabled data-i18n="analyzeBtn">분석 시작</button>
+                    <div class="error-message" id="errorMessage"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Loading -->
+        <section class="section">
+            <div class="card loading" id="loading">
+                <div class="loading__spinner"></div>
+                <div class="loading__text" data-i18n="loadingText">계정 상태를 확인하고 있습니다.</div>
+                <div class="loading__subtext" data-i18n="loadingWait">잠시만 기다려주세요</div>
+            </div>
+        </section>
+
+        <!-- Results -->
+        <div class="results" id="results">
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat__number" id="followingCount">0</div>
+                    <div class="stat__label" data-i18n="following">팔로잉</div>
+                </div>
+                <div class="stat">
+                    <div class="stat__number" id="followersCount">0</div>
+                    <div class="stat__label" data-i18n="followers">팔로워</div>
+                </div>
+                <div class="stat">
+                    <div class="stat__number" id="mutualCount">0</div>
+                    <div class="stat__label" data-i18n="mutual">맞팔</div>
+                </div>
+                <div class="stat">
+                    <div class="stat__number" id="unfollowCount">0</div>
+                    <div class="stat__label" data-i18n="unfollowTarget">언팔 대상</div>
+                </div>
+            </div>
+
+            <section class="section">
+                <div class="card account-section" id="activeSection">
+                    <div class="section-header">
+                        <div class="section-header__icon section-header__icon--active"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="17" y1="11" x2="23" y2="11"/></svg></div>
+                        <h2 class="section-header__title" data-i18n="activeSectionTitle">나를 팔로우하지 않은 대상</h2>
+                        <div class="sort-buttons" id="sortButtons">
+                            <button class="sort-btn active" data-sort="alphabet" data-i18n="sortAlphabet">가나다순</button>
+                            <button class="sort-btn" data-sort="newest" data-i18n="sortNewest">최신순</button>
+                            <button class="sort-btn" data-sort="oldest" data-i18n="sortOldest">오래된순</button>
+                        </div>
+                    </div>
+                    <div class="account-list" id="activeList"></div>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="card account-section inactive-section" id="inactiveSection">
+                    <div class="section-header">
+                        <div class="section-header__icon section-header__icon--inactive">—</div>
+                        <h2 class="section-header__title" data-i18n="inactiveSectionTitle">제외된 계정</h2>
+                    </div>
+                    <div class="account-list" id="inactiveList"></div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-links">
+                <a href="#" class="footer-link" id="privacyLink" data-i18n="privacyPolicy">개인정보 처리방침</a>
+                <a href="/terms" class="footer-link" data-i18n="termsOfService">이용약관</a>
+                <a href="/about" class="footer-link" data-i18n="aboutUs">서비스 소개</a>
+            </div>
+            <p class="copyright">© 2025 UnfollowLens</p>
+        </footer>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="privacyModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">개인정보 처리방침</h2>
+                <button class="modal-close" id="modalClose">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-lang-switch">
+                    <button class="modal-lang-btn active" data-modal-lang="ko">한국어</button>
+                    <button class="modal-lang-btn" data-modal-lang="en">English</button>
+                </div>
+
+                <div class="privacy-content show" id="privacy-ko">
+                    <p class="last-updated">최종 업데이트: 2025년 1월</p>
+                    <div class="privacy-highlight">
+                        <p><strong>UnfollowLens는 사용자의 개인정보를 수집하거나 저장하지 않습니다.</strong></p>
+                    </div>
+                    <h2>1. 서비스 개요</h2>
+                    <p>UnfollowLens는 Instagram 데이터 파일을 분석하여 맞팔하지 않는 계정을 찾아주는 무료 웹 서비스입니다.</p>
+                    <h2>2. 데이터 처리 방식</h2>
+                    <ul>
+                        <li><strong>업로드된 파일:</strong> 서버로 전송되지 않으며, 브라우저에서만 처리됩니다.</li>
+                        <li><strong>데이터 저장:</strong> 분석 결과는 브라우저에만 표시됩니다.</li>
+                        <li><strong>계정 정보:</strong> 회원가입이나 로그인이 필요하지 않습니다.</li>
+                    </ul>
+                    <h2>3. 데이터 보안</h2>
+                    <ul>
+                        <li>모든 통신은 HTTPS를 통해 암호화됩니다.</li>
+                        <li>업로드된 파일은 서버로 전송되지 않으며, 브라우저에서만 처리됩니다.</li>
+                    </ul>
+                    <h2>4. 문의</h2>
+                    <p>문의사항은 <a href="mailto:unfollowlens@gmail.com">unfollowlens@gmail.com</a>으로 연락해 주세요.</p>
+                </div>
+
+                <div class="privacy-content" id="privacy-en">
+                    <p class="last-updated">Last updated: January 2025</p>
+                    <div class="privacy-highlight">
+                        <p><strong>UnfollowLens does not collect or store any personal information.</strong></p>
+                    </div>
+                    <h2>1. Service Overview</h2>
+                    <p>UnfollowLens is a free web service that analyzes Instagram data files to find accounts that don't follow you back.</p>
+                    <h2>2. Data Processing</h2>
+                    <ul>
+                        <li><strong>Uploaded Files:</strong> Never sent to a server. Processed entirely in your browser.</li>
+                        <li><strong>Data Storage:</strong> Results are only displayed in your browser.</li>
+                        <li><strong>Account Info:</strong> No registration or login required.</li>
+                    </ul>
+                    <h2>3. Security</h2>
+                    <ul>
+                        <li>All communications encrypted via HTTPS.</li>
+                        <li>Uploaded files are never sent to a server. Processed entirely in your browser.</li>
+                    </ul>
+                    <h2>4. Contact</h2>
+                    <p>Contact us at <a href="mailto:unfollowlens@gmail.com">unfollowlens@gmail.com</a>.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Language Selector -->
+    <div class="lang-selector">
+        <button class="lang-btn" data-lang="ko">한국어</button>
+        <button class="lang-btn" data-lang="en">EN</button>
+        <button class="lang-btn" data-lang="ja">日本語</button>
+        <button class="lang-btn" data-lang="zh">中文</button>
+        <button class="lang-btn" data-lang="es">ES</button>
+    </div>
+
+    <!-- Support -->
+    <div class="support-buttons">
+        <a href="https://www.buymeacoffee.com/zamonte" target="_blank" rel="noopener" class="support-btn" title="Buy Me a Coffee">☕</a>
+        <a href="https://ko-fi.com/montecarlo62602" target="_blank" rel="noopener" class="support-btn" title="Ko-fi">❤️</a>
+    </div>
+
+    <script>
+        const translations = {
+            ko: {
+                title: 'UnfollowLens - 인스타그램 언팔 체커',
+                subtitle: '나를 팔로우하지 않는 계정을 찾아보세요.',
+                uploadText: 'ZIP 파일을 드래그하거나 클릭하세요',
+                uploadHint: 'Instagram에서 다운로드한 데이터 파일',
+                analyzeBtn: '분석 시작',
+                loadingText: '계정 상태를 확인하고 있습니다.',
+                loadingWait: '잠시만 기다려주세요',
+                following: '팔로잉',
+                followers: '팔로워',
+                mutual: '맞팔',
+                unfollowTarget: '언팔 대상',
+                activeSectionTitle: '언팔로우 대상',
+                inactiveSectionTitle: '제외된 계정',
+                fileSelected: '선택된 파일:',
+                viewProfile: '프로필',
+                private: '비공개',
+                deleted: '탈퇴',
+                deletedOrRestricted: '탈퇴/제한',
+                restricted: '제한됨',
+                unknown: '확인 불가',
+                statusError: '오류',
+                unverified: '미확인',
+                emptyMessage: '언팔로우 대상이 없습니다! 🎉',
+                errorZipOnly: 'ZIP 파일만 업로드 가능합니다',
+                errorAnalysis: '분석 중 오류가 발생했습니다',
+                privacyPolicy: '개인정보 처리방침',
+                termsOfService: '이용약관',
+                aboutUs: '서비스 소개',
+                guideTitle: 'Instagram 데이터 다운로드 방법',
+                platformMobile: '모바일 앱',
+                platformWeb: '웹 브라우저',
+                mobileStep1Title: 'Instagram 앱 실행',
+                mobileStep1Desc: 'Instagram 앱을 열고 <span class="step__highlight">프로필</span> 탭 → <span class="step__highlight">☰ 메뉴</span>를 탭합니다.',
+                mobileStep2Title: '계정 센터 접속',
+                mobileStep2Desc: '<span class="step__highlight">설정 및 활동</span> → <span class="step__highlight">계정 센터</span> → <span class="step__highlight">내 정보 및 권한</span>을 탭합니다.',
+                mobileStep3Title: '정보 다운로드 선택',
+                mobileStep3Desc: '<span class="step__highlight">내 정보 다운로드</span> → <span class="step__highlight">정보 다운로드</span>를 선택합니다.',
+                mobileStep4Title: '다운로드할 정보 선택',
+                mobileStep4Desc: '<span class="step__highlight">일부 정보</span>를 선택하고, <span class="step__highlight">팔로워 및 팔로잉</span>만 체크합니다.',
+                mobileStep5Title: '형식 및 기간 설정',
+                mobileStep5Desc: '형식: <span class="step__highlight">JSON</span>, 기간: <span class="step__highlight">전체 기간</span> 선택 후 <span class="step__highlight">파일 생성</span>을 탭합니다.',
+                mobileStep6Title: '파일 다운로드',
+                mobileStep6Desc: '이메일로 다운로드 링크가 도착하면 ZIP 파일을 다운로드합니다.',
+                webStep1Title: 'Instagram 웹사이트 접속',
+                webStep1Desc: '<span class="step__highlight">instagram.com</span>에 로그인 → <span class="step__highlight">더 보기</span> → <span class="step__highlight">설정</span>을 클릭합니다.',
+                webStep2Title: '계정 센터 이동',
+                webStep2Desc: '<span class="step__highlight">계정 센터</span> → <span class="step__highlight">내 정보 및 권한</span> → <span class="step__highlight">내 정보 다운로드</span>를 클릭합니다.',
+                webStep3Title: '다운로드 요청',
+                webStep3Desc: '<span class="step__highlight">일부 정보</span> 선택 → <span class="step__highlight">팔로워 및 팔로잉</span>만 체크합니다.',
+                webStep4Title: '형식 설정 및 요청',
+                webStep4Desc: '형식: <span class="step__highlight">JSON</span>, 기간: <span class="step__highlight">전체 기간</span> 선택 후 <span class="step__highlight">파일 생성</span>을 클릭합니다.',
+                webStep5Title: '이메일 확인 및 다운로드',
+                webStep5Desc: '등록된 이메일로 다운로드 링크가 발송됩니다.',
+                guideNoteText: '데이터 준비에는 몇 분에서 최대 24시간이 소요될 수 있습니다.',
+                copyId: '복사',
+                copied: '복사됨',
+                errorInvalidZip: '올바른 Instagram 데이터 ZIP 파일이 아닙니다',
+                privacyNotice: '업로드된 파일은 절대 저장되지 않습니다.',
+                sortAlphabet: '가나다순',
+                sortNewest: '최신순',
+                sortOldest: '오래된순',
+                followedAt: '팔로우한 날짜'
+            },
+            en: {
+                title: 'UnfollowLens - Instagram Unfollow Checker',
+                subtitle: 'Find accounts that don\'t follow you back',
+                uploadText: 'Drag & drop ZIP file or click',
+                uploadHint: 'Data file downloaded from Instagram',
+                analyzeBtn: 'Analyze',
+                loadingText: 'Checking account status',
+                loadingWait: 'Please wait',
+                following: 'Following',
+                followers: 'Followers',
+                mutual: 'Mutual',
+                unfollowTarget: 'Unfollow',
+                activeSectionTitle: 'Accounts to Unfollow',
+                inactiveSectionTitle: 'Excluded Accounts',
+                fileSelected: 'Selected:',
+                viewProfile: 'Profile',
+                private: 'Private',
+                deleted: 'Deleted',
+                deletedOrRestricted: 'Deleted',
+                restricted: 'Restricted',
+                unknown: 'Unknown',
+                statusError: 'Error',
+                unverified: 'Unverified',
+                emptyMessage: 'No accounts to unfollow! 🎉',
+                errorZipOnly: 'Only ZIP files allowed',
+                errorAnalysis: 'Error during analysis',
+                privacyPolicy: 'Privacy Policy',
+                termsOfService: 'Terms',
+                aboutUs: 'About',
+                guideTitle: 'How to Download Instagram Data',
+                platformMobile: 'Mobile App',
+                platformWeb: 'Web Browser',
+                mobileStep1Title: 'Open Instagram',
+                mobileStep1Desc: 'Open the app, go to <span class="step__highlight">Profile</span> → <span class="step__highlight">☰ Menu</span>.',
+                mobileStep2Title: 'Access Settings',
+                mobileStep2Desc: '<span class="step__highlight">Settings</span> → <span class="step__highlight">Accounts Center</span> → <span class="step__highlight">Your information</span>.',
+                mobileStep3Title: 'Select Download',
+                mobileStep3Desc: 'Select <span class="step__highlight">Download your information</span>.',
+                mobileStep4Title: 'Choose Data',
+                mobileStep4Desc: 'Select <span class="step__highlight">Some info</span>, check only <span class="step__highlight">Followers and following</span>.',
+                mobileStep5Title: 'Set Format',
+                mobileStep5Desc: 'Format: <span class="step__highlight">JSON</span>, Range: <span class="step__highlight">All time</span>, tap <span class="step__highlight">Create files</span>.',
+                mobileStep6Title: 'Download',
+                mobileStep6Desc: 'Download the ZIP file when the email arrives.',
+                webStep1Title: 'Visit Instagram',
+                webStep1Desc: 'Login to <span class="step__highlight">instagram.com</span> → <span class="step__highlight">More</span> → <span class="step__highlight">Settings</span>.',
+                webStep2Title: 'Go to Settings',
+                webStep2Desc: '<span class="step__highlight">Accounts Center</span> → <span class="step__highlight">Your information</span> → <span class="step__highlight">Download</span>.',
+                webStep3Title: 'Request Download',
+                webStep3Desc: 'Select <span class="step__highlight">Some info</span> → check only <span class="step__highlight">Followers and following</span>.',
+                webStep4Title: 'Set Format',
+                webStep4Desc: 'Format: <span class="step__highlight">JSON</span>, Range: <span class="step__highlight">All time</span>, click <span class="step__highlight">Create files</span>.',
+                webStep5Title: 'Check Email',
+                webStep5Desc: 'Download link will be sent to your email.',
+                guideNoteText: 'Data preparation may take minutes to 24 hours.',
+                copyId: 'Copy',
+                copied: 'Copied',
+                errorInvalidZip: 'Invalid Instagram data ZIP file',
+                privacyNotice: 'Your file is never stored on our servers. All processing happens in your browser.',
+                sortAlphabet: 'A-Z',
+                sortNewest: 'Newest',
+                sortOldest: 'Oldest',
+                followedAt: 'Followed on'
+            },
+            ja: {
+                title: 'UnfollowLens - インスタグラムアンフォローチェッカー',
+                subtitle: 'フォローバックしていないアカウントを探す',
+                uploadText: 'ZIPファイルをドラッグまたはクリック',
+                uploadHint: 'Instagramからダウンロードしたデータファイル',
+                analyzeBtn: '分析開始',
+                loadingText: 'アカウント状態を確認中',
+                loadingWait: 'しばらくお待ちください',
+                following: 'フォロー中',
+                followers: 'フォロワー',
+                mutual: '相互',
+                unfollowTarget: '対象',
+                activeSectionTitle: 'アンフォロー対象',
+                inactiveSectionTitle: '除外アカウント',
+                fileSelected: '選択:',
+                viewProfile: 'プロフィール',
+                private: '非公開',
+                deleted: '退会',
+                deletedOrRestricted: '退会/制限',
+                restricted: '制限中',
+                unknown: '確認不可',
+                statusError: 'エラー',
+                unverified: '未確認',
+                emptyMessage: '対象なし！🎉',
+                errorZipOnly: 'ZIPファイルのみ',
+                errorAnalysis: 'エラー',
+                privacyPolicy: 'プライバシー',
+                termsOfService: '利用規約',
+                aboutUs: '紹介',
+                guideTitle: 'Instagramデータダウンロード方法',
+                platformMobile: 'モバイル',
+                platformWeb: 'ウェブ',
+                guideNoteText: 'データ準備には数分〜24時間かかります。',
+                copyId: 'コピー',
+                copied: 'コピー済',
+                errorInvalidZip: '無効なInstagramデータZIPファイルです',
+                privacyNotice: 'アップロードされたファイルはサーバーに保存されず、ブラウザ内でのみ処理されます。',
+                sortAlphabet: 'ABC順',
+                sortNewest: '新しい順',
+                sortOldest: '古い順',
+                followedAt: 'フォロー日'
+            },
+            zh: {
+                title: 'UnfollowLens - Instagram取关检查器',
+                subtitle: '查找没有回关你的账户',
+                uploadText: '拖放ZIP文件或点击',
+                uploadHint: '从Instagram下载的数据文件',
+                analyzeBtn: '开始分析',
+                loadingText: '正在检查账户状态',
+                loadingWait: '请稍候',
+                following: '关注',
+                followers: '粉丝',
+                mutual: '互关',
+                unfollowTarget: '取关',
+                activeSectionTitle: '取关对象',
+                inactiveSectionTitle: '已排除',
+                fileSelected: '已选:',
+                viewProfile: '主页',
+                private: '私密',
+                deleted: '已注销',
+                deletedOrRestricted: '已注销/受限',
+                restricted: '受限',
+                unknown: '无法确认',
+                statusError: '错误',
+                unverified: '未确认',
+                emptyMessage: '没有需要取关的账户！🎉',
+                errorZipOnly: '只能上传ZIP文件',
+                errorAnalysis: '分析出错',
+                privacyPolicy: '隐私政策',
+                termsOfService: '条款',
+                aboutUs: '关于',
+                guideTitle: '如何下载Instagram数据',
+                platformMobile: '手机应用',
+                platformWeb: '网页',
+                guideNoteText: '数据准备可能需要几分钟到24小时。',
+                copyId: '复制',
+                copied: '已复制',
+                errorInvalidZip: '无效的Instagram数据ZIP文件',
+                privacyNotice: '上传的文件不会存储在服务器上，所有处理均在浏览器中完成。',
+                sortAlphabet: 'A-Z',
+                sortNewest: '最新',
+                sortOldest: '最早',
+                followedAt: '关注于'
+            },
+            es: {
+                title: 'UnfollowLens - Verificador de Unfollows',
+                subtitle: 'Encuentra cuentas que no te siguen',
+                uploadText: 'Arrastra el ZIP o haz clic',
+                uploadHint: 'Archivo de datos de Instagram',
+                analyzeBtn: 'Analizar',
+                loadingText: 'Verificando estado',
+                loadingWait: 'Por favor espera',
+                following: 'Siguiendo',
+                followers: 'Seguidores',
+                mutual: 'Mutuos',
+                unfollowTarget: 'Dejar',
+                activeSectionTitle: 'Para dejar de seguir',
+                inactiveSectionTitle: 'Excluidas',
+                fileSelected: 'Archivo:',
+                viewProfile: 'Perfil',
+                private: 'Privado',
+                deleted: 'Eliminada',
+                deletedOrRestricted: 'Eliminada',
+                restricted: 'Restringida',
+                unknown: 'Desconocida',
+                statusError: 'Error',
+                unverified: 'No verificada',
+                emptyMessage: '¡No hay cuentas! 🎉',
+                errorZipOnly: 'Solo archivos ZIP',
+                errorAnalysis: 'Error',
+                privacyPolicy: 'Privacidad',
+                termsOfService: 'Términos',
+                aboutUs: 'Acerca de',
+                guideTitle: 'Cómo descargar datos de Instagram',
+                platformMobile: 'App Móvil',
+                platformWeb: 'Navegador',
+                guideNoteText: 'La preparación puede tardar minutos a 24 horas.',
+                copyId: 'Copiar',
+                copied: 'Copiado',
+                errorInvalidZip: 'Archivo ZIP de datos de Instagram no valido',
+                privacyNotice: 'Tu archivo nunca se almacena en nuestros servidores. Todo se procesa en tu navegador.',
+                sortAlphabet: 'A-Z',
+                sortNewest: 'Reciente',
+                sortOldest: 'Antiguo',
+                followedAt: 'Seguido el'
+            }
+        };
+
+        let currentLang = 'ko';
+
+        function detectLanguage() {
+            const browserLang = (navigator.language || navigator.userLanguage).split('-')[0];
+            return translations[browserLang] ? browserLang : 'en';
+        }
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('preferredLang', lang);
+            document.documentElement.lang = lang;
+
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang] && translations[lang][key]) {
+                    if (translations[lang][key].includes('<span')) {
+                        el.innerHTML = translations[lang][key];
+                    } else {
+                        el.textContent = translations[lang][key];
+                    }
+                }
+            });
+
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.lang === lang);
+            });
+        }
+
+        function t(key) {
+            return (translations[currentLang] && translations[currentLang][key]) || key;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedLang = localStorage.getItem('preferredLang');
+            setLanguage(savedLang || detectLanguage());
+
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.addEventListener('click', () => setLanguage(btn.dataset.lang));
+            });
+
+            const guideHeader = document.getElementById('guideHeader');
+            const guideContent = document.getElementById('guideContent');
+            const guideToggle = document.getElementById('guideToggle');
+
+            guideHeader.addEventListener('click', () => {
+                guideContent.classList.toggle('show');
+                guideToggle.classList.toggle('open');
+            });
+
+            document.querySelectorAll('.platform-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    document.querySelectorAll('.platform-tab').forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    const platform = tab.dataset.platform;
+                    document.querySelectorAll('.platform-content').forEach(c => c.classList.remove('show'));
+                    document.getElementById(platform === 'mobile' ? 'mobileGuide' : 'webGuide').classList.add('show');
+                });
+            });
+        });
+
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const fileSelected = document.getElementById('fileSelected');
+        const loading = document.getElementById('loading');
+        const results = document.getElementById('results');
+        const errorMessage = document.getElementById('errorMessage');
+
+        let selectedFile = null;
+
+        uploadArea.addEventListener('click', () => fileInput.click());
+        uploadArea.addEventListener('dragover', (e) => { e.preventDefault(); uploadArea.classList.add('dragover'); });
+        uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('dragover'));
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            if (e.dataTransfer.files.length > 0) handleFile(e.dataTransfer.files[0]);
+        });
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) handleFile(e.target.files[0]);
+        });
+
+        function handleFile(file) {
+            if (!file.name.endsWith('.zip')) {
+                showError(t('errorZipOnly'));
+                return;
+            }
+            selectedFile = file;
+            fileSelected.textContent = `${t('fileSelected')} ${file.name}`;
+            fileSelected.classList.add('show');
+            analyzeBtn.disabled = false;
+            hideError();
+        }
+
+        async function checkAccountStatus(username) {
+            try {
+                const response = await fetch(
+                    `/api/check-account?username=${encodeURIComponent(username)}`
+                );
+                const contentType = response.headers.get('content-type') || '';
+                if (!contentType.includes('application/json')) {
+                    return {
+                        username,
+                        status: 'error',
+                        accessible: true,
+                        error: `Unexpected content-type: ${contentType}`
+                    };
+                }
+                if (!response.ok) {
+                    return {
+                        username,
+                        status: 'error',
+                        accessible: true,
+                        error: `HTTP ${response.status}`
+                    };
+                }
+                return await response.json();
+            } catch (error) {
+                return {
+                    username,
+                    status: 'error',
+                    accessible: true,
+                    error: error.message
+                };
+            }
+        }
+
+        async function checkAccountsParallel(usernames, maxConcurrent = 3) {
+            const results = [];
+            let index = 0;
+
+            async function worker() {
+                while (index < usernames.length) {
+                    const currentIndex = index++;
+                    const result = await checkAccountStatus(usernames[currentIndex]);
+                    results.push(result);
+                    if (index < usernames.length) {
+                        await new Promise(resolve => setTimeout(resolve, 300));
+                    }
+                }
+            }
+
+            const workers = Array.from(
+                { length: Math.min(maxConcurrent, usernames.length) },
+                () => worker()
+            );
+            await Promise.all(workers);
+
+            return results;
+        }
+
+        analyzeBtn.addEventListener('click', async () => {
+            if (!selectedFile) return;
+
+            loading.style.display = 'block';
+            results.style.display = 'none';
+            analyzeBtn.disabled = true;
+            hideError();
+
+            try {
+                const zipData = await selectedFile.arrayBuffer();
+                const zip = await JSZip.loadAsync(zipData);
+
+                const followingFile = zip.file('connections/followers_and_following/following.json');
+                if (!followingFile) {
+                    throw new Error(t('errorInvalidZip'));
+                }
+                const followingJson = JSON.parse(await followingFile.async('string'));
+                const followingTimestamps = new Map();
+                (followingJson.relationships_following || []).forEach(item => {
+                    const entry = (item.string_list_data || [])[0];
+                    const username = entry?.value || item.title;
+                    if (username) {
+                        followingTimestamps.set(username, entry?.timestamp || 0);
+                    }
+                });
+                const followingSet = new Set(followingTimestamps.keys());
+
+                const followerFiles = Object.keys(zip.files)
+                    .filter(name => name.match(/^connections\/followers_and_following\/followers_\d+\.json$/))
+                    .sort();
+                if (followerFiles.length === 0) {
+                    throw new Error(t('errorInvalidZip'));
+                }
+                const followersSet = new Set();
+                for (const filePath of followerFiles) {
+                    const json = JSON.parse(await zip.file(filePath).async('string'));
+                    json
+                        .flatMap(item => item.string_list_data || [])
+                        .map(entry => entry.value)
+                        .filter(Boolean)
+                        .forEach(username => followersSet.add(username));
+                }
+
+                const nonFollowers = [...followingSet]
+                    .filter(username => !followersSet.has(username))
+                    .sort();
+
+                const rawAccountStatuses = await checkAccountsParallel(nonFollowers, 3);
+                const accountStatuses = rawAccountStatuses.map(acc => ({
+                    ...acc,
+                    followedAt: followingTimestamps.get(acc.username) || 0
+                }));
+
+                const inactiveStatuses = ['deleted', 'deleted_or_restricted', 'restricted'];
+                const activeAccounts = accountStatuses
+                    .filter(acc => !inactiveStatuses.includes(acc.status))
+                    .sort((a, b) => a.username.localeCompare(b.username));
+
+                const inactiveAccounts = accountStatuses
+                    .filter(acc => inactiveStatuses.includes(acc.status))
+                    .sort((a, b) => a.username.localeCompare(b.username));
+
+                const mutualCount = [...followingSet]
+                    .filter(username => followersSet.has(username))
+                    .length;
+
+                displayResults({
+                    stats: {
+                        following: followingSet.size,
+                        followers: followersSet.size,
+                        mutual: mutualCount,
+                        non_followers_total: nonFollowers.length
+                    },
+                    active_accounts: activeAccounts,
+                    inactive_accounts: inactiveAccounts
+                });
+            } catch (error) {
+                showError(t('errorAnalysis') + ': ' + error.message);
+                loading.style.display = 'none';
+                analyzeBtn.disabled = false;
+            }
+        });
+
+        let currentActiveAccounts = [];
+        let currentSortOrder = 'alphabet';
+
+        function sortAndRenderActiveList() {
+            const sorted = [...currentActiveAccounts];
+            if (currentSortOrder === 'newest') {
+                sorted.sort((a, b) => {
+                    if (!a.followedAt && !b.followedAt) return a.username.localeCompare(b.username);
+                    if (!a.followedAt) return 1;
+                    if (!b.followedAt) return -1;
+                    return b.followedAt - a.followedAt;
+                });
+            } else if (currentSortOrder === 'oldest') {
+                sorted.sort((a, b) => {
+                    if (!a.followedAt && !b.followedAt) return a.username.localeCompare(b.username);
+                    if (!a.followedAt) return 1;
+                    if (!b.followedAt) return -1;
+                    return a.followedAt - b.followedAt;
+                });
+            } else {
+                sorted.sort((a, b) => a.username.localeCompare(b.username));
+            }
+            const activeList = document.getElementById('activeList');
+            activeList.innerHTML = '';
+            if (sorted.length === 0) {
+                activeList.innerHTML = `<div class="empty-message">${t('emptyMessage')}</div>`;
+            } else {
+                sorted.forEach(acc => activeList.appendChild(createAccountItem(acc, true)));
+            }
+        }
+
+        document.getElementById('sortButtons').addEventListener('click', (e) => {
+            const btn = e.target.closest('.sort-btn');
+            if (!btn) return;
+            const sortType = btn.dataset.sort;
+            if (sortType === currentSortOrder) return;
+            currentSortOrder = sortType;
+            document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            sortAndRenderActiveList();
+        });
+
+        function displayResults(data) {
+            loading.style.display = 'none';
+            results.style.display = 'block';
+
+            document.getElementById('followingCount').textContent = data.stats.following;
+            document.getElementById('followersCount').textContent = data.stats.followers;
+            document.getElementById('mutualCount').textContent = data.stats.mutual;
+            document.getElementById('unfollowCount').textContent = data.active_accounts.length;
+
+            currentActiveAccounts = data.active_accounts;
+            currentSortOrder = 'alphabet';
+            document.querySelectorAll('.sort-btn').forEach(b => b.classList.toggle('active', b.dataset.sort === 'alphabet'));
+            sortAndRenderActiveList();
+
+            const inactiveList = document.getElementById('inactiveList');
+            inactiveList.innerHTML = '';
+
+            if (data.inactive_accounts.length === 0) {
+                document.getElementById('inactiveSection').style.display = 'none';
+            } else {
+                document.getElementById('inactiveSection').style.display = 'block';
+                data.inactive_accounts.forEach(acc => inactiveList.appendChild(createAccountItem(acc, false)));
+            }
+
+            analyzeBtn.disabled = false;
+        }
+
+        function copyToClipboard(text, btn, copiedLabel, resetLabel, copiedClass, delay) {
+            function onCopied() {
+                btn.textContent = copiedLabel;
+                btn.classList.add(copiedClass);
+                setTimeout(() => {
+                    btn.textContent = resetLabel;
+                    btn.classList.remove(copiedClass);
+                }, delay);
+            }
+            navigator.clipboard.writeText(text).then(onCopied).catch(() => {
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                textarea.style.position = 'fixed';
+                textarea.style.opacity = '0';
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                onCopied();
+            });
+        }
+
+        function copyId(btn, username) {
+            copyToClipboard(username, btn, t('copied'), t('copyId'), 'copy-btn--copied', 1500);
+        }
+
+        function createAccountItem(acc, isActive) {
+            const div = document.createElement('div');
+            div.className = 'account-item';
+            const safeUsername = acc.username.replace(/[^a-zA-Z0-9._]/g, '');
+            const initial = safeUsername.charAt(0).toUpperCase();
+            const isUnverified = acc.status === 'unknown' || acc.status === 'error';
+            const igIcon = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="white" stroke="none"/></svg>';
+            const fallbackAvatar = isUnverified ? igIcon : (acc.is_private ? '\u{1F4F7}' : initial);
+
+            if (isActive) {
+                const privateBadge = acc.is_private ? `<span class="private-badge">${t('private')}</span>` : '';
+                const unverifiedBadge = isUnverified ? `<span class="unverified-badge">${t('unverified')}</span>` : '';
+                const followDateHtml = acc.followedAt
+                    ? `<span class="follow-date">${t('followedAt')} ${new Date(acc.followedAt * 1000).toLocaleDateString(currentLang, { year: 'numeric', month: '2-digit', day: '2-digit' })}</span>`
+                    : '';
+                div.innerHTML = `
+                    <div class="account-info">
+                        <div class="account-avatar">${fallbackAvatar}</div>
+                        <div class="account-username">@${safeUsername}${privateBadge}${unverifiedBadge}${followDateHtml}</div>
+                    </div>
+                    <div class="account-actions">
+                        <a href="https://www.instagram.com/${safeUsername}" target="_blank" rel="noopener" class="account-link">${t('viewProfile')}</a>
+                        <button class="account-link copy-id-btn" onclick="copyId(this, '${safeUsername}')">${t('copyId')}</button>
+                    </div>
+                `;
+                if (acc.profile_pic_url) {
+                    const avatar = div.querySelector('.account-avatar');
+                    const img = document.createElement('img');
+                    img.src = '/api/proxy-image?url=' + encodeURIComponent(acc.profile_pic_url);
+                    img.alt = `@${safeUsername}`;
+                    img.onerror = function() {
+                        this.remove();
+                        avatar.textContent = fallbackAvatar;
+                    };
+                    avatar.textContent = '';
+                    avatar.appendChild(img);
+                }
+            } else {
+                const statusText = { 'deleted': t('deleted'), 'deleted_or_restricted': t('deletedOrRestricted'), 'restricted': t('restricted'), 'unknown': t('unknown'), 'error': t('statusError') };
+                div.innerHTML = `
+                    <div class="account-info">
+                        <div class="account-avatar account-avatar--inactive">📷</div>
+                        <div class="account-username">@${safeUsername}</div>
+                    </div>
+                    <span class="inactive-badge">${statusText[acc.status] || acc.status}</span>
+                `;
+            }
+            return div;
+        }
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+        }
+
+        function hideError() {
+            errorMessage.style.display = 'none';
+        }
+
+        const privacyLink = document.getElementById('privacyLink');
+        const privacyModal = document.getElementById('privacyModal');
+        const modalClose = document.getElementById('modalClose');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalTitles = { ko: '개인정보 처리방침', en: 'Privacy Policy' };
+
+        privacyLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            const modalLang = ['ko', 'ja', 'zh'].includes(currentLang) ? 'ko' : 'en';
+            setModalLanguage(modalLang);
+            privacyModal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        });
+
+        modalClose.addEventListener('click', closeModal);
+        privacyModal.addEventListener('click', (e) => { if (e.target === privacyModal) closeModal(); });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && privacyModal.classList.contains('show')) closeModal(); });
+
+        function closeModal() {
+            privacyModal.classList.remove('show');
+            document.body.style.overflow = '';
+        }
+
+        function setModalLanguage(lang) {
+            document.querySelectorAll('.modal-lang-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.modalLang === lang));
+            document.querySelectorAll('.privacy-content').forEach(c => c.classList.remove('show'));
+            document.getElementById('privacy-' + lang).classList.add('show');
+            modalTitle.textContent = modalTitles[lang];
+        }
+
+        document.querySelectorAll('.modal-lang-btn').forEach(btn => {
+            btn.addEventListener('click', () => setModalLanguage(btn.dataset.modalLang));
+        });
+    </script>
+</body>
+</html>

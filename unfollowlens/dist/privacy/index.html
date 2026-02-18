@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>개인정보 처리방침 - UnfollowLens</title>
+    <meta name="description" content="UnfollowLens 개인정보 처리방침">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://unfollowlens.com/privacy">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600&family=Noto+Sans+KR:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #FDFCFA;
+            --bg-alt: #F5F3EF;
+            --text: #1A1A1A;
+            --text-secondary: #666666;
+            --text-muted: #999999;
+            --accent: #E63946;
+            --border: #E8E6E1;
+            --border-dark: #D4D1CA;
+            --card-shadow: 0 2px 40px rgba(0,0,0,0.06);
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', 'Noto Sans KR', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .header {
+            padding: 60px 0 40px;
+            text-align: center;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: var(--transition);
+            margin-bottom: 24px;
+        }
+
+        .back-link:hover {
+            color: var(--accent);
+        }
+
+        .page-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 6vw, 2.5rem);
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: 8px;
+        }
+
+        .page-title .dot {
+            color: var(--accent);
+        }
+
+        .card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 24px;
+        }
+
+        .lang-switch {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 28px;
+        }
+
+        .lang-btn {
+            padding: 10px 20px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: transparent;
+            color: var(--text-secondary);
+            font-family: inherit;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .lang-btn:hover {
+            border-color: var(--text);
+            color: var(--text);
+        }
+
+        .lang-btn.active {
+            background: var(--text);
+            border-color: var(--text);
+            color: white;
+        }
+
+        .content {
+            display: none;
+        }
+
+        .content.show {
+            display: block;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+
+        .last-updated {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-bottom: 24px;
+        }
+
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.05rem;
+            font-weight: 500;
+            color: var(--text);
+            margin-top: 28px;
+            margin-bottom: 12px;
+        }
+
+        p, li {
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            line-height: 1.8;
+        }
+
+        ul {
+            padding-left: 20px;
+            margin-bottom: 16px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .highlight {
+            background: var(--bg-alt);
+            padding: 20px 24px;
+            border-radius: 12px;
+            margin: 24px 0;
+            border-left: 3px solid var(--accent);
+        }
+
+        .highlight p {
+            margin-bottom: 0;
+            color: var(--text);
+        }
+
+        .contact-section {
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 640px) {
+            .container { padding: 0 16px; }
+            .header { padding: 40px 0 24px; }
+            .card { padding: 24px 20px; }
+            .lang-switch { flex-wrap: wrap; }
+        }
+
+        @media (max-width: 400px) {
+            .card { padding: 20px 16px; }
+            h1 { font-size: 1.3rem; }
+            h2 { font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <a href="/" class="back-link">← UnfollowLens로 돌아가기</a>
+            <h1 class="page-title">Privacy<span class="dot">.</span></h1>
+        </header>
+
+        <div class="card">
+            <div class="lang-switch">
+                <button class="lang-btn active" data-lang="ko">한국어</button>
+                <button class="lang-btn" data-lang="en">English</button>
+            </div>
+
+            <div class="content show" id="content-ko">
+                <h1>개인정보 처리방침</h1>
+                <p class="last-updated">최종 업데이트: 2025년 1월</p>
+
+                <div class="highlight">
+                    <p><strong>UnfollowLens는 사용자의 개인정보를 수집하거나 저장하지 않습니다.</strong></p>
+                </div>
+
+                <h2>1. 서비스 개요</h2>
+                <p>UnfollowLens는 Instagram 데이터 파일을 분석하여 맞팔하지 않는 계정을 찾아주는 무료 웹 서비스입니다.</p>
+
+                <h2>2. 데이터 처리 방식</h2>
+                <ul>
+                    <li><strong>업로드된 파일:</strong> 사용자가 업로드한 Instagram ZIP 파일은 서버로 전송되지 않으며, 브라우저에서만 처리됩니다.</li>
+                    <li><strong>데이터 저장:</strong> 분석 결과는 사용자의 브라우저에만 표시되며, 서버에 저장되지 않습니다.</li>
+                    <li><strong>계정 정보:</strong> 회원가입이나 로그인이 필요하지 않습니다.</li>
+                </ul>
+
+                <h2>3. 쿠키 및 추적</h2>
+                <ul>
+                    <li><strong>언어 설정:</strong> 사용자가 선택한 언어 설정을 브라우저의 localStorage에 저장합니다.</li>
+                    <li><strong>Google AdSense:</strong> 본 서비스는 Google AdSense를 사용하여 광고를 표시합니다. Google은 쿠키를 사용하여 사용자의 관심사에 기반한 광고를 제공할 수 있습니다. 자세한 내용은 <a href="https://policies.google.com/technologies/ads" target="_blank">Google 광고 정책</a>을 참조하세요.</li>
+                    <li><strong>제3자 서비스:</strong> Buy Me a Coffee 위젯이 포함되어 있으며, 해당 서비스의 자체 개인정보 처리방침이 적용됩니다.</li>
+                </ul>
+
+                <h2>4. 제3자 API 사용</h2>
+                <p>계정 상태 확인을 위해 Instagram 공개 프로필 페이지에 접근합니다. 이 과정에서:</p>
+                <ul>
+                    <li>사용자의 Instagram 계정에 로그인하지 않습니다.</li>
+                    <li>공개적으로 접근 가능한 정보만 확인합니다.</li>
+                </ul>
+
+                <h2>5. 데이터 보안</h2>
+                <ul>
+                    <li>모든 통신은 HTTPS를 통해 암호화됩니다.</li>
+                    <li>업로드된 파일은 서버로 전송되지 않으며, 브라우저에서만 처리됩니다.</li>
+                    <li>사용자 데이터는 서버에 영구 저장되지 않습니다.</li>
+                </ul>
+
+                <h2>6. 사용자 권리</h2>
+                <p>서비스 특성상 개인정보를 저장하지 않으므로, 별도의 데이터 삭제 요청이 필요하지 않습니다.</p>
+
+                <h2>7. 정책 변경</h2>
+                <p>본 개인정보 처리방침은 서비스 변경에 따라 업데이트될 수 있습니다. 변경 시 이 페이지에 공지됩니다.</p>
+
+                <div class="contact-section">
+                    <h2>8. 문의</h2>
+                    <p>개인정보 관련 문의사항이 있으시면 <a href="https://github.com/iamzamonte/side-project/issues" target="_blank">GitHub 이슈</a>를 통해 연락해 주세요.</p>
+                </div>
+            </div>
+
+            <div class="content" id="content-en">
+                <h1>Privacy Policy</h1>
+                <p class="last-updated">Last updated: January 2025</p>
+
+                <div class="highlight">
+                    <p><strong>UnfollowLens does not collect or store any personal information.</strong></p>
+                </div>
+
+                <h2>1. Service Overview</h2>
+                <p>UnfollowLens is a free web service that analyzes Instagram data files to find accounts that don't follow you back.</p>
+
+                <h2>2. Data Processing</h2>
+                <ul>
+                    <li><strong>Uploaded Files:</strong> Instagram ZIP files are never sent to a server. All processing happens entirely in your browser.</li>
+                    <li><strong>Data Storage:</strong> Analysis results are only displayed in the user's browser and are not stored on our servers.</li>
+                    <li><strong>Account Information:</strong> No registration or login is required.</li>
+                </ul>
+
+                <h2>3. Cookies and Tracking</h2>
+                <ul>
+                    <li><strong>Language Settings:</strong> Your selected language preference is stored in your browser's localStorage.</li>
+                    <li><strong>Google AdSense:</strong> This service uses Google AdSense to display advertisements. Google may use cookies to serve ads based on your interests. For more information, please see <a href="https://policies.google.com/technologies/ads" target="_blank">Google's Advertising Policies</a>.</li>
+                    <li><strong>Third-party Services:</strong> A Buy Me a Coffee widget is included, which has its own privacy policy.</li>
+                </ul>
+
+                <h2>4. Third-party API Usage</h2>
+                <p>To check account status, we access Instagram's public profile pages. During this process:</p>
+                <ul>
+                    <li>We do not log into your Instagram account.</li>
+                    <li>We only check publicly accessible information.</li>
+                </ul>
+
+                <h2>5. Data Security</h2>
+                <ul>
+                    <li>All communications are encrypted via HTTPS.</li>
+                    <li>Uploaded files are never sent to a server and are processed entirely in your browser.</li>
+                    <li>No user data is permanently stored on our servers.</li>
+                </ul>
+
+                <h2>6. User Rights</h2>
+                <p>Since we do not store personal information, no data deletion requests are necessary.</p>
+
+                <h2>7. Policy Changes</h2>
+                <p>This privacy policy may be updated as the service changes. Changes will be posted on this page.</p>
+
+                <div class="contact-section">
+                    <h2>8. Contact</h2>
+                    <p>For privacy-related inquiries, please contact us through <a href="https://github.com/iamzamonte/side-project/issues" target="_blank">GitHub Issues</a>.</p>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            &copy; 2025 UnfollowLens. All rights reserved.
+        </footer>
+    </div>
+
+    <script>
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                document.querySelectorAll('.content').forEach(c => c.classList.remove('show'));
+                document.getElementById('content-' + btn.dataset.lang).classList.add('show');
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>이용약관 - UnfollowLens</title>
+    <meta name="description" content="UnfollowLens 서비스 이용약관">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://unfollowlens.com/terms">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Noto+Sans+KR:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #FDFCFA;
+            --bg-alt: #F5F3EF;
+            --text: #1A1A1A;
+            --text-secondary: #666666;
+            --text-muted: #999999;
+            --accent: #E63946;
+            --border: #E8E6E1;
+            --border-dark: #D4D1CA;
+            --card-shadow: 0 2px 40px rgba(0,0,0,0.06);
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', 'Noto Sans KR', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .header {
+            padding: 60px 0 40px;
+            text-align: center;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: var(--transition);
+            margin-bottom: 24px;
+        }
+
+        .back-link:hover {
+            color: var(--accent);
+        }
+
+        .page-title {
+            font-family: 'DM Sans', 'Noto Sans KR', sans-serif;
+            font-size: clamp(2rem, 6vw, 2.5rem);
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: 8px;
+        }
+
+        .page-title .dot {
+            color: var(--accent);
+        }
+
+        .card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 24px;
+        }
+
+        .lang-switch {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 28px;
+        }
+
+        .lang-btn {
+            padding: 10px 20px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: transparent;
+            color: var(--text-secondary);
+            font-family: inherit;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .lang-btn:hover {
+            border-color: var(--text);
+            color: var(--text);
+        }
+
+        .lang-btn.active {
+            background: var(--text);
+            border-color: var(--text);
+            color: white;
+        }
+
+        .content {
+            display: none;
+        }
+
+        .content.show {
+            display: block;
+        }
+
+        h1 {
+            font-family: 'DM Sans', 'Noto Sans KR', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+
+        .last-updated {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-bottom: 24px;
+        }
+
+        h2 {
+            font-family: 'DM Sans', 'Noto Sans KR', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 500;
+            color: var(--text);
+            margin-top: 28px;
+            margin-bottom: 12px;
+        }
+
+        p, li {
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            line-height: 1.8;
+        }
+
+        ul, ol {
+            padding-left: 20px;
+            margin-bottom: 16px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .highlight {
+            background: var(--bg-alt);
+            padding: 20px 24px;
+            border-radius: 12px;
+            margin: 24px 0;
+            border-left: 3px solid var(--accent);
+        }
+
+        .highlight p {
+            margin-bottom: 0;
+            color: var(--text);
+        }
+
+        .contact-section {
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 640px) {
+            .container { padding: 0 16px; }
+            .header { padding: 40px 0 24px; }
+            .card { padding: 24px 20px; }
+            .lang-switch { flex-wrap: wrap; }
+        }
+
+        @media (max-width: 400px) {
+            .card { padding: 20px 16px; }
+            h1 { font-size: 1.3rem; }
+            h2 { font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <a href="/" class="back-link">← UnfollowLens로 돌아가기</a>
+            <h1 class="page-title">Terms<span class="dot">.</span></h1>
+        </header>
+
+        <div class="card">
+            <div class="lang-switch">
+                <button class="lang-btn active" data-lang="ko">한국어</button>
+                <button class="lang-btn" data-lang="en">English</button>
+            </div>
+
+            <div class="content show" id="content-ko">
+                <h1>이용약관</h1>
+                <p class="last-updated">최종 업데이트: 2025년 1월</p>
+
+                <div class="highlight">
+                    <p><strong>UnfollowLens 서비스를 이용하시기 전에 본 약관을 주의 깊게 읽어주세요.</strong></p>
+                </div>
+
+                <h2>1. 서비스 개요</h2>
+                <p>UnfollowLens("서비스")는 사용자가 Instagram에서 다운로드한 데이터 파일을 분석하여 맞팔로우하지 않는 계정을 식별하는 무료 웹 서비스입니다.</p>
+
+                <h2>2. 서비스 이용 동의</h2>
+                <p>본 서비스를 이용함으로써 귀하는 다음 약관에 동의하는 것으로 간주됩니다:</p>
+                <ul>
+                    <li>본 이용약관의 모든 조항</li>
+                    <li>개인정보 처리방침</li>
+                    <li>관련 법률 및 규정 준수</li>
+                </ul>
+
+                <h2>3. 서비스 이용 조건</h2>
+                <p>서비스 이용 시 다음 조건을 준수해야 합니다:</p>
+                <ul>
+                    <li>본인의 Instagram 계정 데이터만 업로드할 것</li>
+                    <li>타인의 개인정보를 무단으로 수집하거나 사용하지 않을 것</li>
+                    <li>서비스를 불법적인 목적으로 사용하지 않을 것</li>
+                    <li>서비스의 정상적인 운영을 방해하지 않을 것</li>
+                    <li>자동화된 방법으로 서비스에 과도한 부하를 주지 않을 것</li>
+                </ul>
+
+                <h2>4. 지적 재산권</h2>
+                <p>UnfollowLens 서비스의 모든 콘텐츠, 디자인, 로고, 소프트웨어는 운영자의 재산이며 저작권법의 보호를 받습니다. 사전 서면 동의 없이 복제, 수정, 배포할 수 없습니다.</p>
+
+                <h2>5. 면책 조항</h2>
+                <p>서비스 운영자는 다음에 대해 책임지지 않습니다:</p>
+                <ul>
+                    <li>서비스 이용으로 인한 직접적 또는 간접적 손해</li>
+                    <li>서비스의 일시적 중단 또는 오류</li>
+                    <li>사용자가 업로드한 데이터의 정확성</li>
+                    <li>Instagram 정책 변경으로 인한 서비스 제한</li>
+                    <li>제3자 서비스(Instagram, Google AdSense 등)의 문제</li>
+                </ul>
+
+                <h2>6. 서비스 제공 방식</h2>
+                <ul>
+                    <li>서비스는 "있는 그대로" 제공되며, 특정 목적에의 적합성을 보장하지 않습니다.</li>
+                    <li>서비스는 예고 없이 변경, 중단될 수 있습니다.</li>
+                    <li>무료 서비스이므로 서비스 수준 협약(SLA)이 적용되지 않습니다.</li>
+                </ul>
+
+                <h2>7. 광고</h2>
+                <p>서비스는 Google AdSense를 통해 광고를 표시할 수 있습니다. 광고는 서비스 운영 비용을 지원하기 위한 것이며, 광고주의 제품이나 서비스를 보증하지 않습니다.</p>
+
+                <h2>8. 제3자 링크</h2>
+                <p>서비스에는 제3자 웹사이트로의 링크가 포함될 수 있습니다. 이러한 외부 사이트에 대해서는 책임지지 않으며, 각 사이트의 이용약관 및 개인정보 처리방침을 확인하시기 바랍니다.</p>
+
+                <h2>9. 약관 변경</h2>
+                <p>본 약관은 언제든지 변경될 수 있습니다. 중요한 변경 사항이 있을 경우 서비스를 통해 공지합니다. 변경 후에도 서비스를 계속 이용하시면 변경된 약관에 동의하는 것으로 간주됩니다.</p>
+
+                <h2>10. 준거법</h2>
+                <p>본 약관은 대한민국 법률에 따라 해석되며, 서비스와 관련된 분쟁은 대한민국 법원의 관할에 따릅니다.</p>
+
+                <div class="contact-section">
+                    <h2>11. 문의</h2>
+                    <p>본 약관에 대한 문의사항이 있으시면 <a href="https://github.com/iamzamonte/side-project/issues" target="_blank">GitHub 이슈</a>를 통해 연락해 주세요.</p>
+                </div>
+            </div>
+
+            <div class="content" id="content-en">
+                <h1>Terms of Service</h1>
+                <p class="last-updated">Last updated: January 2025</p>
+
+                <div class="highlight">
+                    <p><strong>Please read these Terms of Service carefully before using UnfollowLens.</strong></p>
+                </div>
+
+                <h2>1. Service Overview</h2>
+                <p>UnfollowLens ("Service") is a free web service that analyzes data files downloaded from Instagram to identify accounts that don't follow you back.</p>
+
+                <h2>2. Agreement to Terms</h2>
+                <p>By using this Service, you agree to:</p>
+                <ul>
+                    <li>All provisions of these Terms of Service</li>
+                    <li>Our Privacy Policy</li>
+                    <li>Compliance with applicable laws and regulations</li>
+                </ul>
+
+                <h2>3. Conditions of Use</h2>
+                <p>When using the Service, you must:</p>
+                <ul>
+                    <li>Only upload your own Instagram account data</li>
+                    <li>Not collect or use others' personal information without authorization</li>
+                    <li>Not use the Service for illegal purposes</li>
+                    <li>Not interfere with the normal operation of the Service</li>
+                    <li>Not place excessive load on the Service through automated methods</li>
+                </ul>
+
+                <h2>4. Intellectual Property</h2>
+                <p>All content, design, logos, and software of the UnfollowLens Service are the property of the operator and are protected by copyright law. They may not be reproduced, modified, or distributed without prior written consent.</p>
+
+                <h2>5. Disclaimer</h2>
+                <p>The Service operator is not responsible for:</p>
+                <ul>
+                    <li>Direct or indirect damages resulting from use of the Service</li>
+                    <li>Temporary interruption or errors in the Service</li>
+                    <li>Accuracy of data uploaded by users</li>
+                    <li>Service limitations due to Instagram policy changes</li>
+                    <li>Issues with third-party services (Instagram, Google AdSense, etc.)</li>
+                </ul>
+
+                <h2>6. Service Provision</h2>
+                <ul>
+                    <li>The Service is provided "as is" without warranty of fitness for a particular purpose.</li>
+                    <li>The Service may be changed or discontinued without notice.</li>
+                    <li>As a free service, no Service Level Agreement (SLA) applies.</li>
+                </ul>
+
+                <h2>7. Advertising</h2>
+                <p>The Service may display advertisements through Google AdSense. Advertisements are intended to support the cost of operating the Service and do not constitute endorsement of the advertiser's products or services.</p>
+
+                <h2>8. Third-Party Links</h2>
+                <p>The Service may contain links to third-party websites. We are not responsible for these external sites, and you should review their terms of service and privacy policies.</p>
+
+                <h2>9. Changes to Terms</h2>
+                <p>These Terms may be changed at any time. Significant changes will be announced through the Service. Continued use of the Service after changes constitutes acceptance of the modified Terms.</p>
+
+                <h2>10. Governing Law</h2>
+                <p>These Terms shall be interpreted in accordance with the laws of the Republic of Korea, and disputes related to the Service shall be subject to the jurisdiction of the courts of the Republic of Korea.</p>
+
+                <div class="contact-section">
+                    <h2>11. Contact</h2>
+                    <p>For questions about these Terms, please contact us through <a href="https://github.com/iamzamonte/side-project/issues" target="_blank">GitHub Issues</a>.</p>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            &copy; 2025 UnfollowLens. All rights reserved.
+        </footer>
+    </div>
+
+    <script>
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                document.querySelectorAll('.content').forEach(c => c.classList.remove('show'));
+                document.getElementById('content-' + btn.dataset.lang).classList.add('show');
+            });
+        });
+    </script>
+</body>
+</html>

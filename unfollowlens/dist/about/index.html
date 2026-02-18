@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>서비스 소개 - UnfollowLens</title>
+    <meta name="description" content="UnfollowLens - 인스타그램 맞팔 확인 및 언팔 대상 찾기 무료 서비스">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://unfollowlens.com/about">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Noto+Sans+KR:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #FDFCFA;
+            --bg-alt: #F5F3EF;
+            --text: #1A1A1A;
+            --text-secondary: #666666;
+            --text-muted: #999999;
+            --accent: #E63946;
+            --border: #E8E6E1;
+            --border-dark: #D4D1CA;
+            --card-shadow: 0 2px 40px rgba(0,0,0,0.06);
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', 'Noto Sans KR', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .header {
+            padding: 60px 0 40px;
+            text-align: center;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: var(--transition);
+            margin-bottom: 24px;
+        }
+
+        .back-link:hover {
+            color: var(--accent);
+        }
+
+        .page-title {
+            font-family: 'DM Sans', 'Noto Sans KR', sans-serif;
+            font-size: clamp(2rem, 6vw, 2.5rem);
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: 8px;
+        }
+
+        .page-title .dot {
+            color: var(--accent);
+        }
+
+        .card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 24px;
+        }
+
+        .lang-switch {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 28px;
+        }
+
+        .lang-btn {
+            padding: 10px 20px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: transparent;
+            color: var(--text-secondary);
+            font-family: inherit;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .lang-btn:hover {
+            border-color: var(--text);
+            color: var(--text);
+        }
+
+        .lang-btn.active {
+            background: var(--text);
+            border-color: var(--text);
+            color: white;
+        }
+
+        .content {
+            display: none;
+        }
+
+        .content.show {
+            display: block;
+        }
+
+        h1 {
+            font-family: 'DM Sans', 'Noto Sans KR', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-family: 'DM Sans', 'Noto Sans KR', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--text);
+            margin-top: 32px;
+            margin-bottom: 16px;
+        }
+
+        p, li {
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            line-height: 1.8;
+        }
+
+        ul, ol {
+            padding-left: 20px;
+            margin-bottom: 16px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .highlight {
+            background: var(--bg-alt);
+            padding: 20px 24px;
+            border-radius: 12px;
+            margin: 24px 0;
+            border-left: 3px solid var(--accent);
+        }
+
+        .highlight p {
+            margin-bottom: 0;
+            color: var(--text);
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        .feature-item {
+            background: var(--bg-alt);
+            padding: 24px 20px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid var(--border);
+            transition: var(--transition);
+        }
+
+        .feature-item:hover {
+            border-color: var(--border-dark);
+        }
+
+        .feature-icon {
+            font-size: 1.5rem;
+            margin-bottom: 12px;
+        }
+
+        .feature-title {
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        .feature-desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 0;
+            line-height: 1.6;
+        }
+
+        .support-section {
+            background: #FFFBF0;
+            border: 1px solid #F5E6C8;
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 32px;
+        }
+
+        .support-title {
+            color: var(--text);
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+        }
+
+        .support-desc {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 16px;
+        }
+
+        .support-links {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .support-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 18px;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .support-link:hover {
+            border-color: var(--text);
+            transform: translateY(-2px);
+        }
+
+        .contact-section {
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 640px) {
+            .container { padding: 0 16px; }
+            .header { padding: 40px 0 24px; }
+            .card { padding: 24px 20px; }
+            .feature-grid { grid-template-columns: 1fr; }
+            .lang-switch { flex-wrap: wrap; }
+            .support-links { flex-direction: column; }
+            .support-link { justify-content: center; }
+        }
+
+        @media (max-width: 400px) {
+            .card { padding: 20px 16px; }
+            h1 { font-size: 1.3rem; }
+            h2 { font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <a href="/" class="back-link">← UnfollowLens로 돌아가기</a>
+            <h1 class="page-title">About<span class="dot">.</span></h1>
+        </header>
+
+        <div class="card">
+            <div class="lang-switch">
+                <button class="lang-btn active" data-lang="ko">한국어</button>
+                <button class="lang-btn" data-lang="en">English</button>
+            </div>
+
+            <div class="content show" id="content-ko">
+                <h1>UnfollowLens 소개</h1>
+
+                <div class="highlight">
+                    <p><strong>UnfollowLens는 인스타그램에서 나를 팔로우하지 않는 계정을 쉽게 찾아주는 무료 웹 서비스입니다.</strong></p>
+                </div>
+
+                <h2>서비스 특징</h2>
+                <div class="feature-grid">
+                    <div class="feature-item">
+                        <div class="feature-icon">🔒</div>
+                        <div class="feature-title">100% 개인정보 보호</div>
+                        <p class="feature-desc">데이터는 분석 후 즉시 삭제되며, 서버에 저장되지 않습니다.</p>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">⚡</div>
+                        <div class="feature-title">빠른 분석</div>
+                        <p class="feature-desc">업로드 후 몇 초 만에 결과를 확인할 수 있습니다.</p>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">💰</div>
+                        <div class="feature-title">완전 무료</div>
+                        <p class="feature-desc">회원가입이나 결제 없이 누구나 무료로 사용할 수 있습니다.</p>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">🌍</div>
+                        <div class="feature-title">다국어 지원</div>
+                        <p class="feature-desc">한국어, 영어, 일본어, 중국어, 스페인어를 지원합니다.</p>
+                    </div>
+                </div>
+
+                <h2>작동 방식</h2>
+                <ol>
+                    <li><strong>Instagram 데이터 다운로드:</strong> Instagram에서 내 데이터를 JSON 형식으로 다운로드합니다.</li>
+                    <li><strong>파일 업로드:</strong> 다운로드한 ZIP 파일을 UnfollowLens에 업로드합니다.</li>
+                    <li><strong>분석 결과 확인:</strong> 맞팔하지 않는 계정 목록을 확인합니다.</li>
+                </ol>
+
+                <h2>왜 UnfollowLens인가요?</h2>
+                <ul>
+                    <li><strong>안전:</strong> Instagram 비밀번호를 입력하지 않습니다. 공식 데이터 다운로드 기능을 활용합니다.</li>
+                    <li><strong>정확:</strong> 탈퇴/비공개 계정을 자동으로 분류하여 활성 계정만 표시합니다.</li>
+                    <li><strong>신뢰:</strong> 오픈소스 프로젝트로 투명하게 운영됩니다.</li>
+                </ul>
+
+                <div class="support-section">
+                    <div class="support-title">☕ 서비스 후원하기</div>
+                    <p class="support-desc">UnfollowLens가 유용하셨다면 커피 한 잔으로 응원해주세요!</p>
+                    <div class="support-links">
+                        <a href="https://www.buymeacoffee.com/zamonte" target="_blank" class="support-link">☕ Buy Me a Coffee</a>
+                        <a href="https://ko-fi.com/montecarlo62602" target="_blank" class="support-link">❤️ Ko-fi</a>
+                    </div>
+                </div>
+
+                <div class="contact-section">
+                    <h2>문의하기</h2>
+                    <p>버그 리포트, 기능 제안, 기타 문의사항은 <a href="https://github.com/iamzamonte/side-project/issues" target="_blank">GitHub 이슈</a>를 통해 연락해 주세요.</p>
+                </div>
+            </div>
+
+            <div class="content" id="content-en">
+                <h1>About UnfollowLens</h1>
+
+                <div class="highlight">
+                    <p><strong>UnfollowLens is a free web service that helps you easily find Instagram accounts that don't follow you back.</strong></p>
+                </div>
+
+                <h2>Features</h2>
+                <div class="feature-grid">
+                    <div class="feature-item">
+                        <div class="feature-icon">🔒</div>
+                        <div class="feature-title">100% Privacy</div>
+                        <p class="feature-desc">Data is deleted immediately after analysis and never stored on our servers.</p>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">⚡</div>
+                        <div class="feature-title">Fast Analysis</div>
+                        <p class="feature-desc">Get results within seconds after uploading your file.</p>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">💰</div>
+                        <div class="feature-title">Completely Free</div>
+                        <p class="feature-desc">No registration or payment required. Free for everyone.</p>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">🌍</div>
+                        <div class="feature-title">Multi-language</div>
+                        <p class="feature-desc">Supports Korean, English, Japanese, Chinese, and Spanish.</p>
+                    </div>
+                </div>
+
+                <h2>How It Works</h2>
+                <ol>
+                    <li><strong>Download Instagram Data:</strong> Download your data from Instagram in JSON format.</li>
+                    <li><strong>Upload File:</strong> Upload the downloaded ZIP file to UnfollowLens.</li>
+                    <li><strong>View Results:</strong> See the list of accounts that don't follow you back.</li>
+                </ol>
+
+                <h2>Why UnfollowLens?</h2>
+                <ul>
+                    <li><strong>Safe:</strong> No Instagram password required. Uses official data download feature.</li>
+                    <li><strong>Accurate:</strong> Automatically categorizes deleted/private accounts and shows only active ones.</li>
+                    <li><strong>Trustworthy:</strong> Open-source project with transparent operation.</li>
+                </ul>
+
+                <div class="support-section">
+                    <div class="support-title">☕ Support This Service</div>
+                    <p class="support-desc">If UnfollowLens was helpful, consider buying me a coffee!</p>
+                    <div class="support-links">
+                        <a href="https://www.buymeacoffee.com/zamonte" target="_blank" class="support-link">☕ Buy Me a Coffee</a>
+                        <a href="https://ko-fi.com/montecarlo62602" target="_blank" class="support-link">❤️ Ko-fi</a>
+                    </div>
+                </div>
+
+                <div class="contact-section">
+                    <h2>Contact Us</h2>
+                    <p>For bug reports, feature suggestions, or other inquiries, please contact us through <a href="https://github.com/iamzamonte/side-project/issues" target="_blank">GitHub Issues</a>.</p>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            &copy; 2025 UnfollowLens. All rights reserved.
+        </footer>
+    </div>
+
+    <script>
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                document.querySelectorAll('.content').forEach(c => c.classList.remove('show'));
+                document.getElementById('content-' + btn.dataset.lang).classList.add('show');
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+{
+  "name": "unfollowlens",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "ci": "npm run lint && npm run format:check && npm run test",
+    "dev": "wrangler pages dev dist"
+  },
+  "devDependencies": {
+    "@cloudflare/vitest-pool-workers": "^0.8.0",
+    "eslint": "^9.39.2",
+    "eslint-config-prettier": "^10.1.8",
+    "jszip": "^3.10.1",
+    "prettier": "^3.8.1",
+    "vitest": "^3.0.0",
+    "wrangler": "^4.63.0"
+  }
+}

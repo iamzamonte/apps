@@ -1,0 +1,6 @@
+node_modules/
+dist/index.html
+dist/about/
+dist/privacy/
+dist/terms/
+package-lock.json

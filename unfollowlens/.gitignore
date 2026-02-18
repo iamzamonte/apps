@@ -1,0 +1,18 @@
+# Dependencies
+node_modules/
+
+# Wrangler
+.wrangler/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Project specific
+*.zip
