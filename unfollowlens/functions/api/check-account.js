@@ -8,11 +8,11 @@
  * 아래 순서로 레지덴셜 IP fallback을 시도합니다:
  *
  * [200 로그인 월 케이스]
- *   1. Dataimpulse 레지덴셜 프록시 (TCP 소켓 직접 연결)
+ *   1. Dataimpulse 레지덴셜 프록시 (CONNECT 터널 → inner TLS)
  *
  * [429 rate limit 케이스]
  *   1. ScraperAPI (스크래핑 전문 서비스)
- *   2. Dataimpulse 레지덴셜 프록시 (TCP 소켓 직접 연결)
+ *   2. Dataimpulse 레지덴셜 프록시 (CONNECT 터널 → inner TLS)
  *
  * Route: GET /api/check-account?username=<username>
  *
@@ -114,14 +114,16 @@ async function fetchViaScrapingApi(profileUrl, env) {
 }
 
 /**
- * HTTP 포워드 프록시를 통해 Instagram 프로필을 가져옵니다.
+ * CONNECT 터널을 통해 Instagram 프로필을 가져옵니다.
  *
- * 흐름: connect(secureTransport:'on') → TLS로 프록시 연결 → GET (full URL) → 응답 파싱
+ * 흐름:
+ *   connect(starttls) → startTls() [outer TLS, 프록시]
+ *   → CONNECT hostname:443 → 200 OK
+ *   → startTls() [inner TLS, instagram.com]
+ *   → GET /path/ HTTP/1.0 → 응답 파싱
  *
- * 참고: CONNECT 터널 + startTls() 방식은 Cloudflare Workers 프로덕션에서
- * TLS Handshake가 실패하는 알려진 제한사항이 있어, 프록시 자체에 TLS로 직접
- * 연결한 뒤 forward proxy 요청을 전송하는 방식을 사용합니다.
- * https://community.cloudflare.com/t/forward-proxy-via-cloudflare-sockets-and-starttls/862412
+ * 포트 823은 TLS(HTTPS proxy)이므로 starttls → startTls()로 outer TLS를 맺습니다.
+ * HTTPS 목적지는 CONNECT 터널 후 inner TLS로 처리합니다.
  *
  * @returns {{ status: number, body: string }}
  */
@@ -132,17 +134,50 @@ async function fetchViaProxy(profileUrl, env) {
   const encoder = new TextEncoder();
   const decoder = new TextDecoder();
 
-  // 1. 프록시에 TLS로 직접 연결 (startTls() 우회 — 처음부터 암호화 채널 사용)
-  const socket = connect(
+  // 1. 프록시에 TCP 연결 (starttls 모드 — 이후 startTls()로 TLS 업그레이드)
+  const rawSocket = connect(
     { hostname: env.PROXY_HOST, port: proxyPort },
-    { secureTransport: 'on', allowHalfOpen: false },
+    { secureTransport: 'starttls', allowHalfOpen: false },
   );
 
-  // 2. TLS 채널 내에서 HTTP 포워드 프록시 요청 (프록시가 Instagram HTTPS 연결 대행)
-  const httpRequest =
-    `GET ${profileUrl} HTTP/1.0\r\n` +
-    `Host: ${target.hostname}\r\n` +
+  // 2. 프록시와 outer TLS 핸드셰이크 (포트 823은 TLS 필수)
+  const outerSocket = rawSocket.startTls({ expectedServerHostname: env.PROXY_HOST });
+
+  // 3. CONNECT 터널 요청 (outer TLS 위에서)
+  const connectReq =
+    `CONNECT ${target.hostname}:443 HTTP/1.0\r\n` +
+    `Host: ${target.hostname}:443\r\n` +
     `Proxy-Authorization: Basic ${auth}\r\n` +
+    `\r\n`;
+
+  const outerWriter = outerSocket.writable.getWriter();
+  await outerWriter.write(encoder.encode(connectReq));
+  outerWriter.releaseLock();
+
+  // 4. CONNECT 200 OK 대기
+  const outerReader = outerSocket.readable.getReader();
+  let connectResponse = '';
+  for (;;) {
+    const { value, done } = await outerReader.read();
+    if (done) throw new Error('Proxy closed connection during CONNECT');
+    connectResponse += decoder.decode(value, { stream: true });
+    if (connectResponse.includes('\r\n\r\n')) break;
+  }
+  outerReader.releaseLock();
+
+  const connectStatusLine = connectResponse.split(/\r?\n/)[0];
+  const connectMatch = connectStatusLine.match(/HTTP\/[\d.]+\s+(\d+)/);
+  if (!connectMatch || parseInt(connectMatch[1], 10) !== 200) {
+    throw new Error(`CONNECT failed: ${connectStatusLine.trim()}`);
+  }
+
+  // 5. inner TLS 핸드셰이크 (instagram.com:443, 터널 위에서)
+  const innerSocket = outerSocket.startTls({ expectedServerHostname: target.hostname });
+
+  // 6. HTTP GET 요청 전송 (inner TLS 위에서, path 기반)
+  const httpRequest =
+    `GET ${target.pathname} HTTP/1.0\r\n` +
+    `Host: ${target.hostname}\r\n` +
     `User-Agent: ${FETCH_HEADERS['User-Agent']}\r\n` +
     `Accept: text/html\r\n` +
     `Accept-Language: en-US,en;q=0.9\r\n` +
@@ -150,15 +185,15 @@ async function fetchViaProxy(profileUrl, env) {
     `Connection: close\r\n` +
     `\r\n`;
 
-  const writer = socket.writable.getWriter();
-  await writer.write(encoder.encode(httpRequest));
-  writer.releaseLock();
+  const innerWriter = innerSocket.writable.getWriter();
+  await innerWriter.write(encoder.encode(httpRequest));
+  innerWriter.releaseLock();
 
-  // 3. 전체 응답 읽기
+  // 7. 전체 응답 읽기
   const chunks = [];
-  const reader = socket.readable.getReader();
+  const innerReader = innerSocket.readable.getReader();
   for (;;) {
-    const { value, done } = await reader.read();
+    const { value, done } = await innerReader.read();
     if (done) break;
     chunks.push(value);
   }
@@ -173,14 +208,13 @@ async function fetchViaProxy(profileUrl, env) {
 
   const responseText = decoder.decode(fullData);
 
-  // 4. HTTP 응답 파싱 (status line + headers + body)
+  // 8. HTTP 응답 파싱 (status line + headers + body)
   const crlfIndex = responseText.indexOf('\r\n\r\n');
   const lfIndex = responseText.indexOf('\n\n');
   const headerEnd = crlfIndex !== -1 ? crlfIndex : lfIndex;
   const separatorLen = crlfIndex !== -1 ? 4 : 2;
 
   if (headerEnd === -1) {
-    // 디버그: 프록시가 반환한 데이터 미리보기 (첫 200자 + hex)
     const preview = responseText.substring(0, 200);
     const hexBytes = Array.from(fullData.slice(0, 20))
       .map((b) => b.toString(16).padStart(2, '0'))

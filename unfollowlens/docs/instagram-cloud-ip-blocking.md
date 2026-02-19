@@ -1,7 +1,7 @@
 # Instagram Cloud IP 차단 문제
 
 > 작성일: 2026-02-19
-> 상태: **미해결**
+> 상태: **로컬 검증 완료 — 배포 후 확인 필요**
 
 ## 현상
 
@@ -41,6 +41,7 @@ Instagram은 클라우드 서버 IP를 감지하여 프로필 페이지 대신 �
 1단계: Cloudflare IP 직접 요청
   ├─ 200 + og 태그 있음 → active ✅
   ├─ 200 + og 태그 없음 (로그인 월) → Dataimpulse로 재시도
+  │     │   (CONNECT 터널 → inner TLS → HTTPS 요청)
   │     ├─ Dataimpulse 200 + og 태그 있음 → active ✅
   │     ├─ Dataimpulse 200 + og 태그 없음 → deleted_or_restricted
   │     ├─ Dataimpulse 404 → deleted
@@ -52,19 +53,39 @@ Instagram은 클라우드 서버 IP를 감지하여 프로필 페이지 대신 �
        └─ Fallback 없음 → unknown
 ```
 
-## 미해결 상태
+## 진단 결과 (2026-02-20)
 
-### 문제: Cloudflare Workers에서 Dataimpulse TCP 연결 신뢰성
+### 포트 823 = TLS (HTTPS 프록시)
 
-`fetchViaProxy()` 구현은 `cloudflare:sockets`를 사용한 TCP 직접 연결이다.
-Cloudflare Workers 프로덕션 환경에서 TLS 핸드셰이크 실패가 알려진 제한사항으로
-보고되어 있어, 실제 작동 여부가 불확실하다.
+로컬 테스트(`scripts/test-proxy.mjs`)로 확인한 결과, Dataimpulse 포트 823은 **평문 TCP가 아닌 TLS 소켓**이다.
+따라서 기존 `secureTransport: 'off'` 방식으로 연결하면 즉시 끊긴다.
 
-참고: https://community.cloudflare.com/t/forward-proxy-via-cloudflare-sockets-and-starttls/862412
+### CONNECT 터널링으로 전환한 이유
 
-**영향**: Dataimpulse 연결이 프로덕션에서 실패할 가능성 있음. 이 경우 `deleted_or_restricted` (확인불가 배지)로 표시됨.
+`GET https://www.instagram.com/...` 방식의 포워드 프록시 요청은 동작하지 않는다.
+올바른 흐름:
 
-**대안**: Dataimpulse HTTP API(표준 fetch)가 있다면 TCP 소켓 대신 사용
+```
+1. TLS 소켓으로 프록시에 연결 (outer TLS)
+2. CONNECT www.instagram.com:443 HTTP/1.1 전송
+3. 프록시가 "200 Connection established" 반환
+4. 동일 소켓 위에서 inner TLS 핸드셰이크 (이중 TLS)
+5. HTTPS GET / 요청 전송
+```
+
+### 로컬 테스트 성공 결과
+
+Node.js `tls.connect({ socket })` 이중 TLS로 `@littleghost_cafe` 검증:
+- `status: active` 반환
+- 프로필 사진 URL 포함
+- `og:title`, `og:description` 태그 정상 파싱
+
+### 프로덕션 구현 및 리스크
+
+`check-account.js`는 CF Workers `outerSocket.startTls()` 이중 호출로 수정됨.
+CF Workers의 `startTls()` 이중 호출이 공식 지원되지 않아 배포 환경에서 실패할 수 있다.
+
+**실패 시 대안:** `node:tls` 기반 별도 프록시 워커 또는 외부 Node.js 서비스로 프록시 요청 위임.
 
 ## 현재 사용자 경험
 
