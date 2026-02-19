@@ -4,21 +4,24 @@
  * Instagram 프로필 HTML 페이지의 og:* 메타태그를 파싱하여
  * 계정 상태와 프로필 사진을 가져옵니다.
  *
- * 429 응답 시 아래 순서로 fallback합니다:
- *   1. Google Cloud Run 프록시 (권장 - Google IP 사용)
- *   2. ScraperAPI (스크래핑 전문 서비스)
- *   3. Dataimpulse 레지덴셜 프록시 (TCP 소켓 직접 연결)
+ * Instagram이 클라우드 IP를 감지하여 로그인 페이지를 반환하는 경우
+ * 아래 순서로 레지덴셜 IP fallback을 시도합니다:
+ *
+ * [200 로그인 월 케이스]
+ *   1. Dataimpulse 레지덴셜 프록시 (TCP 소켓 직접 연결)
+ *
+ * [429 rate limit 케이스]
+ *   1. ScraperAPI (스크래핑 전문 서비스)
+ *   2. Dataimpulse 레지덴셜 프록시 (TCP 소켓 직접 연결)
  *
  * Route: GET /api/check-account?username=<username>
  *
  * 환경변수 (선택 - Cloudflare Dashboard에서 설정):
- *   CLOUD_RUN_URL     - Cloud Run 서비스 URL (예: https://unfollowlens-proxy-xxx.run.app)
- *   CLOUD_RUN_API_KEY - Cloud Run 인증 키 (openssl rand -hex 32 으로 생성)
- *   SCRAPER_API_KEY   - ScraperAPI 키 (https://www.scraperapi.com)
- *   PROXY_HOST        - Dataimpulse 프록시 호스트 (예: gw.dataimpulse.com)
- *   PROXY_PORT        - Dataimpulse 프록시 포트 (예: 823)
- *   PROXY_USER        - Dataimpulse 로그인 (예: login__cr.us)
- *   PROXY_PASS        - Dataimpulse 비밀번호
+ *   SCRAPER_API_KEY - ScraperAPI 키 (https://www.scraperapi.com)
+ *   PROXY_HOST      - Dataimpulse 프록시 호스트 (예: gw.dataimpulse.com)
+ *   PROXY_PORT      - Dataimpulse 프록시 포트 (예: 823)
+ *   PROXY_USER      - Dataimpulse 로그인 (예: login__cr.us)
+ *   PROXY_PASS      - Dataimpulse 비밀번호
  */
 
 import { connect } from 'cloudflare:sockets';
@@ -81,38 +84,12 @@ function parseAccountFromHtml(html, username) {
   };
 }
 
-function hasCloudRunConfig(env) {
-  return Boolean(env && env.CLOUD_RUN_URL);
-}
-
 function hasScraperApiConfig(env) {
   return Boolean(env && env.SCRAPER_API_KEY);
 }
 
 function hasProxyConfig(env) {
   return Boolean(env && env.PROXY_HOST && env.PROXY_USER && env.PROXY_PASS);
-}
-
-/**
- * Google Cloud Run 프록시를 통해 Instagram 프로필을 가져옵니다.
- *
- * Cloud Run 서버가 Google IP로 Instagram을 직접 fetch하여 HTML을 반환합니다.
- * x-api-key 헤더로 무단 접근을 차단합니다.
- *
- * @returns {{ status: number, body: string }}
- */
-async function fetchViaCloudRun(username, env) {
-  const url = new URL('/check-account', env.CLOUD_RUN_URL);
-  url.searchParams.set('username', username);
-
-  const headers = { Accept: 'text/html' };
-  if (env.CLOUD_RUN_API_KEY) {
-    headers['x-api-key'] = env.CLOUD_RUN_API_KEY;
-  }
-
-  const response = await fetch(url.toString(), { headers });
-  const body = await response.text();
-  return { status: response.status, body };
 }
 
 /**
@@ -266,33 +243,9 @@ export async function onRequestGet(context) {
       redirect: 'follow',
     });
 
-    // 2단계: 429 차단 시 fallback (Cloud Run → ScraperAPI → Dataimpulse → unknown)
+    // 2단계: 429 rate limit 시 fallback (ScraperAPI → Dataimpulse → unknown)
     if (response.status === 429) {
-      // Fallback 1: Google Cloud Run (Google IP로 Instagram fetch)
-      if (hasCloudRunConfig(env)) {
-        try {
-          const cloudRunResult = await fetchViaCloudRun(sanitizedUsername, env);
-
-          if (cloudRunResult.status === 404) {
-            return jsonResponse({
-              username: sanitizedUsername,
-              status: 'deleted',
-              accessible: false,
-            });
-          }
-
-          if (cloudRunResult.status === 200) {
-            const result = parseAccountFromHtml(cloudRunResult.body, sanitizedUsername);
-            return jsonResponse(result);
-          }
-
-          // 2xx 이외 → 다음 fallback으로
-        } catch {
-          // Cloud Run 네트워크 에러 → 다음 fallback으로
-        }
-      }
-
-      // Fallback 2: 스크래핑 API (표준 fetch()로 동작)
+      // Fallback 1: ScraperAPI (표준 fetch()로 동작)
       if (hasScraperApiConfig(env)) {
         try {
           const apiResult = await fetchViaScrapingApi(profileUrl, env);
@@ -312,11 +265,11 @@ export async function onRequestGet(context) {
 
           // 2xx 이외 → 다음 fallback으로
         } catch {
-          // 스크래핑 API 네트워크 에러 → 다음 fallback으로
+          // ScraperAPI 네트워크 에러 → 다음 fallback으로
         }
       }
 
-      // Fallback 3: Dataimpulse 레지덴셜 프록시 (Cloudflare Workers TCP 제한으로 실패 가능)
+      // Fallback 2: Dataimpulse 레지덴셜 프록시
       if (hasProxyConfig(env)) {
         try {
           const proxyResult = await fetchViaProxy(profileUrl, env);
@@ -379,47 +332,26 @@ export async function onRequestGet(context) {
     const html = await response.text();
     const result = parseAccountFromHtml(html, sanitizedUsername);
 
-    // 200이지만 og 태그가 없는 경우 (로그인 월/챌린지 페이지 가능성)
-    // Cloud Run으로 재시도하여 실제 프로필 확인
-    if (result.status === 'deleted_or_restricted' && hasCloudRunConfig(env)) {
+    // 200이지만 og 태그가 없는 경우 = Instagram이 클라우드 IP에 로그인 월 반환
+    // Dataimpulse 레지덴셜 프록시로 재시도하여 실제 프로필 확인
+    if (result.status === 'deleted_or_restricted' && hasProxyConfig(env)) {
       try {
-        const cloudRunResult = await fetchViaCloudRun(sanitizedUsername, env);
-        if (cloudRunResult.status === 200) {
-          const retryResult = parseAccountFromHtml(cloudRunResult.body, sanitizedUsername);
-          if (retryResult.status !== 'deleted_or_restricted') {
-            return jsonResponse(retryResult);
-          }
+        const proxyResult = await fetchViaProxy(profileUrl, env);
+
+        if (proxyResult.status === 200) {
+          const retryResult = parseAccountFromHtml(proxyResult.body, sanitizedUsername);
+          return jsonResponse(retryResult);
         }
-        if (cloudRunResult.status === 404) {
+
+        if (proxyResult.status === 404) {
           return jsonResponse({
             username: sanitizedUsername,
             status: 'deleted',
             accessible: false,
           });
         }
-        if (cloudRunResult.status === 401) {
-          return jsonResponse({
-            username: sanitizedUsername,
-            status: 'unknown',
-            accessible: true,
-            error: 'Cloud Run auth failed (API key mismatch)',
-          });
-        }
-        if (cloudRunResult.status !== 200) {
-          return jsonResponse({
-            username: sanitizedUsername,
-            status: 'unknown',
-            accessible: true,
-            error: `Cloud Run HTTP ${cloudRunResult.status}`,
-          });
-        }
-      } catch (cloudRunError) {
-        return jsonResponse({
-          username: sanitizedUsername,
-          status: 'unknown',
-          accessible: true,
-          error: `Cloud Run failed: ${cloudRunError.message || 'network error'}`,
-        });
+      } catch {
+        // Dataimpulse 실패 → 원래 deleted_or_restricted 반환
       }
     }
 
