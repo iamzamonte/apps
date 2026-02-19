@@ -1939,7 +1939,7 @@
                     followedAt: followingTimestamps.get(acc.username) || 0
                 }));
 
-                const inactiveStatuses = ['deleted', 'deleted_or_restricted', 'restricted'];
+                const inactiveStatuses = ['deleted', 'restricted'];
                 const activeAccounts = accountStatuses
                     .filter(acc => !inactiveStatuses.includes(acc.status))
                     .sort((a, b) => a.username.localeCompare(b.username));
@@ -2069,7 +2069,7 @@
             div.className = 'account-item';
             const safeUsername = acc.username.replace(/[^a-zA-Z0-9._]/g, '');
             const initial = safeUsername.charAt(0).toUpperCase();
-            const isUnverified = acc.status === 'unknown' || acc.status === 'error';
+            const isUnverified = acc.status === 'unknown' || acc.status === 'error' || acc.status === 'deleted_or_restricted';
             const igIcon = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="white" stroke="none"/></svg>';
             const fallbackAvatar = isUnverified ? igIcon : (acc.is_private ? '\u{1F4F7}' : initial);
 

@@ -379,6 +379,29 @@ export async function onRequestGet(context) {
     const html = await response.text();
     const result = parseAccountFromHtml(html, sanitizedUsername);
 
+    // 200이지만 og 태그가 없는 경우 (로그인 월/챌린지 페이지 가능성)
+    // Cloud Run으로 재시도하여 실제 프로필 확인
+    if (result.status === 'deleted_or_restricted' && hasCloudRunConfig(env)) {
+      try {
+        const cloudRunResult = await fetchViaCloudRun(sanitizedUsername, env);
+        if (cloudRunResult.status === 200) {
+          const retryResult = parseAccountFromHtml(cloudRunResult.body, sanitizedUsername);
+          if (retryResult.status !== 'deleted_or_restricted') {
+            return jsonResponse(retryResult);
+          }
+        }
+        if (cloudRunResult.status === 404) {
+          return jsonResponse({
+            username: sanitizedUsername,
+            status: 'deleted',
+            accessible: false,
+          });
+        }
+      } catch {
+        // Cloud Run 실패 → 원래 결과 반환
+      }
+    }
+
     return jsonResponse(result);
   } catch (error) {
     return jsonResponse({
