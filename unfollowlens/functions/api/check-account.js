@@ -397,8 +397,29 @@ export async function onRequestGet(context) {
             accessible: false,
           });
         }
-      } catch {
-        // Cloud Run 실패 → 원래 결과 반환
+        if (cloudRunResult.status === 401) {
+          return jsonResponse({
+            username: sanitizedUsername,
+            status: 'unknown',
+            accessible: true,
+            error: 'Cloud Run auth failed (API key mismatch)',
+          });
+        }
+        if (cloudRunResult.status !== 200) {
+          return jsonResponse({
+            username: sanitizedUsername,
+            status: 'unknown',
+            accessible: true,
+            error: `Cloud Run HTTP ${cloudRunResult.status}`,
+          });
+        }
+      } catch (cloudRunError) {
+        return jsonResponse({
+          username: sanitizedUsername,
+          status: 'unknown',
+          accessible: true,
+          error: `Cloud Run failed: ${cloudRunError.message || 'network error'}`,
+        });
       }
     }
 
