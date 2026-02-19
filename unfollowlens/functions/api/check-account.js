@@ -4,16 +4,21 @@
  * Instagram 프로필 HTML 페이지의 og:* 메타태그를 파싱하여
  * 계정 상태와 프로필 사진을 가져옵니다.
  *
- * 429 응답 시 스크래핑 API 또는 레지덴셜 프록시로 fallback합니다.
+ * 429 응답 시 아래 순서로 fallback합니다:
+ *   1. Google Cloud Run 프록시 (권장 - Google IP 사용)
+ *   2. ScraperAPI (스크래핑 전문 서비스)
+ *   3. Dataimpulse 레지덴셜 프록시 (TCP 소켓 직접 연결)
  *
  * Route: GET /api/check-account?username=<username>
  *
  * 환경변수 (선택 - Cloudflare Dashboard에서 설정):
- *   SCRAPER_API_KEY - ScraperAPI 키 (권장, https://www.scraperapi.com)
- *   PROXY_HOST - 프록시 호스트 (예: gw.dataimpulse.com)
- *   PROXY_PORT - 프록시 포트 (예: 823)
- *   PROXY_USER - 프록시 로그인 (예: login__cr.us)
- *   PROXY_PASS - 프록시 비밀번호
+ *   CLOUD_RUN_URL     - Cloud Run 서비스 URL (예: https://unfollowlens-proxy-xxx.run.app)
+ *   CLOUD_RUN_API_KEY - Cloud Run 인증 키 (openssl rand -hex 32 으로 생성)
+ *   SCRAPER_API_KEY   - ScraperAPI 키 (https://www.scraperapi.com)
+ *   PROXY_HOST        - Dataimpulse 프록시 호스트 (예: gw.dataimpulse.com)
+ *   PROXY_PORT        - Dataimpulse 프록시 포트 (예: 823)
+ *   PROXY_USER        - Dataimpulse 로그인 (예: login__cr.us)
+ *   PROXY_PASS        - Dataimpulse 비밀번호
  */
 
 import { connect } from 'cloudflare:sockets';
@@ -76,12 +81,38 @@ function parseAccountFromHtml(html, username) {
   };
 }
 
+function hasCloudRunConfig(env) {
+  return Boolean(env && env.CLOUD_RUN_URL);
+}
+
 function hasScraperApiConfig(env) {
   return Boolean(env && env.SCRAPER_API_KEY);
 }
 
 function hasProxyConfig(env) {
   return Boolean(env && env.PROXY_HOST && env.PROXY_USER && env.PROXY_PASS);
+}
+
+/**
+ * Google Cloud Run 프록시를 통해 Instagram 프로필을 가져옵니다.
+ *
+ * Cloud Run 서버가 Google IP로 Instagram을 직접 fetch하여 HTML을 반환합니다.
+ * x-api-key 헤더로 무단 접근을 차단합니다.
+ *
+ * @returns {{ status: number, body: string }}
+ */
+async function fetchViaCloudRun(username, env) {
+  const url = new URL('/check-account', env.CLOUD_RUN_URL);
+  url.searchParams.set('username', username);
+
+  const headers = { Accept: 'text/html' };
+  if (env.CLOUD_RUN_API_KEY) {
+    headers['x-api-key'] = env.CLOUD_RUN_API_KEY;
+  }
+
+  const response = await fetch(url.toString(), { headers });
+  const body = await response.text();
+  return { status: response.status, body };
 }
 
 /**
@@ -235,9 +266,33 @@ export async function onRequestGet(context) {
       redirect: 'follow',
     });
 
-    // 2단계: 429 차단 시 fallback (스크래핑 API → 프록시 → unknown)
+    // 2단계: 429 차단 시 fallback (Cloud Run → ScraperAPI → Dataimpulse → unknown)
     if (response.status === 429) {
-      // Fallback 1: 스크래핑 API (권장 — 표준 fetch()로 동작)
+      // Fallback 1: Google Cloud Run (Google IP로 Instagram fetch)
+      if (hasCloudRunConfig(env)) {
+        try {
+          const cloudRunResult = await fetchViaCloudRun(sanitizedUsername, env);
+
+          if (cloudRunResult.status === 404) {
+            return jsonResponse({
+              username: sanitizedUsername,
+              status: 'deleted',
+              accessible: false,
+            });
+          }
+
+          if (cloudRunResult.status === 200) {
+            const result = parseAccountFromHtml(cloudRunResult.body, sanitizedUsername);
+            return jsonResponse(result);
+          }
+
+          // 2xx 이외 → 다음 fallback으로
+        } catch {
+          // Cloud Run 네트워크 에러 → 다음 fallback으로
+        }
+      }
+
+      // Fallback 2: 스크래핑 API (표준 fetch()로 동작)
       if (hasScraperApiConfig(env)) {
         try {
           const apiResult = await fetchViaScrapingApi(profileUrl, env);
@@ -255,13 +310,13 @@ export async function onRequestGet(context) {
             return jsonResponse(result);
           }
 
-          // 2xx 이외 (429, 500 등) → 프록시로 fallthrough
+          // 2xx 이외 → 다음 fallback으로
         } catch {
-          // 스크래핑 API 네트워크 에러 → 프록시로 fallthrough
+          // 스크래핑 API 네트워크 에러 → 다음 fallback으로
         }
       }
 
-      // Fallback 2: 레지덴셜 프록시 (Cloudflare Workers TCP 제한으로 실패 가능)
+      // Fallback 3: Dataimpulse 레지덴셜 프록시 (Cloudflare Workers TCP 제한으로 실패 가능)
       if (hasProxyConfig(env)) {
         try {
           const proxyResult = await fetchViaProxy(profileUrl, env);
