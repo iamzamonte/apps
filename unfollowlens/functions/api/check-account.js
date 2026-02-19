@@ -24,7 +24,7 @@
  *   PROXY_PASS      - Dataimpulse 비밀번호
  */
 
-import { connect } from 'cloudflare:sockets';
+import tls from 'node:tls';
 
 const NO_CACHE_HEADERS = { 'Cache-Control': 'no-store, no-cache, must-revalidate' };
 
@@ -116,14 +116,14 @@ async function fetchViaScrapingApi(profileUrl, env) {
 /**
  * CONNECT 터널을 통해 Instagram 프로필을 가져옵니다.
  *
- * 흐름:
- *   connect(starttls) → startTls() [outer TLS, 프록시]
- *   → CONNECT hostname:443 → 200 OK
- *   → startTls() [inner TLS, instagram.com]
+ * 흐름 (node:tls 이중 TLS):
+ *   tls.connect(proxy:823) [outer TLS]
+ *   → CONNECT instagram.com:443 → 200 OK
+ *   → tls.connect({ socket: outerSocket }) [inner TLS]
  *   → GET /path/ HTTP/1.0 → 응답 파싱
  *
- * 포트 823은 TLS(HTTPS proxy)이므로 starttls → startTls()로 outer TLS를 맺습니다.
- * HTTPS 목적지는 CONNECT 터널 후 inner TLS로 처리합니다.
+ * cloudflare:sockets의 startTls() 이중 호출 제한을 node:tls로 우회합니다.
+ * (nodejs_compat 플래그 필요)
  *
  * @returns {{ status: number, body: string }}
  */
@@ -131,50 +131,56 @@ async function fetchViaProxy(profileUrl, env) {
   const target = new URL(profileUrl);
   const proxyPort = parseInt(env.PROXY_PORT || '823', 10);
   const auth = btoa(`${env.PROXY_USER}:${env.PROXY_PASS}`);
-  const encoder = new TextEncoder();
-  const decoder = new TextDecoder();
 
-  // 1. 프록시에 TCP 연결 (starttls 모드 — 이후 startTls()로 TLS 업그레이드)
-  const rawSocket = connect(
-    { hostname: env.PROXY_HOST, port: proxyPort },
-    { secureTransport: 'starttls', allowHalfOpen: false },
-  );
+  // 1. 프록시에 outer TLS 연결 (포트 823 = HTTPS proxy)
+  const outerSocket = await new Promise((resolve, reject) => {
+    const s = tls.connect(
+      { host: env.PROXY_HOST, port: proxyPort, rejectUnauthorized: false },
+      () => resolve(s),
+    );
+    s.on('error', (e) => reject(new Error(`Proxy TLS error: ${e.message}`)));
+    s.setTimeout(15000, () => {
+      s.destroy();
+      reject(new Error('Proxy connection timeout'));
+    });
+  });
 
-  // 2. 프록시와 outer TLS 핸드셰이크 (포트 823은 TLS 필수)
-  const outerSocket = rawSocket.startTls({ expectedServerHostname: env.PROXY_HOST });
+  // 2. CONNECT 터널 요청 후 200 OK 대기
+  await new Promise((resolve, reject) => {
+    const connectReq =
+      `CONNECT ${target.hostname}:443 HTTP/1.0\r\n` +
+      `Host: ${target.hostname}:443\r\n` +
+      `Proxy-Authorization: Basic ${auth}\r\n` +
+      `\r\n`;
 
-  // 3. CONNECT 터널 요청 (outer TLS 위에서)
-  const connectReq =
-    `CONNECT ${target.hostname}:443 HTTP/1.0\r\n` +
-    `Host: ${target.hostname}:443\r\n` +
-    `Proxy-Authorization: Basic ${auth}\r\n` +
-    `\r\n`;
+    outerSocket.write(connectReq, 'utf8');
 
-  const outerWriter = outerSocket.writable.getWriter();
-  await outerWriter.write(encoder.encode(connectReq));
-  outerWriter.releaseLock();
+    let buf = '';
+    const onData = (chunk) => {
+      buf += chunk.toString('utf8');
+      if (buf.includes('\r\n\r\n') || buf.includes('\n\n')) {
+        outerSocket.removeListener('data', onData);
+        const statusLine = buf.split(/\r?\n/)[0];
+        const match = statusLine.match(/HTTP\/[\d.]+\s+(\d+)/);
+        const code = match ? parseInt(match[1], 10) : 0;
+        if (code === 200) resolve();
+        else reject(new Error(`CONNECT failed: ${statusLine.trim()}`));
+      }
+    };
+    outerSocket.on('data', onData);
+    outerSocket.once('error', (e) => reject(new Error(`CONNECT error: ${e.message}`)));
+  });
 
-  // 4. CONNECT 200 OK 대기
-  const outerReader = outerSocket.readable.getReader();
-  let connectResponse = '';
-  for (;;) {
-    const { value, done } = await outerReader.read();
-    if (done) throw new Error('Proxy closed connection during CONNECT');
-    connectResponse += decoder.decode(value, { stream: true });
-    if (connectResponse.includes('\r\n\r\n')) break;
-  }
-  outerReader.releaseLock();
+  // 3. inner TLS 핸드셰이크 (instagram.com, 터널 위에서)
+  const innerSocket = await new Promise((resolve, reject) => {
+    const s = tls.connect(
+      { socket: outerSocket, host: target.hostname, rejectUnauthorized: false },
+      () => resolve(s),
+    );
+    s.on('error', (e) => reject(new Error(`Instagram TLS error: ${e.message}`)));
+  });
 
-  const connectStatusLine = connectResponse.split(/\r?\n/)[0];
-  const connectMatch = connectStatusLine.match(/HTTP\/[\d.]+\s+(\d+)/);
-  if (!connectMatch || parseInt(connectMatch[1], 10) !== 200) {
-    throw new Error(`CONNECT failed: ${connectStatusLine.trim()}`);
-  }
-
-  // 5. inner TLS 핸드셰이크 (instagram.com:443, 터널 위에서)
-  const innerSocket = outerSocket.startTls({ expectedServerHostname: target.hostname });
-
-  // 6. HTTP GET 요청 전송 (inner TLS 위에서, path 기반)
+  // 4. HTTP GET 요청 전송 (inner TLS 위에서, path 기반)
   const httpRequest =
     `GET ${target.pathname} HTTP/1.0\r\n` +
     `Host: ${target.hostname}\r\n` +
@@ -185,30 +191,21 @@ async function fetchViaProxy(profileUrl, env) {
     `Connection: close\r\n` +
     `\r\n`;
 
-  const innerWriter = innerSocket.writable.getWriter();
-  await innerWriter.write(encoder.encode(httpRequest));
-  innerWriter.releaseLock();
+  await new Promise((resolve, reject) => {
+    innerSocket.write(httpRequest, 'utf8', (err) => (err ? reject(err) : resolve()));
+  });
 
-  // 7. 전체 응답 읽기
-  const chunks = [];
-  const innerReader = innerSocket.readable.getReader();
-  for (;;) {
-    const { value, done } = await innerReader.read();
-    if (done) break;
-    chunks.push(value);
-  }
+  // 5. 전체 응답 수집
+  const fullData = await new Promise((resolve, reject) => {
+    const chunks = [];
+    innerSocket.on('data', (chunk) => chunks.push(chunk));
+    innerSocket.on('end', () => resolve(Buffer.concat(chunks)));
+    innerSocket.on('error', reject);
+  });
+  innerSocket.destroy();
 
-  const totalLength = chunks.reduce((sum, chunk) => sum + chunk.length, 0);
-  const fullData = new Uint8Array(totalLength);
-  let offset = 0;
-  for (const chunk of chunks) {
-    fullData.set(chunk, offset);
-    offset += chunk.length;
-  }
-
-  const responseText = decoder.decode(fullData);
-
-  // 8. HTTP 응답 파싱 (status line + headers + body)
+  // 6. HTTP 응답 파싱 (status line + headers + body)
+  const responseText = fullData.toString('utf8');
   const crlfIndex = responseText.indexOf('\r\n\r\n');
   const lfIndex = responseText.indexOf('\n\n');
   const headerEnd = crlfIndex !== -1 ? crlfIndex : lfIndex;
