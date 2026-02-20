@@ -1,14 +1,36 @@
 steps:
+  # 1. Build — latest 태그도 함께 생성 (rollback 편의)
   - name: 'gcr.io/cloud-builders/docker'
+    id: build
     dir: unfollowlens/cloud-run
     args:
       - build
       - -t
       - gcr.io/$PROJECT_ID/unfollowlens-proxy:$COMMIT_SHA
+      - -t
+      - gcr.io/$PROJECT_ID/unfollowlens-proxy:latest
       - .
 
-images:
-  - gcr.io/$PROJECT_ID/unfollowlens-proxy:$COMMIT_SHA
+  # 2. Push — deploy 전에 이미지가 레지스트리에 있어야 함
+  - name: 'gcr.io/cloud-builders/docker'
+    id: push
+    args:
+      - push
+      - --all-tags
+      - gcr.io/$PROJECT_ID/unfollowlens-proxy
+
+  # 3. Deploy to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    id: deploy
+    entrypoint: gcloud
+    args:
+      - run
+      - deploy
+      - unfollowlens-proxy
+      - --image=gcr.io/$PROJECT_ID/unfollowlens-proxy:$COMMIT_SHA
+      - --region=us-east1
+      - --platform=managed
+      - --allow-unauthenticated
 
 options:
   logging: CLOUD_LOGGING_ONLY
