@@ -529,3 +529,87 @@ def test_set_slot_switches_image_and_shapes(app, tmp_path):
     assert canvas.image is img2
     assert canvas._shape_manager is manager2
     assert len(canvas._shape_manager.shapes) == 1
+
+
+# ── 줌 기능 테스트 ────────────────────────────────────────────
+
+def test_canvas_initial_zoom_is_one(app):
+    canvas = Canvas(ShapeManager())
+    assert canvas.zoom == 1.0
+
+
+def test_canvas_zoom_in(app, sample_image):
+    canvas = Canvas(ShapeManager())
+    canvas.load_image(sample_image)
+    canvas.zoom_in()
+    assert canvas.zoom > 1.0
+
+
+def test_canvas_zoom_out(app, sample_image):
+    canvas = Canvas(ShapeManager())
+    canvas.load_image(sample_image)
+    canvas.zoom_out()
+    assert canvas.zoom < 1.0
+
+
+def test_canvas_zoom_reset(app, sample_image):
+    canvas = Canvas(ShapeManager())
+    canvas.load_image(sample_image)
+    canvas.zoom_in()
+    canvas.zoom_in()
+    assert canvas.zoom > 1.0
+    canvas.zoom_reset()
+    assert abs(canvas.zoom - 1.0) < 0.01
+
+
+def test_canvas_zoom_clamped_min(app, sample_image):
+    from src.ui.canvas import MIN_ZOOM
+    canvas = Canvas(ShapeManager())
+    canvas.load_image(sample_image)
+    canvas.set_zoom(0.01)
+    assert canvas.zoom >= MIN_ZOOM
+
+
+def test_canvas_zoom_clamped_max(app, sample_image):
+    from src.ui.canvas import MAX_ZOOM
+    canvas = Canvas(ShapeManager())
+    canvas.load_image(sample_image)
+    canvas.set_zoom(100.0)
+    assert canvas.zoom <= MAX_ZOOM
+
+
+def test_canvas_zoom_changes_widget_size(app, sample_image):
+    canvas = Canvas(ShapeManager())
+    canvas.load_image(sample_image)
+    w_before = canvas.width()
+    canvas.set_zoom(2.0)
+    assert canvas.width() > w_before
+
+
+def test_canvas_zoom_changed_signal(app, sample_image):
+    canvas = Canvas(ShapeManager())
+    canvas.load_image(sample_image)
+    received = []
+    canvas.zoom_changed.connect(received.append)
+    canvas.zoom_in()
+    assert len(received) == 1
+    assert received[0] > 1.0
+
+
+def test_set_slot_restores_zoom(app):
+    from PIL import Image as PILImage
+    manager = ShapeManager()
+    canvas = Canvas(manager)
+    img = PILImage.new("RGB", (100, 80), (255, 0, 0))
+    pixmap = _pil_to_pixmap(img)
+    canvas.set_slot(img, 1.0, pixmap, manager, zoom=2.0)
+    assert abs(canvas.zoom - 2.0) < 0.01
+
+
+def test_canvas_scale_unaffected_by_zoom(app, sample_image):
+    """scale 속성은 base_scale을 반환하며 줌 영향을 받지 않는다."""
+    canvas = Canvas(ShapeManager())
+    canvas.load_image(sample_image)
+    base = canvas.scale
+    canvas.set_zoom(2.0)
+    assert canvas.scale == base

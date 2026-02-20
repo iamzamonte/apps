@@ -5,6 +5,7 @@ from PyQt6.QtWidgets import (
 )
 from PyQt6.QtGui import QIcon, QPixmap
 from PyQt6.QtCore import Qt, pyqtSignal, QSize
+from src.utils.theme import FILE_EXPLORER_STYLE, FILE_EXPLORER_TITLE_STYLE
 
 
 class FileExplorer(QWidget):
@@ -16,16 +17,17 @@ class FileExplorer(QWidget):
         super().__init__(parent)
         self.setMinimumWidth(140)
         self.setMaximumWidth(200)
+        self.setStyleSheet(FILE_EXPLORER_STYLE)
         self._setup_ui()
 
     def _setup_ui(self) -> None:
         layout = QVBoxLayout(self)
-        layout.setContentsMargins(4, 4, 4, 4)
-        layout.setSpacing(4)
+        layout.setContentsMargins(6, 8, 6, 6)
+        layout.setSpacing(6)
 
         title = QLabel("파일 목록")
         title.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        title.setStyleSheet("font-weight: bold; padding: 4px;")
+        title.setStyleSheet(FILE_EXPLORER_TITLE_STYLE)
         layout.addWidget(title)
 
         self._list = QListWidget()

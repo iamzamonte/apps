@@ -42,9 +42,11 @@ def test_window_has_toolbar(app):
     assert window.toolbar is not None
 
 
-def test_window_has_properties_panel(app):
+def test_toolbar_has_properties_controls(app):
+    """속성 컨트롤(선 색상, 채움, 굵기)이 툴바에 통합되어 있다."""
     window = MainWindow()
-    assert window.properties_panel is not None
+    assert window.toolbar.pen_color is not None
+    assert window.toolbar.pen_width > 0
 
 
 def test_window_has_file_explorer(app):

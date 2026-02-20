@@ -54,6 +54,13 @@ class ShapeManager:
             raise IndexError(f"Shape index {index} out of range")
         self._shapes = [*self._shapes[:index], shape, *self._shapes[index + 1:]]
 
+    def remove(self, index: int) -> None:
+        """지정 인덱스의 도형을 삭제합니다 (불변 방식)."""
+        if not (0 <= index < len(self._shapes)):
+            raise IndexError(f"Shape index {index} out of range")
+        self._shapes = [*self._shapes[:index], *self._shapes[index + 1:]]
+        self._undo_stack = []
+
     def clear(self) -> None:
         self._shapes = []
         self._undo_stack = []

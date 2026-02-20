@@ -15,6 +15,10 @@ from src.utils.constants import (
 HANDLE_SIZE = 8
 # 도형 최소 크기 (리사이즈 하한)
 MIN_SHAPE_SIZE = 4
+# 줌 범위
+MIN_ZOOM = 0.25
+MAX_ZOOM = 4.0
+ZOOM_STEP = 1.15  # 휠 한 칸당 15% 변경
 
 
 def _pil_to_pixmap(image: Image.Image) -> QPixmap:
@@ -27,6 +31,8 @@ def _pil_to_pixmap(image: Image.Image) -> QPixmap:
 class Canvas(QWidget):
     # 도형 선택/해제 시 발생 (선택된 Shape 또는 None)
     selection_changed = pyqtSignal(object)
+    # 줌 레벨 변경 시 발생 (float: 줌 비율)
+    zoom_changed = pyqtSignal(float)
 
     def __init__(self, shape_manager: ShapeManager, parent: Optional[QWidget] = None) -> None:
         super().__init__(parent)
@@ -34,7 +40,8 @@ class Canvas(QWidget):
         self._image: Optional[Image.Image] = None
         self._pixmap: Optional[QPixmap] = None
         self._handler = ImageHandler()
-        self._scale: float = 1.0
+        self._base_scale: float = 1.0
+        self._zoom: float = 1.0
 
         # 그리기 모드 상태
         self._draw_start: Optional[QPoint] = None
@@ -54,6 +61,7 @@ class Canvas(QWidget):
         self._fill_color: Optional[str] = None
 
         self.setAcceptDrops(True)
+        self.setFocusPolicy(Qt.FocusPolicy.ClickFocus)
         self.setStyleSheet(f"background: {CANVAS_BG_COLOR};")
 
     # ── 읽기 전용 속성 ──────────────────────────────────────────
@@ -63,7 +71,12 @@ class Canvas(QWidget):
 
     @property
     def scale(self) -> float:
-        return self._scale
+        """내보내기용 base scale (줌 미포함)."""
+        return self._base_scale
+
+    @property
+    def zoom(self) -> float:
+        return self._zoom
 
     # ── 선택 모드 ───────────────────────────────────────────────
     @property
@@ -119,21 +132,64 @@ class Canvas(QWidget):
             raise ValueError(f"fill_color must be a hex color string or None, got '{value}'")
         self._fill_color = value
 
+    # ── 줌 ────────────────────────────────────────────────────────
+    def set_zoom(self, zoom: float) -> None:
+        """줌 레벨을 설정하고 디스플레이를 갱신합니다."""
+        clamped = max(MIN_ZOOM, min(zoom, MAX_ZOOM))
+        if abs(clamped - self._zoom) < 0.001:
+            return
+        self._zoom = clamped
+        self._rebuild_display()
+        self.zoom_changed.emit(self._zoom)
+
+    def zoom_in(self) -> None:
+        self.set_zoom(self._zoom * ZOOM_STEP)
+
+    def zoom_out(self) -> None:
+        self.set_zoom(self._zoom / ZOOM_STEP)
+
+    def zoom_reset(self) -> None:
+        self.set_zoom(1.0)
+
+    def _rebuild_display(self) -> None:
+        """현재 줌 레벨에 맞게 디스플레이 픽스맵을 재생성합니다."""
+        if self._image is None:
+            return
+        eff = self._base_scale * self._zoom
+        display_w = max(1, int(self._image.width * eff))
+        display_h = max(1, int(self._image.height * eff))
+        display_img = self._image.resize((display_w, display_h), Image.LANCZOS)
+        self._pixmap = _pil_to_pixmap(display_img)
+        self.setFixedSize(display_w, display_h)
+        self.update()
+
+    # ── 좌표 변환 헬퍼 ────────────────────────────────────────────
+    def _to_shape_space(self, display_pos: QPoint) -> QPoint:
+        """디스플레이(줌 적용) 좌표 → 도형(base_scale) 좌표."""
+        z = self._zoom if self._zoom > 0 else 1.0
+        return QPoint(int(display_pos.x() / z), int(display_pos.y() / z))
+
+    def _to_display(self, val: int) -> int:
+        """도형 좌표 값 → 디스플레이 좌표 값."""
+        return int(val * self._zoom)
+
     # ── 이미지 로드 ─────────────────────────────────────────────
     def load_image(self, path: str, max_size: Optional[Tuple[int, int]] = None) -> None:
         self._image = self._handler.load(path)
-        self._scale = self._calc_scale(self._image.size, max_size)
-        display_w = int(self._image.width * self._scale)
-        display_h = int(self._image.height * self._scale)
+        self._base_scale = self._calc_scale(self._image.size, max_size)
+        self._zoom = 1.0
+        display_w = int(self._image.width * self._base_scale)
+        display_h = int(self._image.height * self._base_scale)
         display_img = (
             self._image.resize((display_w, display_h), Image.LANCZOS)
-            if self._scale != 1.0 else self._image
+            if self._base_scale != 1.0 else self._image
         )
         self._pixmap = _pil_to_pixmap(display_img)
         self._selected_index = None
         self._resize_handle = None
         self.setFixedSize(display_w, display_h)
         self.update()
+        self.zoom_changed.emit(self._zoom)
 
     def set_slot(
         self,
@@ -141,19 +197,25 @@ class Canvas(QWidget):
         scale: float,
         pixmap: QPixmap,
         shape_manager: ShapeManager,
+        zoom: float = 1.0,
     ) -> None:
         """멀티 파일 전환: 캔버스를 다른 파일 슬롯으로 교체합니다."""
         self._image = image
-        self._scale = scale
-        self._pixmap = pixmap
+        self._base_scale = scale
+        self._zoom = zoom
         self._shape_manager = shape_manager
         self._selected_index = None
         self._draw_start = None
         self._draw_preview = None
         self._is_dragging = False
         self._resize_handle = None
-        self.setFixedSize(pixmap.width(), pixmap.height())
+        if abs(zoom - 1.0) < 0.001:
+            self._pixmap = pixmap
+            self.setFixedSize(pixmap.width(), pixmap.height())
+        else:
+            self._rebuild_display()
         self.update()
+        self.zoom_changed.emit(self._zoom)
 
     def _calc_scale(
         self,
@@ -173,6 +235,18 @@ class Canvas(QWidget):
         self._selected_index = None
         self.update()
 
+    def delete_selected(self) -> None:
+        """선택된 도형을 삭제합니다."""
+        if self._selected_index is None:
+            return
+        if self._selected_index >= len(self._shape_manager.shapes):
+            return
+        self._shape_manager.remove(self._selected_index)
+        self._selected_index = None
+        self._resize_handle = None
+        self.selection_changed.emit(None)
+        self.update()
+
     # ── 도형 합성 내보내기 ──────────────────────────────────────
     def render_to_image(self) -> Optional[Image.Image]:
         """모든 도형을 원본 이미지에 합성한 PIL Image를 반환합니다."""
@@ -180,7 +254,7 @@ class Canvas(QWidget):
             return None
         result = self._image.copy()
         draw = ImageDraw.Draw(result, "RGBA")
-        inv = (1.0 / self._scale) if self._scale > 0 else 1.0
+        inv = (1.0 / self._base_scale) if self._base_scale > 0 else 1.0
         for shape in self._shape_manager.shapes:
             x = int(shape.x * inv)
             y = int(shape.y * inv)
@@ -221,7 +295,7 @@ class Canvas(QWidget):
 
     # ── 리사이즈 핸들 ────────────────────────────────────────────
     def _handle_rects(self, shape: Shape) -> Dict[str, QRect]:
-        """선택된 도형의 8개 리사이즈 핸들 QRect를 반환합니다."""
+        """선택된 도형의 8개 리사이즈 핸들 QRect (base_scale 좌표)를 반환합니다."""
         x, y, w, h = shape.x, shape.y, shape.width, shape.height
         hs = HANDLE_SIZE // 2
         cx = x + w // 2
@@ -237,8 +311,8 @@ class Canvas(QWidget):
             'se': QRect(x + w - hs,  y + h - hs,  HANDLE_SIZE, HANDLE_SIZE),
         }
 
-    def _get_handle_at(self, pos: QPoint) -> Optional[str]:
-        """pos 위치에 해당하는 핸들 이름('nw'~'se')을 반환합니다. 없으면 None."""
+    def _get_handle_at(self, shape_pos: QPoint) -> Optional[str]:
+        """shape_pos(base_scale 좌표)에 해당하는 핸들 이름을 반환합니다."""
         if self._selected_index is None:
             return None
         shapes = self._shape_manager.shapes
@@ -248,7 +322,7 @@ class Canvas(QWidget):
         for name, rect in self._handle_rects(shape).items():
             # 클릭 감도를 위해 3px 여백 추가
             hit = QRect(rect.x() - 3, rect.y() - 3, rect.width() + 6, rect.height() + 6)
-            if hit.contains(pos):
+            if hit.contains(shape_pos):
                 return name
         return None
 
@@ -257,41 +331,52 @@ class Canvas(QWidget):
         painter = QPainter(self)
         if self._pixmap:
             painter.drawPixmap(0, 0, self._pixmap)
+        z = self._zoom
         for i, shape in enumerate(self._shape_manager.shapes):
-            self._draw_shape(painter, shape)
+            self._draw_shape(painter, shape, z)
             if i == self._selected_index:
-                self._draw_selection_indicator(painter, shape)
+                self._draw_selection_indicator(painter, shape, z)
         if self._draw_preview:
-            self._draw_preview_shape(painter)
+            self._draw_preview_shape(painter, z)
 
-    def _draw_shape(self, painter: QPainter, shape: Shape) -> None:
-        pen = QPen(QColor(shape.pen_color), shape.pen_width)
+    def _draw_shape(self, painter: QPainter, shape: Shape, z: float) -> None:
+        pen = QPen(QColor(shape.pen_color), max(1, shape.pen_width * z))
         painter.setPen(pen)
         painter.setBrush(QColor(shape.fill_color) if shape.fill_color else Qt.BrushStyle.NoBrush)
-        rect = QRect(shape.x, shape.y, shape.width, shape.height)
+        rect = QRect(
+            self._to_display(shape.x), self._to_display(shape.y),
+            self._to_display(shape.width), self._to_display(shape.height),
+        )
         if shape.shape_type == ShapeType.RECTANGLE:
             painter.drawRect(rect)
         elif shape.shape_type == ShapeType.ELLIPSE:
             painter.drawEllipse(rect)
 
-    def _draw_selection_indicator(self, painter: QPainter, shape: Shape) -> None:
+    def _draw_selection_indicator(self, painter: QPainter, shape: Shape, z: float) -> None:
         """선택된 도형 주위에 점선 테두리와 8개 리사이즈 핸들을 표시합니다."""
+        dx, dy = self._to_display(shape.x), self._to_display(shape.y)
+        dw, dh = self._to_display(shape.width), self._to_display(shape.height)
         # 점선 테두리
         pen = QPen(QColor("#0080FF"), 1, Qt.PenStyle.DashLine)
         painter.setPen(pen)
         painter.setBrush(Qt.BrushStyle.NoBrush)
-        rect = QRect(shape.x - 3, shape.y - 3, shape.width + 6, shape.height + 6)
-        painter.drawRect(rect)
-        # 8개 핸들 (흰 배경 + 파란 테두리)
+        painter.drawRect(QRect(dx - 3, dy - 3, dw + 6, dh + 6))
+        # 8개 핸들 (흰 배경 + 파란 테두리) — 화면 고정 크기
         painter.setPen(QPen(QColor("#0080FF"), 1))
         painter.setBrush(QBrush(QColor("#FFFFFF")))
         for handle_rect in self._handle_rects(shape).values():
-            painter.drawRect(handle_rect)
+            display_rect = QRect(
+                self._to_display(handle_rect.x()),
+                self._to_display(handle_rect.y()),
+                HANDLE_SIZE, HANDLE_SIZE,
+            )
+            painter.drawRect(display_rect)
 
-    def _draw_preview_shape(self, painter: QPainter) -> None:
-        pen = QPen(QColor(self._pen_color), self._pen_width, Qt.PenStyle.DashLine)
+    def _draw_preview_shape(self, painter: QPainter, z: float) -> None:
+        pen = QPen(QColor(self._pen_color), max(1, self._pen_width * z), Qt.PenStyle.DashLine)
         painter.setPen(pen)
         painter.setBrush(Qt.BrushStyle.NoBrush)
+        # _draw_preview는 이미 디스플레이 좌표로 저장됨
         if self._current_shape_type == ShapeType.RECTANGLE:
             painter.drawRect(self._draw_preview)
         elif self._current_shape_type == ShapeType.ELLIPSE:
@@ -301,9 +386,9 @@ class Canvas(QWidget):
     def mousePressEvent(self, event) -> None:
         if event.button() != Qt.MouseButton.LeftButton:
             return
-        pos = event.position().toPoint()
+        display_pos = event.position().toPoint()
+        pos = self._to_shape_space(display_pos)
         if self._select_mode:
-            # 리사이즈 핸들 우선 확인 (선택된 도형이 있을 때)
             handle = self._get_handle_at(pos)
             if handle:
                 self._resize_handle = handle
@@ -312,7 +397,7 @@ class Canvas(QWidget):
                 self._resize_handle = None
                 self._handle_select_press(pos)
         else:
-            self._draw_start = pos
+            self._draw_start = display_pos
 
     def _handle_select_press(self, pos: QPoint) -> None:
         shapes = self._shape_manager.shapes
@@ -330,14 +415,15 @@ class Canvas(QWidget):
         self.update()
 
     def mouseMoveEvent(self, event) -> None:
-        pos = event.position().toPoint()
+        display_pos = event.position().toPoint()
+        pos = self._to_shape_space(display_pos)
         if self._select_mode:
             if self._resize_handle is not None and self._selected_index is not None:
                 self._handle_resize_move(pos)
             elif self._is_dragging and self._selected_index is not None:
                 self._handle_select_move(pos)
         elif self._draw_start:
-            self._draw_preview = QRect(self._draw_start, pos).normalized()
+            self._draw_preview = QRect(self._draw_start, display_pos).normalized()
             self.update()
 
     def _handle_select_move(self, pos: QPoint) -> None:
@@ -367,7 +453,6 @@ class Canvas(QWidget):
         x, y, w, h = old.x, old.y, old.width, old.height
         handle = self._resize_handle
 
-        # 'n'/'s'/'w'/'e' 문자 포함 여부로 방향 판단
         if 'n' in handle:
             new_h = y + h - pos.y()
             if new_h > MIN_SHAPE_SIZE:
@@ -405,13 +490,20 @@ class Canvas(QWidget):
             self._resize_handle = None
             return
         if self._draw_start:
-            pos = event.position().toPoint()
-            rect = QRect(self._draw_start, pos).normalized()
-            if rect.width() > 2 and rect.height() > 2:
+            display_pos = event.position().toPoint()
+            display_rect = QRect(self._draw_start, display_pos).normalized()
+            # 디스플레이 좌표 → 도형(base_scale) 좌표
+            shape_rect = QRect(
+                self._to_shape_space(QPoint(display_rect.x(), display_rect.y())).x(),
+                self._to_shape_space(QPoint(display_rect.x(), display_rect.y())).y(),
+                int(display_rect.width() / self._zoom) if self._zoom > 0 else display_rect.width(),
+                int(display_rect.height() / self._zoom) if self._zoom > 0 else display_rect.height(),
+            )
+            if shape_rect.width() > 2 and shape_rect.height() > 2:
                 self._shape_manager.add(Shape(
                     shape_type=self._current_shape_type,
-                    x=rect.x(), y=rect.y(),
-                    width=rect.width(), height=rect.height(),
+                    x=shape_rect.x(), y=shape_rect.y(),
+                    width=shape_rect.width(), height=shape_rect.height(),
                     pen_color=self._pen_color,
                     pen_width=self._pen_width,
                     fill_color=self._fill_color,
@@ -419,6 +511,23 @@ class Canvas(QWidget):
             self._draw_start = None
             self._draw_preview = None
             self.update()
+
+    # ── 키보드 이벤트 ──────────────────────────────────────────────
+    def keyPressEvent(self, event) -> None:
+        if event.key() in (Qt.Key.Key_Delete, Qt.Key.Key_Backspace):
+            self.delete_selected()
+        else:
+            super().keyPressEvent(event)
+
+    # ── 마우스 휠 (줌) ────────────────────────────────────────────
+    def wheelEvent(self, event) -> None:
+        if self._image is None:
+            return
+        delta = event.angleDelta().y()
+        if delta > 0:
+            self.zoom_in()
+        elif delta < 0:
+            self.zoom_out()
 
     # ── 드래그 & 드롭 ────────────────────────────────────────────
     def dragEnterEvent(self, event) -> None:
