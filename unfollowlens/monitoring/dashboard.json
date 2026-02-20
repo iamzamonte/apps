@@ -1,6 +1,7 @@
 {
   "displayName": "Unfollowlens",
   "mosaicLayout": {
+    "columns": 12,
     "tiles": [
       {
         "width": 6,
@@ -10,6 +11,7 @@
           "xyChart": {
             "dataSets": [
               {
+                "plotType": "STACKED_BAR",
                 "timeSeriesQuery": {
                   "timeSeriesFilter": {
                     "filter": "resource.type=\"cloud_run_revision\" AND resource.labels.service_name=\"unfollowlens-proxy\" AND metric.type=\"run.googleapis.com/request_count\"",
@@ -35,6 +37,36 @@
           "xyChart": {
             "dataSets": [
               {
+                "legendTemplate": "p50",
+                "plotType": "LINE",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "resource.type=\"cloud_run_revision\" AND resource.labels.service_name=\"unfollowlens-proxy\" AND metric.type=\"run.googleapis.com/request_latencies\"",
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_PERCENTILE_50",
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_50"
+                    }
+                  }
+                }
+              },
+              {
+                "legendTemplate": "p95",
+                "plotType": "LINE",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "resource.type=\"cloud_run_revision\" AND resource.labels.service_name=\"unfollowlens-proxy\" AND metric.type=\"run.googleapis.com/request_latencies\"",
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_PERCENTILE_95",
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_95"
+                    }
+                  }
+                }
+              },
+              {
+                "legendTemplate": "p99",
+                "plotType": "LINE",
                 "timeSeriesQuery": {
                   "timeSeriesFilter": {
                     "filter": "resource.type=\"cloud_run_revision\" AND resource.labels.service_name=\"unfollowlens-proxy\" AND metric.type=\"run.googleapis.com/request_latencies\"",
@@ -46,7 +78,11 @@
                   }
                 }
               }
-            ]
+            ],
+            "yAxis": {
+              "label": "ms",
+              "scale": "LINEAR"
+            }
           }
         }
       },
@@ -59,6 +95,7 @@
           "xyChart": {
             "dataSets": [
               {
+                "plotType": "LINE",
                 "timeSeriesQuery": {
                   "timeSeriesFilter": {
                     "filter": "resource.type=\"cloud_run_revision\" AND resource.labels.service_name=\"unfollowlens-proxy\" AND metric.type=\"run.googleapis.com/container/instance_count\"",
@@ -84,6 +121,7 @@
           "xyChart": {
             "dataSets": [
               {
+                "plotType": "LINE",
                 "timeSeriesQuery": {
                   "timeSeriesFilter": {
                     "filter": "resource.type=\"cloud_run_revision\" AND resource.labels.service_name=\"unfollowlens-proxy\" AND metric.type=\"run.googleapis.com/container/cpu/utilizations\"",
@@ -109,6 +147,7 @@
           "xyChart": {
             "dataSets": [
               {
+                "plotType": "LINE",
                 "timeSeriesQuery": {
                   "timeSeriesFilter": {
                     "filter": "resource.type=\"cloud_run_revision\" AND resource.labels.service_name=\"unfollowlens-proxy\" AND metric.type=\"run.googleapis.com/container/memory/utilizations\"",
@@ -133,6 +172,7 @@
           "xyChart": {
             "dataSets": [
               {
+                "plotType": "LINE",
                 "timeSeriesQuery": {
                   "timeSeriesFilter": {
                     "filter": "resource.type=\"uptime_url\" AND metric.type=\"monitoring.googleapis.com/uptime_check/check_passed\"",
