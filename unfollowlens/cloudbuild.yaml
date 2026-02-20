@@ -1,12 +1,11 @@
 steps:
   - name: 'gcr.io/cloud-builders/docker'
+    dir: unfollowlens/cloud-run
     args:
       - build
       - -t
       - gcr.io/$PROJECT_ID/unfollowlens-proxy:$COMMIT_SHA
-      - -f
-      - unfollowlens/cloud-run/Dockerfile
-      - unfollowlens/cloud-run
+      - .
 
 images:
   - gcr.io/$PROJECT_ID/unfollowlens-proxy:$COMMIT_SHA

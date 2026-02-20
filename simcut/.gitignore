@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+
+# PyInstaller
+build/
+dist/
+# simcut.spec은 빌드 재현을 위해 추적 (예외)
+
+# pytest
+.pytest_cache/
+.coverage
+htmlcov/
+
+# macOS
+.DS_Store
