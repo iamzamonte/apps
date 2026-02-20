@@ -250,6 +250,19 @@ export async function onRequestGet(context) {
     }
 
     if (response.status === 404) {
+      if (hasCloudRunConfig(env)) {
+        try {
+          const proxyResult = await fetchViaCloudRun(profileUrl, env);
+
+          if (proxyResult.status === 200) {
+            const result = parseAccountFromHtml(proxyResult.body, sanitizedUsername);
+            return jsonResponse(result);
+          }
+        } catch {
+          // Cloud Run 실패 → 원래 404 결과 반환
+        }
+      }
+
       return jsonResponse({
         username: sanitizedUsername,
         status: 'deleted',
