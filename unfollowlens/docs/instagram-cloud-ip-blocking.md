@@ -1,7 +1,8 @@
 # Instagram Cloud IP 차단 문제
 
 > 작성일: 2026-02-19
-> 상태: **로컬 검증 완료 — 배포 후 확인 필요**
+> 최종 수정: 2026-02-20
+> 상태: **해결됨**
 
 ## 현상
 
@@ -10,20 +11,19 @@ ZIP 파일을 업로드하면 일부 계정(`@littleghost_cafe` 등)이:
 | 환경 | 결과 |
 |------|------|
 | 로컬 (자택 IP) | 활성 목록 + 프로필 사진 표시 |
-| 운영 (unfollowlens.com) | 활성 목록 + 미확인 배지 (사진 없음) |
-
-※ 운영 배포 전 구버전 캐시가 남아 있을 경우 "제외된 계정"으로 표시될 수 있음 → `_headers` 캐시 무효화로 해결됨
+| 운영 (unfollowlens.com) | "삭제됨"으로 잘못 분류 (사진 없음) |
 
 ## 근본 원인
 
 ### Instagram의 클라우드 IP 감지
 
-Instagram은 클라우드 서버 IP를 감지하여 프로필 페이지 대신 로그인 페이지를 반환한다.
+Instagram은 클라우드 서버 IP를 감지하여 프로필 페이지 대신 **로그인 페이지** 또는 **404**를 반환한다.
 
 ```
 클라우드 IP (Cloudflare / Google Cloud Run)
 → GET https://www.instagram.com/littleghost_cafe/
 ← HTTP 200, <title>Login • Instagram</title>  ← og 태그 없음
+← 또는 HTTP 404                                ← 유효 계정도 404 반환
 
 자택/레지덴셜 IP
 → GET https://www.instagram.com/littleghost_cafe/
@@ -31,67 +31,183 @@ Instagram은 클라우드 서버 IP를 감지하여 프로필 페이지 대신 �
 ```
 
 `parseAccountFromHtml()`은 og 태그가 없으면 `deleted_or_restricted`를 반환하므로,
-실제로 존재하는 계정이 확인 불가 상태로 처리된다.
+실제로 존재하는 계정이 확인 불가 또는 삭제 상태로 처리된다.
 
-## 현재 Fallback 체인 (Cloud Run 제거 후)
+## 해결 과정
 
-`check-account.js`의 fallback 체인:
+### Issue 1: Cloudflare Workers `startTls()` 이중 TLS 미지원
+
+**문제**: Dataimpulse 레지덴셜 프록시는 CONNECT 터널 + 이중 TLS가 필요.
+Cloudflare Workers의 `startTls()`는 이중 호출을 공식 지원하지 않아 프로덕션에서 실패.
+
+**시도한 방법**:
+1. `cloudflare:sockets` API의 `startTls()` 이중 호출 → 프로덕션에서 불안정
+2. `node:tls` (`nodejs_compat` 플래그) → Cloudflare Workers에서 완전한 `tls.connect({ socket })` 미지원
+
+**해결**: 이중 TLS 로직을 **Google Cloud Run**으로 이전.
+Cloud Run은 Node.js 22를 완전하게 지원하므로 `node:tls`의 `tls.connect({ socket })` 이중 TLS가 정상 동작.
+
+```
+[변경 전] Cloudflare Worker → Dataimpulse (이중 TLS 직접 처리) → Instagram
+[변경 후] Cloudflare Worker → Cloud Run → Dataimpulse (이중 TLS) → Instagram
+```
+
+**관련 커밋**: `e5c5f84` — refactor: 이중 TLS 프록시 로직을 Cloudflare Worker에서 Cloud Run으로 이전
+
+### Issue 2: Cloud Build Docker 빌드 에러
+
+**문제**: `cloudbuild.yaml`에서 Docker 빌드 시 에러 발생.
+
+```
+Error response from daemon: unexpected error reading Dockerfile:
+read /var/lib/docker/tmp/.../cloud-run: is a directory
+```
+
+Docker가 build context(`unfollowlens/cloud-run`)를 Dockerfile로 읽으려 시도.
+
+**시도한 방법**:
+1. `-f unfollowlens/cloud-run/Dockerfile` 플래그 추가 → 동일 에러 (build context 경로 해석 문제)
+
+**해결**: `dir` 필드로 작업 디렉토리를 명시적으로 설정하고 `.`으로 build context 지정.
+
+```yaml
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    dir: unfollowlens/cloud-run    # 작업 디렉토리 명시
+    args:
+      - build
+      - -t
+      - gcr.io/$PROJECT_ID/unfollowlens-proxy:$COMMIT_SHA
+      - .                          # 현재 디렉토리 = build context
+```
+
+추가로 push + deploy 단계를 파이프라인에 통합하여 빌드-푸시-배포 자동화 완료.
+
+**관련 커밋**: `b07709e`, `37ce275`
+
+### Issue 3: Instagram 404 응답에 Cloud Run fallback 누락
+
+**문제**: Instagram이 클라우드 IP에 대해 유효한 계정도 **404**를 반환하는 경우가 있음.
+기존 코드는 404를 받으면 Cloud Run fallback 없이 즉시 `"deleted"`로 반환.
+
+```
+429 → Cloud Run fallback 있음 ✅
+200 + 로그인 월 → Cloud Run fallback 있음 ✅
+404 → Cloud Run fallback 없음 ❌  ← 버그
+```
+
+**증거**:
+- Cloudflare API 응답: `{"status":"deleted","accessible":false}` (profile_pic_url 없음)
+- Cloud Run 직접 호출: HTTP 200, og:image 정상 반환 (427 Followers, 프로필 사진 포함)
+
+**해결**: 404 핸들러에 Cloud Run fallback 추가.
+Cloud Run이 200을 반환하면 실제 상태를 판단하고, Cloud Run도 404이면 진짜 삭제된 계정으로 처리.
+
+```javascript
+if (response.status === 404) {
+  if (hasCloudRunConfig(env)) {
+    try {
+      const proxyResult = await fetchViaCloudRun(profileUrl, env);
+      if (proxyResult.status === 200) {
+        const result = parseAccountFromHtml(proxyResult.body, sanitizedUsername);
+        return jsonResponse(result);
+      }
+    } catch {
+      // Cloud Run 실패 → 원래 404 결과 반환
+    }
+  }
+  return jsonResponse({ username, status: 'deleted', accessible: false });
+}
+```
+
+## 현재 아키텍처
+
+```
+사용자 → unfollowlens.com (Cloudflare Pages)
+             │
+             ▼
+      check-account.js (Cloudflare Pages Function)
+             │
+             ├─ 1단계: Cloudflare IP로 Instagram 직접 요청
+             │
+             ├─ 200 + og 태그 → active ✅
+             │
+             ├─ 200 + 로그인 월 (og 태그 없음) ─┐
+             ├─ 404 ─────────────────────────────┤
+             │                                    ▼
+             │                       Cloud Run (us-east1)
+             │                           │
+             │                           ▼
+             │                    Dataimpulse 레지덴셜 프록시
+             │                    (CONNECT 터널 + 이중 TLS)
+             │                           │
+             │                           ▼
+             │                       Instagram
+             │                           │
+             │                    ┌──────┴──────┐
+             │                    ▼              ▼
+             │               200 + og        404/실패
+             │               → active ✅     → deleted
+             │
+             └─ 429 → ScraperAPI → Cloud Run → unknown
+```
+
+## Fallback 체인
 
 ```
 1단계: Cloudflare IP 직접 요청
   ├─ 200 + og 태그 있음 → active ✅
-  ├─ 200 + og 태그 없음 (로그인 월) → Dataimpulse로 재시도
-  │     │   (CONNECT 터널 → inner TLS → HTTPS 요청)
-  │     ├─ Dataimpulse 200 + og 태그 있음 → active ✅
-  │     ├─ Dataimpulse 200 + og 태그 없음 → deleted_or_restricted
-  │     ├─ Dataimpulse 404 → deleted
-  │     └─ Dataimpulse 실패/미설정 → deleted_or_restricted
-  ├─ 404 → deleted
+  ├─ 200 + og 태그 없음 (로그인 월) → Cloud Run으로 재시도
+  │     ├─ Cloud Run 200 + og 태그 있음 → active ✅
+  │     ├─ Cloud Run 200 + og 태그 없음 → deleted_or_restricted
+  │     ├─ Cloud Run 404 → deleted
+  │     └─ Cloud Run 실패/미설정 → deleted_or_restricted
+  ├─ 404 → Cloud Run으로 재시도
+  │     ├─ Cloud Run 200 + og 태그 있음 → active ✅
+  │     └─ Cloud Run 404/실패/미설정 → deleted
   └─ 429 → [429 fallback 체인]
        ├─ Fallback 1: ScraperAPI
-       ├─ Fallback 2: Dataimpulse
+       ├─ Fallback 2: Cloud Run
        └─ Fallback 없음 → unknown
 ```
 
-## 진단 결과 (2026-02-20)
+## 환경변수
 
-### 포트 823 = TLS (HTTPS 프록시)
+### Cloud Run (`unfollowlens-proxy`)
 
-로컬 테스트(`scripts/test-proxy.mjs`)로 확인한 결과, Dataimpulse 포트 823은 **평문 TCP가 아닌 TLS 소켓**이다.
-따라서 기존 `secureTransport: 'off'` 방식으로 연결하면 즉시 끊긴다.
+| 변수 | 설명 |
+|------|------|
+| `API_KEY` | Cloudflare와 공유하는 인증 키 |
+| `PROXY_HOST` | Dataimpulse 프록시 호스트 (예: `gw.dataimpulse.com`) |
+| `PROXY_PORT` | Dataimpulse 프록시 포트 (기본값: `823`) |
+| `PROXY_USER` | Dataimpulse 로그인 |
+| `PROXY_PASS` | Dataimpulse 비밀번호 |
 
-### CONNECT 터널링으로 전환한 이유
+### Cloudflare Pages (`unfollowlens`)
 
-`GET https://www.instagram.com/...` 방식의 포워드 프록시 요청은 동작하지 않는다.
-올바른 흐름:
+| 변수 | 설명 |
+|------|------|
+| `CLOUD_RUN_URL` | Cloud Run 서비스 URL |
+| `CLOUD_RUN_API_KEY` | Cloud Run 인증 키 |
+| `SCRAPER_API_KEY` | ScraperAPI 키 (429 fallback용) |
+
+## 이중 TLS 흐름 (Cloud Run 내부)
 
 ```
-1. TLS 소켓으로 프록시에 연결 (outer TLS)
-2. CONNECT www.instagram.com:443 HTTP/1.1 전송
-3. 프록시가 "200 Connection established" 반환
-4. 동일 소켓 위에서 inner TLS 핸드셰이크 (이중 TLS)
-5. HTTPS GET / 요청 전송
+1. tls.connect(proxy:823)          [outer TLS — 프록시 인증]
+2. CONNECT instagram.com:443 → 200 OK
+3. tls.connect({ socket })         [inner TLS — instagram.com]
+4. GET /username/ HTTP/1.0         → HTML 반환
 ```
 
-### 로컬 테스트 성공 결과
-
-Node.js `tls.connect({ socket })` 이중 TLS로 `@littleghost_cafe` 검증:
-- `status: active` 반환
-- 프로필 사진 URL 포함
-- `og:title`, `og:description` 태그 정상 파싱
-
-### 프로덕션 구현 및 리스크
-
-`check-account.js`는 CF Workers `outerSocket.startTls()` 이중 호출로 수정됨.
-CF Workers의 `startTls()` 이중 호출이 공식 지원되지 않아 배포 환경에서 실패할 수 있다.
-
-**실패 시 대안:** `node:tls` 기반 별도 프록시 워커 또는 외부 Node.js 서비스로 프록시 요청 위임.
+Cloudflare Workers는 이중 TLS를 지원하지 않으므로,
+`node:tls`가 완전히 동작하는 Cloud Run에서 프록시 연결을 처리한다.
 
 ## 현재 사용자 경험
 
 | 계정 유형 | API 응답 | UI 표시 |
 |----------|---------|--------|
 | 정상 접근 가능한 계정 | `active` | 활성 목록 + 프로필 사진 |
-| Dataimpulse로 접근 성공한 계정 | `active` | 활성 목록 + 프로필 사진 |
-| Dataimpulse도 로그인 월 반환 | `deleted_or_restricted` | 활성 목록 + 확인불가 배지 |
-| 실제 삭제/비활성 계정 | `deleted` | 제외된 계정 목록 |
+| Cloud Run으로 접근 성공한 계정 | `active` | 활성 목록 + 프로필 사진 |
+| Cloud Run도 로그인 월 반환 | `deleted_or_restricted` | 활성 목록 + 확인불가 배지 |
+| Cloud Run도 404 반환 (진짜 삭제) | `deleted` | 제외된 계정 목록 |
