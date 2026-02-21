@@ -375,7 +375,7 @@ google.com, pub-4674053917795285, DIRECT, f08c47fec0942fa0
 
 - [x] hreflang 16개 언어 서브디렉토리 URL + x-default
 - [x] `?lang=ko` → `/ko` 301 리다이렉트 (하위 호환)
-- [x] FAQPage JSON-LD 구조화 데이터 (6개 질문)
+- [x] FAQPage JSON-LD 구조화 데이터 (7개 질문)
 - [x] canonical URL 동적 업데이트 (언어 전환 시)
 - [x] sitemap.xml 언어별 URL 엔트리 (상호 hreflang 참조)
 

@@ -342,7 +342,7 @@ allorigins.win, corsproxy.io 등 무료 CORS 프록시도 데이터센터 IP를 
 - [x] 16개 언어 확장 (ko, en, ja, zh, es, fr, de, pt, hi, ru, ar, tr, vi, th, id, ms)
 - [x] 서브디렉토리 i18n URL (`/ko`, `/en`) + `?lang=` 301 리다이렉트
 - [x] Cloudflare Pages 미들웨어 URL 라우팅
-- [x] FAQ 섹션 (6개 질문, 아코디언 토글, FAQPage JSON-LD)
+- [x] FAQ 섹션 (7개 질문, 아코디언 토글, FAQPage JSON-LD)
 - [x] 100만 건 분석 제한 + 다국어 안내 팝업
 - [x] 언어 선택기 UI 개선 (상단 우측 드롭다운)
 - [x] hreflang 16개 언어 서브디렉토리 URL
