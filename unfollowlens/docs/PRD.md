@@ -20,7 +20,7 @@ UnfollowLens는 Instagram 사용자가 자신의 데이터를 업로드하여 �
 
 - Instagram 사용자 중 팔로워/팔로잉 관리에 관심 있는 사용자
 - 인플루언서, 크리에이터, 소셜 미디어 관리자
-- 다국어 사용자 (한국어, 영어, 일본어, 중국어, 스페인어)
+- 다국어 사용자 (16개 언어 지원: ko, en, ja, zh, es, fr, de, pt, hi, ru, ar, tr, vi, th, id, ms)
 
 ---
 
@@ -82,19 +82,46 @@ UnfollowLens는 Instagram 사용자가 자신의 데이터를 업로드하여 �
 
 #### F6. 다국어 지원
 
-| 언어 | 코드 |
-|------|------|
-| 한국어 | ko |
-| 영어 | en |
-| 일본어 | ja |
-| 중국어 | zh |
-| 스페인어 | es |
+| 언어 | 코드 | 언어 | 코드 |
+|------|------|------|------|
+| 한국어 | ko | 힌디어 | hi |
+| 영어 | en | 러시아어 | ru |
+| 일본어 | ja | 아랍어 | ar |
+| 중국어 | zh | 터키어 | tr |
+| 스페인어 | es | 베트남어 | vi |
+| 프랑스어 | fr | 태국어 | th |
+| 독일어 | de | 인도네시아어 | id |
+| 포르투갈어 | pt | 말레이어 | ms |
+
+- **URL 방식**: 서브디렉토리 (`/ko`, `/en`, `/ja` 등)
+- **하위 호환**: `?lang=ko` → 301 리다이렉트 → `/ko`
+- **언어 감지 우선순위**: URL 경로 → localStorage → 브라우저 언어 → `en`
+- **URL 관리**: `history.pushState`/`replaceState`로 새로고침 없이 URL 전환
 
 #### F7. Instagram 데이터 다운로드 가이드
 
 - 모바일 앱 가이드 (단계별 설명)
 - 웹 브라우저 가이드 (단계별 설명)
 - 접이식 UI로 필요시 펼쳐보기
+
+#### F8. FAQ 섹션
+
+| 항목 | 설명 |
+|------|------|
+| 기능 | 자주 묻는 질문 6개를 아코디언 토글로 표시 |
+| UI | 한 번에 하나의 질문만 펼쳐지는 아코디언 패턴 |
+| 다국어 | 16개 언어 번역 지원 (`data-i18n` 속성) |
+| SEO | FAQPage JSON-LD 구조화 데이터 |
+| 질문 | 서비스 안전성, 데이터 다운로드 시간, 언팔로워 정의, 비용/제한, 결과 차이, 개인정보 보호 |
+
+#### F9. 대용량 데이터 분석 제한
+
+| 항목 | 설명 |
+|------|------|
+| 기능 | 팔로잉+팔로워 합계 100만 건 초과 시 분석 차단 |
+| 시점 | ZIP 파싱 완료 후, 계정 상태 확인 API 호출 전 |
+| UI | 다국어 안내 팝업 (모달) |
+| 대응 | 분석 중단, 로딩 숨김, 버튼 재활성화 |
 
 ---
 
@@ -129,10 +156,12 @@ UnfollowLens는 Instagram 사용자가 자신의 데이터를 업로드하여 �
 | 항목 | 요구사항 |
 |------|----------|
 | 메타 태그 | Open Graph, Twitter Card 지원 |
-| 다국어 SEO | hreflang 태그 적용 |
-| 사이트맵 | XML sitemap 제공 |
+| 다국어 SEO | hreflang 태그 (16개 언어 + x-default, 서브디렉토리 URL) |
+| 사이트맵 | XML sitemap (16개 언어별 URL + hreflang 상호 참조) |
 | 로봇 | robots.txt 제공 |
 | 검색 엔진 인증 | Google, Naver, Bing 사이트 인증 |
+| 구조화 데이터 | WebApplication + FAQPage JSON-LD |
+| i18n URL | 서브디렉토리 방식 (`/ko`, `/en`) |
 
 ---
 
@@ -151,6 +180,7 @@ UnfollowLens는 Instagram 사용자가 자신의 데이터를 업로드하여 �
 | 항목 | 기술 |
 |------|------|
 | 런타임 | Cloudflare Pages Functions |
+| 미들웨어 | `_middleware.js` — i18n URL 라우팅, `?lang=` 301 리다이렉트, preview noindex |
 | API | check-account.js, proxy-image.js |
 
 ### 4.3 인프라
@@ -307,11 +337,23 @@ allorigins.win, corsproxy.io 등 무료 CORS 프록시도 데이터센터 IP를 
 - [x] 미확인 계정 배지 표시
 - [x] 비공개 계정 감지
 
-### Phase 3 (예정)
+### Phase 3 (완료)
+
+- [x] 16개 언어 확장 (ko, en, ja, zh, es, fr, de, pt, hi, ru, ar, tr, vi, th, id, ms)
+- [x] 서브디렉토리 i18n URL (`/ko`, `/en`) + `?lang=` 301 리다이렉트
+- [x] Cloudflare Pages 미들웨어 URL 라우팅
+- [x] FAQ 섹션 (6개 질문, 아코디언 토글, FAQPage JSON-LD)
+- [x] 100만 건 분석 제한 + 다국어 안내 팝업
+- [x] 언어 선택기 UI 개선 (상단 우측 드롭다운)
+- [x] hreflang 16개 언어 서브디렉토리 URL
+- [x] sitemap.xml 16개 언어별 URL 엔트리
+
+### Phase 4 (예정)
 
 - [ ] 결과 내보내기 (CSV/Excel)
 - [ ] 다크 모드
 - [ ] PWA 지원
+- [ ] 블로그/가이드 콘텐츠
 
 ---
 
@@ -334,5 +376,5 @@ allorigins.win, corsproxy.io 등 무료 CORS 프록시도 데이터센터 IP를 
 
 ---
 
-**문서 버전**: 2.0
+**문서 버전**: 3.0
 **최종 업데이트**: 2026년 2월

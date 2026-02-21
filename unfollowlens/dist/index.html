@@ -18,9 +18,10 @@
 
     <!-- SEO Meta Tags -->
     <meta name="description" content="인스타그램 맞팔 확인, 언팔 대상 찾기. 무료 온라인 도구로 나를 팔로우하지 않는 계정을 쉽게 찾아보세요.">
-    <meta name="keywords" content="인스타그램, 언팔, 맞팔, 팔로워 분석, Instagram unfollow">
+    <meta name="keywords" content="인스타그램, 언팔, 맞팔, 팔로워 분석, 인스타 팔취, 인스타 언팔 확인, Instagram unfollow checker, instagram unfollower finder, who unfollowed me instagram, instagram mutual follow check, instagram follower tracker">
     <meta name="author" content="UnfollowLens">
     <meta name="robots" content="index, follow">
+    <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1">
     <meta name="google-site-verification" content="4Nar2uZqlAK2UO6HWD54Gbk2-23lOeTICy16407WKmg" />
     <meta name="naver-site-verification" content="3781c15de7bbcab595064ae3e86e9c559995391d" />
     <meta name="naver-site-verification" content="03c81f90acfff22752b604002e8ea31a5b83f01d" />
@@ -31,7 +32,8 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://unfollowlens.com">
     <meta property="og:title" content="UnfollowLens - 인스타그램 언팔 체커">
-    <meta property="og:description" content="나를 팔로우하지 않는 계정을 찾아보세요.">
+    <meta property="og:description" content="무료 인스타그램 언팔 체커. 로그인 없이 안전하게 맞팔 확인과 언팔 대상을 찾아보세요.">
+    <meta property="og:site_name" content="UnfollowLens">
     <meta property="og:locale" content="ko_KR">
     <meta property="og:image" content="https://unfollowlens.com/static/og-image.png">
     <meta property="og:image:width" content="1200">
@@ -40,7 +42,7 @@
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="UnfollowLens - 인스타그램 언팔 체커">
-    <meta name="twitter:description" content="나를 팔로우하지 않는 계정을 찾아보세요.">
+    <meta name="twitter:description" content="무료 인스타그램 언팔 체커. 로그인 없이 안전하게 맞팔 확인과 언팔 대상을 찾아보세요.">
     <meta name="twitter:image" content="https://unfollowlens.com/static/og-image.png">
 
     <!-- Favicon -->
@@ -51,11 +53,23 @@
 
     <!-- Canonical & Alternates -->
     <link rel="canonical" href="https://unfollowlens.com">
-    <link rel="alternate" hreflang="ko" href="https://unfollowlens.com?lang=ko">
-    <link rel="alternate" hreflang="en" href="https://unfollowlens.com?lang=en">
-    <link rel="alternate" hreflang="ja" href="https://unfollowlens.com?lang=ja">
-    <link rel="alternate" hreflang="zh" href="https://unfollowlens.com?lang=zh">
-    <link rel="alternate" hreflang="es" href="https://unfollowlens.com?lang=es">
+    <link rel="alternate" hreflang="x-default" href="https://unfollowlens.com/">
+    <link rel="alternate" hreflang="ko" href="https://unfollowlens.com/ko">
+    <link rel="alternate" hreflang="en" href="https://unfollowlens.com/en">
+    <link rel="alternate" hreflang="ja" href="https://unfollowlens.com/ja">
+    <link rel="alternate" hreflang="zh" href="https://unfollowlens.com/zh">
+    <link rel="alternate" hreflang="es" href="https://unfollowlens.com/es">
+    <link rel="alternate" hreflang="fr" href="https://unfollowlens.com/fr">
+    <link rel="alternate" hreflang="de" href="https://unfollowlens.com/de">
+    <link rel="alternate" hreflang="pt" href="https://unfollowlens.com/pt">
+    <link rel="alternate" hreflang="hi" href="https://unfollowlens.com/hi">
+    <link rel="alternate" hreflang="ru" href="https://unfollowlens.com/ru">
+    <link rel="alternate" hreflang="ar" href="https://unfollowlens.com/ar">
+    <link rel="alternate" hreflang="tr" href="https://unfollowlens.com/tr">
+    <link rel="alternate" hreflang="vi" href="https://unfollowlens.com/vi">
+    <link rel="alternate" hreflang="th" href="https://unfollowlens.com/th">
+    <link rel="alternate" hreflang="id" href="https://unfollowlens.com/id">
+    <link rel="alternate" hreflang="ms" href="https://unfollowlens.com/ms">
 
     <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2330803849133692" crossorigin="anonymous"></script>
@@ -113,7 +127,7 @@
 
         /* Header */
         .header {
-            padding: 80px 0 60px;
+            padding: 40px 0 36px;
             text-align: center;
             animation: fadeIn 0.8s ease-out;
         }
@@ -822,65 +836,222 @@
             font-size: 0.8rem;
         }
 
-        /* Language Selector */
-        .lang-selector {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            display: flex;
-            gap: 4px;
-            padding: 6px;
-            background: white;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            box-shadow: var(--card-shadow);
-            z-index: 100;
+        /* Top Navigation */
+        .top-nav {
+            position: sticky;
+            top: 0;
+            background: rgba(253, 252, 250, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            z-index: 200;
+            padding: 12px 0;
         }
 
-        .lang-btn {
-            padding: 8px 12px;
-            background: transparent;
-            border: none;
-            border-radius: 8px;
-            color: var(--text-muted);
+        .top-nav__inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .top-nav__left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .top-nav__logo {
+            font-family: 'DM Sans', 'Noto Sans KR', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text);
+            text-decoration: none;
+            letter-spacing: -0.02em;
+        }
+
+        /* Language Dropdown */
+        .lang-dropdown {
+            position: relative;
+        }
+
+        .lang-dropdown__trigger {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 10px;
             font-family: inherit;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             font-weight: 500;
+            color: var(--text);
             cursor: pointer;
             transition: var(--transition);
         }
 
-        .lang-btn:hover {
-            background: var(--bg-alt);
-            color: var(--text);
+        .lang-dropdown__trigger:hover {
+            border-color: var(--border-dark);
         }
 
-        .lang-btn.active {
-            background: var(--text);
+        .lang-dropdown__arrow {
+            width: 14px;
+            height: 14px;
+            transition: transform 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .lang-dropdown.open .lang-dropdown__arrow {
+            transform: rotate(180deg);
+        }
+
+        .lang-dropdown__menu {
+            display: none;
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            min-width: 200px;
+            max-height: 400px;
+            overflow-y: auto;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            padding: 6px;
+            animation: slideDown 0.2s ease-out;
+        }
+
+        .lang-dropdown.open .lang-dropdown__menu {
+            display: block;
+        }
+
+        .lang-dropdown__option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            padding: 10px 14px;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.85rem;
+            color: var(--text);
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: left;
+        }
+
+        .lang-dropdown__option:hover {
+            background: var(--bg-alt);
+        }
+
+        .lang-dropdown__option.active {
+            background: var(--bg-alt);
+            font-weight: 600;
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            margin-top: 0;
+        }
+
+        .faq-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .faq-title__icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            background: var(--accent);
             color: white;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .faq-item {
+            border-bottom: 1px solid var(--border);
+        }
+
+        .faq-item:last-child {
+            border-bottom: none;
+        }
+
+        .faq-question {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            padding: 18px 0;
+            background: transparent;
+            border: none;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text);
+            cursor: pointer;
+            text-align: left;
+            transition: var(--transition);
+            gap: 16px;
+        }
+
+        .faq-question:hover {
+            color: var(--accent);
+        }
+
+        .faq-question__arrow {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+            transition: transform 0.3s ease;
+            color: var(--text-muted);
+        }
+
+        .faq-item.open .faq-question__arrow {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            display: none;
+            padding: 0 0 18px;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.8;
+        }
+
+        .faq-item.open .faq-answer {
+            display: block;
+            animation: slideDown 0.3s ease-out;
         }
 
         /* Support */
         .support-buttons {
-            position: fixed;
-            left: 24px;
-            bottom: 24px;
             display: flex;
-            flex-direction: column;
-            gap: 10px;
-            z-index: 99;
+            flex-direction: row;
+            gap: 8px;
+            align-items: center;
         }
 
         .support-btn {
-            width: 44px;
-            height: 44px;
+            width: 32px;
+            height: 32px;
             background: white;
             border: 1px solid var(--border);
-            border-radius: 12px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
+            font-size: 1rem;
             text-decoration: none;
             transition: var(--transition);
         }
@@ -1054,7 +1225,7 @@
         /* Responsive - Tablet */
         @media (max-width: 768px) {
             .container { padding: 0 20px; }
-            .header { padding: 60px 0 48px; }
+            .header { padding: 32px 0 28px; }
             .tagline { font-size: 1rem; }
             .card { padding: 28px 24px; }
             .guide-title { font-size: 1.1rem; }
@@ -1069,7 +1240,7 @@
         /* Responsive - Mobile */
         @media (max-width: 640px) {
             .container { padding: 0 16px; }
-            .header { padding: 48px 0 36px; }
+            .header { padding: 28px 0 24px; }
             .logo__text { font-size: 2.2rem; }
             .tagline { font-size: 0.95rem; }
             .section { margin-bottom: 32px; }
@@ -1105,15 +1276,9 @@
             .footer { padding: 40px 16px 32px; margin-top: 32px; }
             .footer-links { flex-direction: column; gap: 12px; align-items: center; }
             .footer-link { font-size: 0.85rem; }
-            .lang-selector {
-                bottom: 16px;
-                right: 16px;
-                padding: 4px;
-                gap: 2px;
-            }
-            .lang-btn { padding: 6px 8px; font-size: 0.7rem; }
-            .support-buttons { left: 16px; bottom: 16px; }
-            .support-btn { width: 40px; height: 40px; font-size: 1rem; }
+            .lang-dropdown__trigger { padding: 6px 10px; font-size: 0.8rem; }
+            .lang-dropdown__menu { min-width: 180px; }
+            .lang-dropdown__option { padding: 8px 12px; font-size: 0.8rem; }
             .modal-content {
                 max-width: 100%;
                 max-height: 100vh;
@@ -1133,7 +1298,7 @@
         /* Responsive - Small Mobile */
         @media (max-width: 400px) {
             .container { padding: 0 12px; }
-            .header { padding: 40px 0 28px; }
+            .header { padding: 24px 0 20px; }
             .logo__text { font-size: 1.8rem; }
             .tagline { font-size: 0.85rem; }
             .card { padding: 20px 16px; border-radius: 12px; }
@@ -1168,16 +1333,10 @@
             .inactive-badge { padding: 4px 8px; font-size: 0.75rem; }
             .footer { padding: 32px 12px 24px; }
             .copyright { font-size: 0.75rem; }
-            .lang-selector {
-                bottom: 12px;
-                right: 12px;
-                flex-wrap: wrap;
-                max-width: 140px;
-                justify-content: center;
-            }
-            .lang-btn { padding: 5px 6px; font-size: 0.65rem; }
-            .support-buttons { left: 12px; bottom: 12px; gap: 8px; }
-            .support-btn { width: 36px; height: 36px; font-size: 0.9rem; border-radius: 10px; }
+            .lang-dropdown__name { display: none; }
+            .lang-dropdown__trigger { padding: 6px 8px; }
+            .support-buttons { gap: 6px; }
+            .support-btn { width: 28px; height: 28px; font-size: 0.85rem; border-radius: 6px; }
             .error-message { padding: 12px 14px; font-size: 0.85rem; }
         }
 
@@ -1188,7 +1347,7 @@
             .stat { padding: 14px 6px; }
             .stat__number { font-size: 1.3rem; }
             .stat__label { font-size: 0.65rem; }
-            .lang-selector { max-width: 120px; }
+            .lang-dropdown__name { display: none; }
         }
 
         /* Touch device optimizations */
@@ -1234,9 +1393,88 @@
         }
     }
     </script>
+
+    <!-- FAQPage JSON-LD -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "Is UnfollowLens safe to use?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes, completely safe. All data is processed only in your browser and never sent to any server. No login required and no Instagram password needed."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "How long does it take to download Instagram data?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "After requesting your data from Instagram, it usually takes from a few minutes up to 48 hours. Instagram will send you a notification when your data is ready."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "What exactly is an unfollower?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "An unfollower is an account that you follow but does not follow you back. It means you are following them one-sidedly without mutual follow."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Does it cost anything?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "No, UnfollowLens is a free service. However, to ensure service stability, analysis is restricted for accounts with more than 1 million combined followers and following."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Why does the unfollow list look different than expected?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "The follow status at the time of Instagram data download may differ from the current status. For the most accurate results, download and use the latest data."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "How is my data security and privacy protected?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "All analysis is processed 100% in your browser. Data is never uploaded to any server, and all data is automatically deleted when you close the page."
+                }
+            }
+        ]
+    }
+    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" integrity="sha512-XMVd28F1oH/O71fzwBnV7HucLxVwtxf26XV8P4wPk26EDxuGZ91N8bsOttmnomcCD3CS5ZMRL50H0GgOHvegtg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 <body>
+    <!-- Top Navigation -->
+    <nav class="top-nav">
+        <div class="container top-nav__inner">
+            <div class="top-nav__left">
+                <a href="/" class="top-nav__logo">UnfollowLens<span class="logo__dot">.</span></a>
+                <div class="support-buttons">
+                    <a href="https://www.buymeacoffee.com/zamonte" target="_blank" rel="noopener" class="support-btn" title="Buy Me a Coffee">☕</a>
+                    <a href="https://ko-fi.com/montecarlo62602" target="_blank" rel="noopener" class="support-btn" title="Ko-fi">❤️</a>
+                </div>
+            </div>
+            <div class="lang-dropdown" id="langDropdown">
+                <button class="lang-dropdown__trigger" id="langTrigger">
+                    <span id="langFlag">🇰🇷</span>
+                    <span class="lang-dropdown__name" id="langName">한국어</span>
+                    <svg class="lang-dropdown__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                </button>
+                <div class="lang-dropdown__menu" id="langMenu"></div>
+            </div>
+        </div>
+    </nav>
+
     <div class="container">
         <!-- Header -->
         <header class="header">
@@ -1346,6 +1584,72 @@
             </div>
         </section>
 
+        <!-- FAQ -->
+        <section class="section section--delay-2">
+            <div class="card faq-section">
+                <div class="faq-title">
+                    <span class="faq-title__icon">?</span>
+                    <span data-i18n="faqTitle">자주 묻는 질문</span>
+                </div>
+                <div class="faq-list">
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            <span data-i18n="faqQ1">이 서비스는 안전한가요?</span>
+                            <svg class="faq-question__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                        </button>
+                        <div class="faq-answer">
+                            <p data-i18n="faqA1">네, 완전히 안전합니다. 모든 데이터는 브라우저에서만 처리되며 서버로 전송되지 않습니다. 로그인이 필요 없고, Instagram 비밀번호를 입력하지 않습니다.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            <span data-i18n="faqQ2">데이터를 다운로드하는 데 얼마나 걸리나요?</span>
+                            <svg class="faq-question__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                        </button>
+                        <div class="faq-answer">
+                            <p data-i18n="faqA2">Instagram에서 데이터를 요청하면 보통 몇 분에서 최대 48시간이 소요됩니다. 데이터가 준비되면 Instagram에서 알림을 보내드립니다.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            <span data-i18n="faqQ3">언팔로워가 정확히 무엇인가요?</span>
+                            <svg class="faq-question__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                        </button>
+                        <div class="faq-answer">
+                            <p data-i18n="faqA3">언팔로워란 당신이 팔로우하고 있지만 당신을 팔로우하지 않는 계정입니다. 즉, 맞팔이 아닌 일방적으로 팔로우하고 있는 계정을 의미합니다.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            <span data-i18n="faqQ4">비용이 드나요?</span>
+                            <svg class="faq-question__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                        </button>
+                        <div class="faq-answer">
+                            <p data-i18n="faqA4">아니요, UnfollowLens는 무료 서비스입니다. 다만, 서비스 안정성을 위해 팔로잉+팔로워 합계 100만 건 이상의 대용량 데이터는 분석이 제한됩니다.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            <span data-i18n="faqQ5">언팔 목록이 예상과 다르게 보입니다. 왜 그런가요?</span>
+                            <svg class="faq-question__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                        </button>
+                        <div class="faq-answer">
+                            <p data-i18n="faqA5">Instagram 데이터 다운로드 시점과 현재 팔로우 상태가 다를 수 있습니다. 가장 정확한 결과를 위해 최신 데이터를 다운로드하여 사용하세요.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            <span data-i18n="faqQ6">데이터 보안 및 개인정보는 어떻게 보호되나요?</span>
+                            <svg class="faq-question__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                        </button>
+                        <div class="faq-answer">
+                            <p data-i18n="faqA6">모든 분석은 100% 브라우저에서 처리됩니다. 데이터는 서버로 업로드되지 않으며, 페이지를 닫으면 모든 데이터가 자동으로 삭제됩니다.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- Loading -->
         <section class="section">
             <div class="card loading" id="loading">
@@ -1413,6 +1717,24 @@
         </footer>
     </div>
 
+    <!-- Limit Modal -->
+    <div class="modal-overlay" id="limitModal">
+        <div class="modal-content" style="max-width: 480px; text-align: center;">
+            <div class="modal-header" style="justify-content: center; border-bottom: none; padding-bottom: 0;">
+                <h2 class="modal-title" style="font-size: 1.25rem;">
+                    <span style="font-size: 2rem; display: block; margin-bottom: 12px;">&#9888;&#65039;</span>
+                    <span id="limitTitle" data-i18n="limitTitle">분석 제한 안내</span>
+                </h2>
+            </div>
+            <div class="modal-body" style="padding: 16px 28px 8px;">
+                <p id="limitMessage" data-i18n="limitMessage" style="color: var(--text-secondary); line-height: 1.6; font-size: 0.95rem;">팔로잉과 팔로워 합계가 100만 건을 초과하여 분석이 제한됩니다. 서비스 안정성을 위해 대용량 데이터 분석은 현재 지원되지 않습니다.</p>
+            </div>
+            <div style="padding: 16px 28px 24px; text-align: center;">
+                <button id="limitCloseBtn" style="background: var(--accent); color: white; border: none; padding: 10px 40px; border-radius: 10px; font-size: 1rem; cursor: pointer; font-weight: 600;" data-i18n="limitClose">확인</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal -->
     <div class="modal-overlay" id="privacyModal">
         <div class="modal-content">
@@ -1473,20 +1795,6 @@
         </div>
     </div>
 
-    <!-- Language Selector -->
-    <div class="lang-selector">
-        <button class="lang-btn" data-lang="ko">한국어</button>
-        <button class="lang-btn" data-lang="en">EN</button>
-        <button class="lang-btn" data-lang="ja">日本語</button>
-        <button class="lang-btn" data-lang="zh">中文</button>
-        <button class="lang-btn" data-lang="es">ES</button>
-    </div>
-
-    <!-- Support -->
-    <div class="support-buttons">
-        <a href="https://www.buymeacoffee.com/zamonte" target="_blank" rel="noopener" class="support-btn" title="Buy Me a Coffee">☕</a>
-        <a href="https://ko-fi.com/montecarlo62602" target="_blank" rel="noopener" class="support-btn" title="Ko-fi">❤️</a>
-    </div>
 
     <script>
         const translations = {
@@ -1516,6 +1824,9 @@
                 emptyMessage: '언팔로우 대상이 없습니다! 🎉',
                 errorZipOnly: 'ZIP 파일만 업로드 가능합니다',
                 errorAnalysis: '분석 중 오류가 발생했습니다',
+                limitTitle: '분석 제한 안내',
+                limitMessage: '팔로잉과 팔로워 합계가 100만 건을 초과하여 분석이 제한됩니다. 서비스 안정성을 위해 대용량 데이터 분석은 현재 지원되지 않습니다.',
+                limitClose: '확인',
                 privacyPolicy: '개인정보 처리방침',
                 termsOfService: '이용약관',
                 aboutUs: '서비스 소개',
@@ -1552,7 +1863,20 @@
                 sortAlphabet: '가나다순',
                 sortNewest: '최신순',
                 sortOldest: '오래된순',
-                followedAt: '팔로우한 날짜'
+                followedAt: '팔로우한 날짜',
+                faqTitle: '자주 묻는 질문',
+                faqQ1: '이 서비스는 안전한가요?',
+                faqA1: '네, 완전히 안전합니다. 업로드한 파일은 서버로 전송되지 않으며, 모든 분석은 브라우저 내에서만 이루어집니다. 로그인이나 비밀번호 입력이 필요 없어 계정 보안에도 영향을 주지 않습니다.',
+                faqQ2: '데이터를 다운로드하는 데 얼마나 걸리나요?',
+                faqA2: 'Instagram에서 데이터 파일을 준비하는 데 보통 몇 분에서 최대 24시간이 소요됩니다. 준비가 완료되면 이메일로 알림이 발송됩니다.',
+                faqQ3: '언팔로워가 정확히 무엇인가요?',
+                faqA3: '언팔로워란 내가 팔로우하고 있지만, 나를 다시 팔로우하지 않는 계정을 말합니다. 즉, 맞팔이 아닌 일방적 팔로우 상태의 계정입니다.',
+                faqQ4: '비용이 드나요?',
+                faqA4: '아니요, UnfollowLens는 무료 서비스입니다. 다만, 서비스 안정성을 위해 팔로잉+팔로워 합계 100만 건 이상의 대용량 데이터는 분석이 제한됩니다.',
+                faqQ5: '언팔 목록이 예상과 다르게 보입니다. 왜 그런가요?',
+                faqA5: 'Instagram 데이터는 다운로드 요청 시점의 스냅샷입니다. 다운로드 이후에 발생한 팔로우/언팔 변경사항은 반영되지 않습니다. 또한 최근 Instagram 정책 변경으로 탈퇴한 계정이 목록에 포함될 수 있습니다. 최신 결과를 원하시면 새로운 데이터를 다운로드해 주세요.',
+                faqQ6: '데이터 보안 및 개인정보',
+                faqA6: 'UnfollowLens는 사용자의 개인정보를 수집하거나 저장하지 않습니다. 모든 데이터 처리는 브라우저에서 직접 이루어지며, 서버로 어떤 파일도 전송되지 않습니다. 회원가입이나 로그인도 필요하지 않습니다.'
             },
             en: {
                 title: 'UnfollowLens - Instagram Unfollow Checker',
@@ -1580,6 +1904,9 @@
                 emptyMessage: 'No accounts to unfollow! 🎉',
                 errorZipOnly: 'Only ZIP files allowed',
                 errorAnalysis: 'Error during analysis',
+                limitTitle: 'Analysis Limit',
+                limitMessage: 'Your combined followers and following exceeds 1 million. Analysis of large datasets is currently restricted to ensure service stability.',
+                limitClose: 'OK',
                 privacyPolicy: 'Privacy Policy',
                 termsOfService: 'Terms',
                 aboutUs: 'About',
@@ -1616,7 +1943,20 @@
                 sortAlphabet: 'A-Z',
                 sortNewest: 'Newest',
                 sortOldest: 'Oldest',
-                followedAt: 'Followed on'
+                followedAt: 'Followed on',
+                faqTitle: 'Frequently Asked Questions',
+                faqQ1: 'Is this service safe?',
+                faqA1: 'Yes, completely safe. Your uploaded file is never sent to a server — all analysis happens entirely in your browser. No login or password is required, so your account security is never affected.',
+                faqQ2: 'How long does it take to download my data?',
+                faqA2: 'Instagram typically takes a few minutes to up to 24 hours to prepare your data file. You\'ll receive an email notification when it\'s ready.',
+                faqQ3: 'What exactly is an unfollower?',
+                faqA3: 'An unfollower is an account that you follow but that doesn\'t follow you back. In other words, it\'s a non-mutual follow.',
+                faqQ4: 'Does it cost anything to use?',
+                faqA4: 'No, UnfollowLens is a free service. However, to ensure service stability, analysis is restricted for accounts with more than 1 million combined followers and following.',
+                faqQ5: 'The unfollower list appears different from what I expected. Why?',
+                faqA5: 'Instagram data is a snapshot from the time you requested the download. Any follow/unfollow changes after that point won\'t be reflected. Also, due to recent Instagram policy changes, deactivated accounts may appear in the list. Download fresh data for the most current results.',
+                faqQ6: 'Data Security & Privacy',
+                faqA6: 'UnfollowLens does not collect or store any personal data. All processing happens directly in your browser, and no files are ever sent to a server. No registration or login is required.'
             },
             ja: {
                 title: 'UnfollowLens - インスタグラムアンフォローチェッカー',
@@ -1644,6 +1984,9 @@
                 emptyMessage: '対象なし！🎉',
                 errorZipOnly: 'ZIPファイルのみ',
                 errorAnalysis: 'エラー',
+                limitTitle: '分析制限のお知らせ',
+                limitMessage: 'フォロー数とフォロワー数の合計が100万件を超えているため、分析が制限されています。サービスの安定性のため、大規模データの分析は現在サポートされていません。',
+                limitClose: '確認',
                 privacyPolicy: 'プライバシー',
                 termsOfService: '利用規約',
                 aboutUs: '紹介',
@@ -1658,7 +2001,20 @@
                 sortAlphabet: 'ABC順',
                 sortNewest: '新しい順',
                 sortOldest: '古い順',
-                followedAt: 'フォロー日'
+                followedAt: 'フォロー日',
+                faqTitle: 'よくある質問',
+                faqQ1: 'このサービスは安全ですか？',
+                faqA1: 'はい、完全に安全です。アップロードしたファイルはサーバーに送信されず、すべての分析はブラウザ内で行われます。ログインやパスワードは不要です。',
+                faqQ2: 'データのダウンロードにはどれくらいかかりますか？',
+                faqA2: 'Instagramは通常、数分から最大24時間でデータファイルを準備します。準備完了時にメールで通知されます。',
+                faqQ3: 'アンフォロワーとは何ですか？',
+                faqA3: 'アンフォロワーとは、あなたがフォローしているのに、フォローバックしていないアカウントのことです。',
+                faqQ4: '料金はかかりますか？',
+                faqA4: 'いいえ、UnfollowLensは無料サービスです。ただし、サービスの安定性のため、フォロー+フォロワーの合計が100万件以上の大容量データの分析は制限されます。',
+                faqQ5: 'アンフォロワーリストが予想と違います。なぜですか？',
+                faqA5: 'Instagramのデータはダウンロード要求時のスナップショットです。それ以降の変更は反映されません。最新の結果を得るには、新しいデータをダウンロードしてください。',
+                faqQ6: 'データセキュリティとプライバシー',
+                faqA6: 'UnfollowLensは個人データを収集・保存しません。すべての処理はブラウザ内で直接行われ、ファイルがサーバーに送信されることはありません。'
             },
             zh: {
                 title: 'UnfollowLens - Instagram取关检查器',
@@ -1686,6 +2042,9 @@
                 emptyMessage: '没有需要取关的账户！🎉',
                 errorZipOnly: '只能上传ZIP文件',
                 errorAnalysis: '分析出错',
+                limitTitle: '分析限制提示',
+                limitMessage: '您的关注和粉丝总数超过100万，分析受到限制。为确保服务稳定性，目前不支持大数据量分析。',
+                limitClose: '确认',
                 privacyPolicy: '隐私政策',
                 termsOfService: '条款',
                 aboutUs: '关于',
@@ -1700,7 +2059,20 @@
                 sortAlphabet: 'A-Z',
                 sortNewest: '最新',
                 sortOldest: '最早',
-                followedAt: '关注于'
+                followedAt: '关注于',
+                faqTitle: '常见问题',
+                faqQ1: '这个服务安全吗？',
+                faqA1: '是的，完全安全。您上传的文件不会发送到服务器——所有分析都在您的浏览器中完成。无需登录或密码。',
+                faqQ2: '下载数据需要多长时间？',
+                faqA2: 'Instagram通常需要几分钟到最多24小时来准备您的数据文件。准备好后会通过邮件通知您。',
+                faqQ3: '什么是取关者？',
+                faqA3: '取关者是您关注但没有回关您的账户。也就是说，不是互关状态。',
+                faqQ4: '需要付费吗？',
+                faqA4: '不需要，UnfollowLens是免费服务。但为了确保服务稳定性，关注+粉丝总计超过100万的大数据分析会受到限制。',
+                faqQ5: '取关列表与预期不同，为什么？',
+                faqA5: 'Instagram数据是您请求下载时的快照。之后发生的关注/取关变化不会反映在结果中。要获取最新结果，请重新下载数据。',
+                faqQ6: '数据安全和隐私',
+                faqA6: 'UnfollowLens不收集或存储任何个人数据。所有处理都在您的浏览器中直接完成，不会向服务器发送任何文件。'
             },
             es: {
                 title: 'UnfollowLens - Verificador de Unfollows',
@@ -1728,6 +2100,9 @@
                 emptyMessage: '¡No hay cuentas! 🎉',
                 errorZipOnly: 'Solo archivos ZIP',
                 errorAnalysis: 'Error',
+                limitTitle: 'Límite de análisis',
+                limitMessage: 'El total de seguidores y seguidos supera 1 millón. El análisis de grandes volúmenes de datos está restringido para garantizar la estabilidad del servicio.',
+                limitClose: 'Aceptar',
                 privacyPolicy: 'Privacidad',
                 termsOfService: 'Términos',
                 aboutUs: 'Acerca de',
@@ -1742,21 +2117,713 @@
                 sortAlphabet: 'A-Z',
                 sortNewest: 'Reciente',
                 sortOldest: 'Antiguo',
-                followedAt: 'Seguido el'
+                followedAt: 'Seguido el',
+                faqTitle: 'Preguntas frecuentes',
+                faqQ1: '¿Es seguro este servicio?',
+                faqA1: 'Sí, completamente seguro. Tu archivo nunca se envía a un servidor — todo el análisis ocurre en tu navegador. No se requiere inicio de sesión ni contraseña.',
+                faqQ2: '¿Cuánto tarda en descargar mis datos?',
+                faqA2: 'Instagram generalmente tarda de unos minutos a 24 horas en preparar tu archivo de datos. Recibirás una notificación por correo electrónico.',
+                faqQ3: '¿Qué es exactamente un unfollower?',
+                faqA3: 'Un unfollower es una cuenta que sigues pero que no te sigue de vuelta.',
+                faqQ4: '¿Tiene algún costo?',
+                faqA4: 'No, UnfollowLens es un servicio gratuito. Sin embargo, para garantizar la estabilidad del servicio, el análisis está restringido para cuentas con más de 1 millón de seguidores y seguidos combinados.',
+                faqQ5: 'La lista de unfollowers parece diferente a lo esperado. ¿Por qué?',
+                faqA5: 'Los datos de Instagram son una instantánea del momento de tu solicitud. Los cambios posteriores no se reflejarán. Descarga datos nuevos para obtener los resultados más actuales.',
+                faqQ6: 'Seguridad de datos y privacidad',
+                faqA6: 'UnfollowLens no recopila ni almacena datos personales. Todo el procesamiento ocurre en tu navegador.'
+            },
+            fr: {
+                title: 'UnfollowLens - Vérificateur Instagram',
+                subtitle: 'Trouvez les comptes qui ne vous suivent pas',
+                uploadText: 'Glissez-déposez le fichier ZIP ou cliquez',
+                uploadHint: 'Fichier de données téléchargé depuis Instagram',
+                analyzeBtn: 'Analyser',
+                loadingText: 'Vérification des comptes',
+                loadingWait: 'Veuillez patienter',
+                following: 'Abonnements',
+                followers: 'Abonnés',
+                mutual: 'Mutuels',
+                unfollowTarget: 'Désabonner',
+                activeSectionTitle: 'Comptes à ne plus suivre',
+                inactiveSectionTitle: 'Comptes exclus',
+                fileSelected: 'Fichier :',
+                viewProfile: 'Profil',
+                private: 'Privé',
+                deleted: 'Supprimé',
+                deletedOrRestricted: 'Supprimé',
+                restricted: 'Restreint',
+                unknown: 'Inconnu',
+                statusError: 'Erreur',
+                unverified: 'Non vérifié',
+                emptyMessage: 'Aucun compte à ne plus suivre ! 🎉',
+                errorZipOnly: 'Fichiers ZIP uniquement',
+                errorAnalysis: 'Erreur lors de l\'analyse',
+                limitTitle: 'Limite d\'analyse',
+                limitMessage: 'Le total de vos abonnés et abonnements dépasse 1 million. L\'analyse de grands volumes de données est actuellement limitée pour assurer la stabilité du service.',
+                limitClose: 'OK',
+                errorInvalidZip: 'Fichier ZIP de données Instagram invalide',
+                privacyPolicy: 'Confidentialité',
+                termsOfService: 'Conditions',
+                aboutUs: 'À propos',
+                guideTitle: 'Comment télécharger vos données Instagram',
+                platformMobile: 'Application',
+                platformWeb: 'Navigateur',
+                guideNoteText: 'La préparation peut prendre de quelques minutes à 24 heures.',
+                copyId: 'Copier',
+                copied: 'Copié',
+                privacyNotice: 'Votre fichier n\'est jamais stocké. Tout est traité dans votre navigateur.',
+                sortAlphabet: 'A-Z',
+                sortNewest: 'Récent',
+                sortOldest: 'Ancien',
+                followedAt: 'Suivi le',
+                faqTitle: 'Questions fréquentes',
+                faqQ1: 'Ce service est-il sûr ?',
+                faqA1: 'Oui, totalement sûr. Votre fichier n\'est jamais envoyé à un serveur — toute l\'analyse se fait dans votre navigateur. Aucune connexion ni mot de passe requis.',
+                faqQ2: 'Combien de temps faut-il pour télécharger mes données ?',
+                faqA2: 'Instagram prend généralement quelques minutes à 24 heures pour préparer votre fichier. Vous recevrez un e-mail de notification.',
+                faqQ3: 'Qu\'est-ce qu\'un unfollower exactement ?',
+                faqA3: 'Un unfollower est un compte que vous suivez mais qui ne vous suit pas en retour.',
+                faqQ4: 'Est-ce payant ?',
+                faqA4: 'Non, UnfollowLens est un service gratuit. Toutefois, pour assurer la stabilité du service, l\'analyse est limitée pour les comptes dépassant 1 million d\'abonnés et abonnements combinés.',
+                faqQ5: 'La liste d\'unfollowers semble différente de ce que j\'attendais. Pourquoi ?',
+                faqA5: 'Les données Instagram sont un instantané du moment de votre demande. Les changements après ce point ne seront pas reflétés.',
+                faqQ6: 'Sécurité des données et confidentialité',
+                faqA6: 'UnfollowLens ne collecte ni ne stocke aucune donnée personnelle. Tout le traitement se fait dans votre navigateur.'
+            },
+            de: {
+                title: 'UnfollowLens - Instagram Entfolgen-Checker',
+                subtitle: 'Finden Sie Konten, die Ihnen nicht zurückfolgen',
+                uploadText: 'ZIP-Datei hierher ziehen oder klicken',
+                uploadHint: 'Von Instagram heruntergeladene Datendatei',
+                analyzeBtn: 'Analysieren',
+                loadingText: 'Kontostatus wird überprüft',
+                loadingWait: 'Bitte warten',
+                following: 'Folge ich',
+                followers: 'Follower',
+                mutual: 'Gegenseitig',
+                unfollowTarget: 'Entfolgen',
+                activeSectionTitle: 'Konten zum Entfolgen',
+                inactiveSectionTitle: 'Ausgeschlossene Konten',
+                fileSelected: 'Datei:',
+                viewProfile: 'Profil',
+                private: 'Privat',
+                deleted: 'Gelöscht',
+                deletedOrRestricted: 'Gelöscht',
+                restricted: 'Eingeschränkt',
+                unknown: 'Unbekannt',
+                statusError: 'Fehler',
+                unverified: 'Nicht verifiziert',
+                emptyMessage: 'Keine Konten zum Entfolgen! 🎉',
+                errorZipOnly: 'Nur ZIP-Dateien erlaubt',
+                errorAnalysis: 'Fehler bei der Analyse',
+                limitTitle: 'Analyse-Limit',
+                limitMessage: 'Die Gesamtzahl Ihrer Follower und Followings übersteigt 1 Million. Die Analyse großer Datenmengen ist derzeit eingeschränkt, um die Servicestabilität zu gewährleisten.',
+                limitClose: 'OK',
+                errorInvalidZip: 'Ungültige Instagram-Daten-ZIP-Datei',
+                privacyPolicy: 'Datenschutz',
+                termsOfService: 'AGB',
+                aboutUs: 'Über uns',
+                guideTitle: 'So laden Sie Instagram-Daten herunter',
+                platformMobile: 'Mobile App',
+                platformWeb: 'Webbrowser',
+                guideNoteText: 'Die Vorbereitung kann Minuten bis 24 Stunden dauern.',
+                copyId: 'Kopieren',
+                copied: 'Kopiert',
+                privacyNotice: 'Ihre Datei wird nie auf unseren Servern gespeichert. Alles wird in Ihrem Browser verarbeitet.',
+                sortAlphabet: 'A-Z',
+                sortNewest: 'Neueste',
+                sortOldest: 'Älteste',
+                followedAt: 'Gefolgt am',
+                faqTitle: 'Häufig gestellte Fragen',
+                faqQ1: 'Ist dieser Service sicher?',
+                faqA1: 'Ja, vollkommen sicher. Ihre Datei wird nie an einen Server gesendet — die gesamte Analyse erfolgt in Ihrem Browser. Kein Login oder Passwort erforderlich.',
+                faqQ2: 'Wie lange dauert der Download meiner Daten?',
+                faqA2: 'Instagram benötigt in der Regel einige Minuten bis zu 24 Stunden, um Ihre Datendatei vorzubereiten.',
+                faqQ3: 'Was genau ist ein Unfollower?',
+                faqA3: 'Ein Unfollower ist ein Konto, dem Sie folgen, das Ihnen aber nicht zurückfolgt.',
+                faqQ4: 'Kostet der Service etwas?',
+                faqA4: 'Nein, UnfollowLens ist ein kostenloser Dienst. Allerdings ist die Analyse für Konten mit mehr als 1 Million Followern und Followings zur Gewährleistung der Servicestabilität eingeschränkt.',
+                faqQ5: 'Die Unfollower-Liste sieht anders aus als erwartet. Warum?',
+                faqA5: 'Instagram-Daten sind ein Schnappschuss zum Zeitpunkt Ihrer Anfrage. Änderungen danach werden nicht berücksichtigt.',
+                faqQ6: 'Datensicherheit & Datenschutz',
+                faqA6: 'UnfollowLens sammelt oder speichert keine persönlichen Daten. Die gesamte Verarbeitung erfolgt in Ihrem Browser.'
+            },
+            pt: {
+                title: 'UnfollowLens - Verificador de Unfollow do Instagram',
+                subtitle: 'Encontre contas que não te seguem de volta',
+                uploadText: 'Arraste o arquivo ZIP ou clique',
+                uploadHint: 'Arquivo de dados baixado do Instagram',
+                analyzeBtn: 'Analisar',
+                loadingText: 'Verificando status das contas',
+                loadingWait: 'Por favor, aguarde',
+                following: 'Seguindo',
+                followers: 'Seguidores',
+                mutual: 'Mútuos',
+                unfollowTarget: 'Deixar de seguir',
+                activeSectionTitle: 'Contas para deixar de seguir',
+                inactiveSectionTitle: 'Contas excluídas',
+                fileSelected: 'Arquivo:',
+                viewProfile: 'Perfil',
+                private: 'Privado',
+                deleted: 'Excluída',
+                deletedOrRestricted: 'Excluída',
+                restricted: 'Restrita',
+                unknown: 'Desconhecida',
+                statusError: 'Erro',
+                unverified: 'Não verificada',
+                emptyMessage: 'Nenhuma conta para deixar de seguir! 🎉',
+                errorZipOnly: 'Apenas arquivos ZIP',
+                errorAnalysis: 'Erro na análise',
+                limitTitle: 'Limite de análise',
+                limitMessage: 'O total de seguidores e seguidos excede 1 milhão. A análise de grandes volumes de dados está restrita para garantir a estabilidade do serviço.',
+                limitClose: 'OK',
+                errorInvalidZip: 'Arquivo ZIP de dados do Instagram inválido',
+                privacyPolicy: 'Privacidade',
+                termsOfService: 'Termos',
+                aboutUs: 'Sobre',
+                guideTitle: 'Como baixar dados do Instagram',
+                platformMobile: 'App Móvel',
+                platformWeb: 'Navegador',
+                guideNoteText: 'A preparação pode levar de minutos a 24 horas.',
+                copyId: 'Copiar',
+                copied: 'Copiado',
+                privacyNotice: 'Seu arquivo nunca é armazenado. Todo o processamento acontece no seu navegador.',
+                sortAlphabet: 'A-Z',
+                sortNewest: 'Recente',
+                sortOldest: 'Antigo',
+                followedAt: 'Seguido em',
+                faqTitle: 'Perguntas frequentes',
+                faqQ1: 'Este serviço é seguro?',
+                faqA1: 'Sim, totalmente seguro. Seu arquivo nunca é enviado a um servidor — toda a análise acontece no seu navegador. Nenhum login ou senha necessário.',
+                faqQ2: 'Quanto tempo leva para baixar meus dados?',
+                faqA2: 'O Instagram geralmente leva de alguns minutos a 24 horas para preparar seu arquivo de dados.',
+                faqQ3: 'O que exatamente é um unfollower?',
+                faqA3: 'Um unfollower é uma conta que você segue, mas que não te segue de volta.',
+                faqQ4: 'Custa alguma coisa?',
+                faqA4: 'Não, o UnfollowLens é um serviço gratuito. No entanto, para garantir a estabilidade do serviço, a análise é restrita para contas com mais de 1 milhão de seguidores e seguidos combinados.',
+                faqQ5: 'A lista de unfollowers parece diferente do esperado. Por quê?',
+                faqA5: 'Os dados do Instagram são um instantâneo do momento da sua solicitação. Mudanças após esse ponto não serão refletidas.',
+                faqQ6: 'Segurança de dados e privacidade',
+                faqA6: 'O UnfollowLens não coleta nem armazena dados pessoais. Todo o processamento acontece no seu navegador.'
+            },
+            hi: {
+                title: 'UnfollowLens - Instagram अनफॉलो चेकर',
+                subtitle: 'उन अकाउंट्स को खोजें जो आपको फॉलो बैक नहीं करते',
+                uploadText: 'ZIP फाइल खींचें या क्लिक करें',
+                uploadHint: 'Instagram से डाउनलोड की गई डेटा फाइल',
+                analyzeBtn: 'विश्लेषण',
+                loadingText: 'अकाउंट स्टेटस जांच रहे हैं',
+                loadingWait: 'कृपया प्रतीक्षा करें',
+                following: 'फॉलोइंग',
+                followers: 'फॉलोअर्स',
+                mutual: 'म्यूचुअल',
+                unfollowTarget: 'अनफॉलो',
+                activeSectionTitle: 'अनफॉलो करने के लिए अकाउंट',
+                inactiveSectionTitle: 'बाहर किए गए अकाउंट',
+                fileSelected: 'फाइल:',
+                viewProfile: 'प्रोफाइल',
+                private: 'प्राइवेट',
+                deleted: 'डिलीटेड',
+                deletedOrRestricted: 'डिलीटेड',
+                restricted: 'प्रतिबंधित',
+                unknown: 'अज्ञात',
+                statusError: 'त्रुटि',
+                unverified: 'असत्यापित',
+                emptyMessage: 'अनफॉलो करने के लिए कोई अकाउंट नहीं! 🎉',
+                errorZipOnly: 'केवल ZIP फाइलें',
+                errorAnalysis: 'विश्लेषण में त्रुटि',
+                limitTitle: 'विश्लेषण सीमा',
+                limitMessage: 'आपके फॉलोअर्स और फॉलोइंग का कुल योग 10 लाख से अधिक है। सेवा स्थिरता सुनिश्चित करने के लिए बड़े डेटा का विश्लेषण प्रतिबंधित है।',
+                limitClose: 'ठीक है',
+                errorInvalidZip: 'अमान्य Instagram डेटा ZIP फाइल',
+                privacyPolicy: 'गोपनीयता',
+                termsOfService: 'शर्तें',
+                aboutUs: 'हमारे बारे में',
+                guideTitle: 'Instagram डेटा कैसे डाउनलोड करें',
+                platformMobile: 'मोबाइल ऐप',
+                platformWeb: 'वेब ब्राउज़र',
+                guideNoteText: 'डेटा तैयारी में कुछ मिनट से 24 घंटे लग सकते हैं।',
+                copyId: 'कॉपी',
+                copied: 'कॉपी हो गया',
+                privacyNotice: 'आपकी फाइल कभी स्टोर नहीं होती। सब कुछ आपके ब्राउज़र में प्रोसेस होता है।',
+                sortAlphabet: 'A-Z',
+                sortNewest: 'नवीनतम',
+                sortOldest: 'पुराना',
+                followedAt: 'फॉलो किया',
+                faqTitle: 'अक्सर पूछे जाने वाले प्रश्न',
+                faqQ1: 'क्या यह सेवा सुरक्षित है?',
+                faqA1: 'हां, पूरी तरह सुरक्षित। आपकी फाइल कभी सर्वर पर नहीं भेजी जाती — सारा विश्लेषण आपके ब्राउज़र में होता है।',
+                faqQ2: 'डेटा डाउनलोड करने में कितना समय लगता है?',
+                faqA2: 'Instagram आमतौर पर कुछ मिनट से 24 घंटे में आपकी डेटा फाइल तैयार करता है।',
+                faqQ3: 'अनफॉलोअर क्या होता है?',
+                faqA3: 'अनफॉलोअर वह अकाउंट है जिसे आप फॉलो करते हैं लेकिन वह आपको वापस फॉलो नहीं करता।',
+                faqQ4: 'क्या इसमें कोई शुल्क है?',
+                faqA4: 'नहीं, UnfollowLens एक मुफ्त सेवा है। हालांकि, सेवा स्थिरता सुनिश्चित करने के लिए, 10 लाख से अधिक फॉलोअर्स और फॉलोइंग वाले खातों का विश्लेषण प्रतिबंधित है।',
+                faqQ5: 'अनफॉलोअर लिस्ट अपेक्षा से अलग दिखती है। क्यों?',
+                faqA5: 'Instagram डेटा आपके अनुरोध के समय का स्नैपशॉट है। उसके बाद के बदलाव दिखाई नहीं देंगे।',
+                faqQ6: 'डेटा सुरक्षा और गोपनीयता',
+                faqA6: 'UnfollowLens कोई व्यक्तिगत डेटा एकत्र या संग्रहीत नहीं करता। सारी प्रोसेसिंग आपके ब्राउज़र में होती है।'
+            },
+            ru: {
+                title: 'UnfollowLens - Проверка отписок Instagram',
+                subtitle: 'Найдите аккаунты, которые не подписаны на вас',
+                uploadText: 'Перетащите ZIP-файл или нажмите',
+                uploadHint: 'Файл данных, скачанный из Instagram',
+                analyzeBtn: 'Анализ',
+                loadingText: 'Проверка статуса аккаунтов',
+                loadingWait: 'Пожалуйста, подождите',
+                following: 'Подписки',
+                followers: 'Подписчики',
+                mutual: 'Взаимные',
+                unfollowTarget: 'Отписаться',
+                activeSectionTitle: 'Аккаунты для отписки',
+                inactiveSectionTitle: 'Исключённые аккаунты',
+                fileSelected: 'Файл:',
+                viewProfile: 'Профиль',
+                private: 'Закрытый',
+                deleted: 'Удалён',
+                deletedOrRestricted: 'Удалён',
+                restricted: 'Ограничен',
+                unknown: 'Неизвестно',
+                statusError: 'Ошибка',
+                unverified: 'Не проверен',
+                emptyMessage: 'Нет аккаунтов для отписки! 🎉',
+                errorZipOnly: 'Только ZIP-файлы',
+                errorAnalysis: 'Ошибка анализа',
+                limitTitle: 'Ограничение анализа',
+                limitMessage: 'Общее количество подписчиков и подписок превышает 1 миллион. Анализ больших объёмов данных ограничен для обеспечения стабильности сервиса.',
+                limitClose: 'ОК',
+                errorInvalidZip: 'Недействительный ZIP-файл данных Instagram',
+                privacyPolicy: 'Конфиденциальность',
+                termsOfService: 'Условия',
+                aboutUs: 'О нас',
+                guideTitle: 'Как скачать данные Instagram',
+                platformMobile: 'Мобильное приложение',
+                platformWeb: 'Браузер',
+                guideNoteText: 'Подготовка данных может занять от нескольких минут до 24 часов.',
+                copyId: 'Копировать',
+                copied: 'Скопировано',
+                privacyNotice: 'Ваш файл никогда не сохраняется. Вся обработка происходит в вашем браузере.',
+                sortAlphabet: 'А-Я',
+                sortNewest: 'Новые',
+                sortOldest: 'Старые',
+                followedAt: 'Подписка',
+                faqTitle: 'Часто задаваемые вопросы',
+                faqQ1: 'Безопасен ли этот сервис?',
+                faqA1: 'Да, полностью безопасен. Ваш файл никогда не отправляется на сервер — весь анализ происходит в вашем браузере.',
+                faqQ2: 'Сколько времени занимает загрузка данных?',
+                faqA2: 'Instagram обычно готовит ваш файл данных от нескольких минут до 24 часов.',
+                faqQ3: 'Что такое анфолловер?',
+                faqA3: 'Анфолловер — это аккаунт, на который вы подписаны, но который не подписан на вас в ответ.',
+                faqQ4: 'Это платно?',
+                faqA4: 'Нет, UnfollowLens — бесплатный сервис. Однако для обеспечения стабильности работы анализ ограничен для аккаунтов с более чем 1 миллионом подписчиков и подписок.',
+                faqQ5: 'Список анфолловеров отличается от ожидаемого. Почему?',
+                faqA5: 'Данные Instagram — это снимок на момент вашего запроса. Изменения после этого момента не отражаются.',
+                faqQ6: 'Безопасность данных и конфиденциальность',
+                faqA6: 'UnfollowLens не собирает и не хранит персональные данные. Вся обработка происходит в вашем браузере.'
+            },
+            ar: {
+                title: 'UnfollowLens - فاحص إلغاء المتابعة في Instagram',
+                subtitle: 'اعثر على الحسابات التي لا تتابعك',
+                uploadText: 'اسحب ملف ZIP أو انقر',
+                uploadHint: 'ملف البيانات المحمّل من Instagram',
+                analyzeBtn: 'تحليل',
+                loadingText: 'جارٍ التحقق من حالة الحسابات',
+                loadingWait: 'يرجى الانتظار',
+                following: 'أتابعهم',
+                followers: 'المتابعون',
+                mutual: 'متبادل',
+                unfollowTarget: 'إلغاء المتابعة',
+                activeSectionTitle: 'حسابات لإلغاء متابعتها',
+                inactiveSectionTitle: 'حسابات مستبعدة',
+                fileSelected: 'ملف:',
+                viewProfile: 'الملف الشخصي',
+                private: 'خاص',
+                deleted: 'محذوف',
+                deletedOrRestricted: 'محذوف',
+                restricted: 'مقيّد',
+                unknown: 'غير معروف',
+                statusError: 'خطأ',
+                unverified: 'غير موثّق',
+                emptyMessage: 'لا توجد حسابات لإلغاء متابعتها! 🎉',
+                errorZipOnly: 'ملفات ZIP فقط',
+                errorAnalysis: 'خطأ في التحليل',
+                limitTitle: 'حد التحليل',
+                limitMessage: 'إجمالي المتابعين والمتابَعين يتجاوز مليون. تحليل البيانات الكبيرة مقيد لضمان استقرار الخدمة.',
+                limitClose: 'موافق',
+                errorInvalidZip: 'ملف ZIP بيانات Instagram غير صالح',
+                privacyPolicy: 'الخصوصية',
+                termsOfService: 'الشروط',
+                aboutUs: 'عن الخدمة',
+                guideTitle: 'كيفية تحميل بيانات Instagram',
+                platformMobile: 'تطبيق الجوال',
+                platformWeb: 'المتصفح',
+                guideNoteText: 'قد يستغرق التحضير من دقائق إلى 24 ساعة.',
+                copyId: 'نسخ',
+                copied: 'تم النسخ',
+                privacyNotice: 'لا يتم تخزين ملفك أبدًا. تتم جميع المعالجة في متصفحك.',
+                sortAlphabet: 'أ-ي',
+                sortNewest: 'الأحدث',
+                sortOldest: 'الأقدم',
+                followedAt: 'تمت المتابعة في',
+                faqTitle: 'الأسئلة الشائعة',
+                faqQ1: 'هل هذه الخدمة آمنة؟',
+                faqA1: 'نعم، آمنة تمامًا. لا يتم إرسال ملفك إلى أي خادم — يتم التحليل بالكامل في متصفحك.',
+                faqQ2: 'كم يستغرق تحميل بياناتي؟',
+                faqA2: 'يستغرق Instagram عادةً من دقائق إلى 24 ساعة لتحضير ملف البيانات.',
+                faqQ3: 'ما هو الأنفولور بالضبط؟',
+                faqA3: 'الأنفولور هو حساب تتابعه لكنه لا يتابعك في المقابل.',
+                faqQ4: 'هل هناك رسوم؟',
+                faqA4: 'لا، UnfollowLens خدمة مجانية. ومع ذلك، لضمان استقرار الخدمة، يتم تقييد التحليل للحسابات التي يتجاوز مجموع متابعيها ومتابعاتها مليون.',
+                faqQ5: 'قائمة الأنفولور تبدو مختلفة عما توقعت. لماذا؟',
+                faqA5: 'بيانات Instagram هي لقطة من لحظة طلبك. التغييرات بعد ذلك لن تنعكس.',
+                faqQ6: 'أمان البيانات والخصوصية',
+                faqA6: 'لا يجمع UnfollowLens أي بيانات شخصية أو يخزنها. تتم جميع المعالجة في متصفحك.'
+            },
+            tr: {
+                title: 'UnfollowLens - Instagram Takipten Çıkan Kontrol',
+                subtitle: 'Sizi takip etmeyen hesapları bulun',
+                uploadText: 'ZIP dosyasını sürükleyin veya tıklayın',
+                uploadHint: 'Instagram\'dan indirilen veri dosyası',
+                analyzeBtn: 'Analiz Et',
+                loadingText: 'Hesap durumu kontrol ediliyor',
+                loadingWait: 'Lütfen bekleyin',
+                following: 'Takip',
+                followers: 'Takipçi',
+                mutual: 'Karşılıklı',
+                unfollowTarget: 'Takipten Çık',
+                activeSectionTitle: 'Takipten çıkılacak hesaplar',
+                inactiveSectionTitle: 'Hariç tutulan hesaplar',
+                fileSelected: 'Dosya:',
+                viewProfile: 'Profil',
+                private: 'Gizli',
+                deleted: 'Silindi',
+                deletedOrRestricted: 'Silindi',
+                restricted: 'Kısıtlı',
+                unknown: 'Bilinmiyor',
+                statusError: 'Hata',
+                unverified: 'Doğrulanmadı',
+                emptyMessage: 'Takipten çıkılacak hesap yok! 🎉',
+                errorZipOnly: 'Sadece ZIP dosyaları',
+                errorAnalysis: 'Analiz hatası',
+                limitTitle: 'Analiz Sınırı',
+                limitMessage: 'Toplam takipçi ve takip edilen sayısı 1 milyonu aşmaktadır. Hizmet kararlılığını sağlamak için büyük veri analizi kısıtlanmaktadır.',
+                limitClose: 'Tamam',
+                errorInvalidZip: 'Geçersiz Instagram veri ZIP dosyası',
+                privacyPolicy: 'Gizlilik',
+                termsOfService: 'Şartlar',
+                aboutUs: 'Hakkında',
+                guideTitle: 'Instagram verisi nasıl indirilir',
+                platformMobile: 'Mobil Uygulama',
+                platformWeb: 'Web Tarayıcı',
+                guideNoteText: 'Veri hazırlığı birkaç dakikadan 24 saate kadar sürebilir.',
+                copyId: 'Kopyala',
+                copied: 'Kopyalandı',
+                privacyNotice: 'Dosyanız asla sunucularda saklanmaz. Tüm işlem tarayıcınızda yapılır.',
+                sortAlphabet: 'A-Z',
+                sortNewest: 'En yeni',
+                sortOldest: 'En eski',
+                followedAt: 'Takip tarihi',
+                faqTitle: 'Sık Sorulan Sorular',
+                faqQ1: 'Bu hizmet güvenli mi?',
+                faqA1: 'Evet, tamamen güvenli. Dosyanız asla bir sunucuya gönderilmez — tüm analiz tarayıcınızda yapılır.',
+                faqQ2: 'Verilerimi indirmek ne kadar sürer?',
+                faqA2: 'Instagram genellikle veri dosyanızı hazırlamak için birkaç dakikadan 24 saate kadar süre alır.',
+                faqQ3: 'Unfollower tam olarak nedir?',
+                faqA3: 'Unfollower, takip ettiğiniz ancak sizi geri takip etmeyen bir hesaptır.',
+                faqQ4: 'Ücretli mi?',
+                faqA4: 'Hayır, UnfollowLens ücretsiz bir hizmettir. Ancak hizmet kararlılığını sağlamak için, toplam takipçi ve takip edilen sayısı 1 milyonu aşan hesapların analizi kısıtlanmaktadır.',
+                faqQ5: 'Unfollower listesi beklediğimden farklı görünüyor. Neden?',
+                faqA5: 'Instagram verileri, talep anınızın bir anlık görüntüsüdür. Sonraki değişiklikler yansıtılmaz.',
+                faqQ6: 'Veri Güvenliği ve Gizlilik',
+                faqA6: 'UnfollowLens hiçbir kişisel veri toplamaz veya saklamaz. Tüm işlem tarayıcınızda yapılır.'
+            },
+            vi: {
+                title: 'UnfollowLens - Kiểm tra Unfollow Instagram',
+                subtitle: 'Tìm tài khoản không theo dõi lại bạn',
+                uploadText: 'Kéo thả file ZIP hoặc nhấp vào đây',
+                uploadHint: 'File dữ liệu tải từ Instagram',
+                analyzeBtn: 'Phân tích',
+                loadingText: 'Đang kiểm tra trạng thái tài khoản',
+                loadingWait: 'Vui lòng đợi',
+                following: 'Đang theo dõi',
+                followers: 'Người theo dõi',
+                mutual: 'Theo dõi lẫn nhau',
+                unfollowTarget: 'Bỏ theo dõi',
+                activeSectionTitle: 'Tài khoản cần bỏ theo dõi',
+                inactiveSectionTitle: 'Tài khoản đã loại trừ',
+                fileSelected: 'File:',
+                viewProfile: 'Trang cá nhân',
+                private: 'Riêng tư',
+                deleted: 'Đã xóa',
+                deletedOrRestricted: 'Đã xóa',
+                restricted: 'Bị hạn chế',
+                unknown: 'Không rõ',
+                statusError: 'Lỗi',
+                unverified: 'Chưa xác minh',
+                emptyMessage: 'Không có tài khoản nào cần bỏ theo dõi! 🎉',
+                errorZipOnly: 'Chỉ chấp nhận file ZIP',
+                errorAnalysis: 'Lỗi phân tích',
+                limitTitle: 'Giới hạn phân tích',
+                limitMessage: 'Tổng số người theo dõi và đang theo dõi vượt quá 1 triệu. Phân tích dữ liệu lớn bị hạn chế để đảm bảo sự ổn định của dịch vụ.',
+                limitClose: 'OK',
+                errorInvalidZip: 'File ZIP dữ liệu Instagram không hợp lệ',
+                privacyPolicy: 'Bảo mật',
+                termsOfService: 'Điều khoản',
+                aboutUs: 'Giới thiệu',
+                guideTitle: 'Cách tải dữ liệu Instagram',
+                platformMobile: 'Ứng dụng',
+                platformWeb: 'Trình duyệt',
+                guideNoteText: 'Việc chuẩn bị dữ liệu có thể mất vài phút đến 24 giờ.',
+                copyId: 'Sao chép',
+                copied: 'Đã sao chép',
+                privacyNotice: 'File của bạn không bao giờ được lưu trữ. Mọi xử lý diễn ra trong trình duyệt.',
+                sortAlphabet: 'A-Z',
+                sortNewest: 'Mới nhất',
+                sortOldest: 'Cũ nhất',
+                followedAt: 'Theo dõi ngày',
+                faqTitle: 'Câu hỏi thường gặp',
+                faqQ1: 'Dịch vụ này có an toàn không?',
+                faqA1: 'Có, hoàn toàn an toàn. File của bạn không bao giờ được gửi đến máy chủ — toàn bộ phân tích diễn ra trong trình duyệt.',
+                faqQ2: 'Mất bao lâu để tải dữ liệu?',
+                faqA2: 'Instagram thường mất vài phút đến 24 giờ để chuẩn bị file dữ liệu của bạn.',
+                faqQ3: 'Unfollower chính xác là gì?',
+                faqA3: 'Unfollower là tài khoản bạn theo dõi nhưng không theo dõi lại bạn.',
+                faqQ4: 'Có tốn phí không?',
+                faqA4: 'Không, UnfollowLens là dịch vụ miễn phí. Tuy nhiên, để đảm bảo sự ổn định của dịch vụ, việc phân tích bị hạn chế đối với tài khoản có tổng người theo dõi và đang theo dõi vượt quá 1 triệu.',
+                faqQ5: 'Danh sách unfollower khác với mong đợi. Tại sao?',
+                faqA5: 'Dữ liệu Instagram là ảnh chụp tại thời điểm yêu cầu. Các thay đổi sau đó sẽ không được phản ánh.',
+                faqQ6: 'Bảo mật dữ liệu và quyền riêng tư',
+                faqA6: 'UnfollowLens không thu thập hoặc lưu trữ dữ liệu cá nhân. Mọi xử lý diễn ra trong trình duyệt.'
+            },
+            th: {
+                title: 'UnfollowLens - ตรวจสอบ Unfollow Instagram',
+                subtitle: 'ค้นหาบัญชีที่ไม่ได้ติดตามคุณกลับ',
+                uploadText: 'ลากไฟล์ ZIP หรือคลิก',
+                uploadHint: 'ไฟล์ข้อมูลที่ดาวน์โหลดจาก Instagram',
+                analyzeBtn: 'วิเคราะห์',
+                loadingText: 'กำลังตรวจสอบสถานะบัญชี',
+                loadingWait: 'กรุณารอสักครู่',
+                following: 'กำลังติดตาม',
+                followers: 'ผู้ติดตาม',
+                mutual: 'ติดตามกัน',
+                unfollowTarget: 'เลิกติดตาม',
+                activeSectionTitle: 'บัญชีที่ควรเลิกติดตาม',
+                inactiveSectionTitle: 'บัญชีที่ยกเว้น',
+                fileSelected: 'ไฟล์:',
+                viewProfile: 'โปรไฟล์',
+                private: 'ส่วนตัว',
+                deleted: 'ถูกลบ',
+                deletedOrRestricted: 'ถูกลบ',
+                restricted: 'ถูกจำกัด',
+                unknown: 'ไม่ทราบ',
+                statusError: 'ข้อผิดพลาด',
+                unverified: 'ไม่ได้ยืนยัน',
+                emptyMessage: 'ไม่มีบัญชีที่ต้องเลิกติดตาม! 🎉',
+                errorZipOnly: 'รองรับเฉพาะไฟล์ ZIP',
+                errorAnalysis: 'เกิดข้อผิดพลาด',
+                limitTitle: 'ข้อจำกัดการวิเคราะห์',
+                limitMessage: 'จำนวนผู้ติดตามและกำลังติดตามรวมกันเกิน 1 ล้าน การวิเคราะห์ข้อมูลขนาดใหญ่ถูกจำกัดเพื่อความเสถียรของบริการ',
+                limitClose: 'ตกลง',
+                errorInvalidZip: 'ไฟล์ ZIP ข้อมูล Instagram ไม่ถูกต้อง',
+                privacyPolicy: 'ความเป็นส่วนตัว',
+                termsOfService: 'ข้อกำหนด',
+                aboutUs: 'เกี่ยวกับเรา',
+                guideTitle: 'วิธีดาวน์โหลดข้อมูล Instagram',
+                platformMobile: 'แอปมือถือ',
+                platformWeb: 'เว็บเบราว์เซอร์',
+                guideNoteText: 'การเตรียมข้อมูลอาจใช้เวลาไม่กี่นาทีถึง 24 ชั่วโมง',
+                copyId: 'คัดลอก',
+                copied: 'คัดลอกแล้ว',
+                privacyNotice: 'ไฟล์ของคุณจะไม่ถูกจัดเก็บ ทุกอย่างประมวลผลในเบราว์เซอร์ของคุณ',
+                sortAlphabet: 'A-Z',
+                sortNewest: 'ล่าสุด',
+                sortOldest: 'เก่าสุด',
+                followedAt: 'ติดตามเมื่อ',
+                faqTitle: 'คำถามที่พบบ่อย',
+                faqQ1: 'บริการนี้ปลอดภัยหรือไม่?',
+                faqA1: 'ใช่ ปลอดภัยอย่างสมบูรณ์ ไฟล์ของคุณจะไม่ถูกส่งไปยังเซิร์ฟเวอร์ — การวิเคราะห์ทั้งหมดเกิดขึ้นในเบราว์เซอร์ของคุณ',
+                faqQ2: 'ใช้เวลานานแค่ไหนในการดาวน์โหลดข้อมูล?',
+                faqA2: 'Instagram มักใช้เวลาไม่กี่นาทีถึง 24 ชั่วโมงในการเตรียมไฟล์ข้อมูลของคุณ',
+                faqQ3: 'Unfollower คืออะไร?',
+                faqA3: 'Unfollower คือบัญชีที่คุณติดตามแต่ไม่ได้ติดตามคุณกลับ',
+                faqQ4: 'มีค่าใช้จ่ายหรือไม่?',
+                faqA4: 'ไม่ UnfollowLens เป็นบริการฟรี อย่างไรก็ตาม เพื่อความเสถียรของบริการ การวิเคราะห์จะถูกจำกัดสำหรับบัญชีที่มีผู้ติดตามและกำลังติดตามรวมกันเกิน 1 ล้าน',
+                faqQ5: 'รายชื่อ Unfollower ดูแตกต่างจากที่คาดไว้ ทำไม?',
+                faqA5: 'ข้อมูล Instagram เป็นสแนปช็อตจากเวลาที่คุณร้องขอ การเปลี่ยนแปลงหลังจากนั้นจะไม่แสดง',
+                faqQ6: 'ความปลอดภัยของข้อมูลและความเป็นส่วนตัว',
+                faqA6: 'UnfollowLens ไม่เก็บรวบรวมหรือจัดเก็บข้อมูลส่วนบุคคล การประมวลผลทั้งหมดเกิดขึ้นในเบราว์เซอร์ของคุณ'
+            },
+            id: {
+                title: 'UnfollowLens - Pemeriksa Unfollow Instagram',
+                subtitle: 'Temukan akun yang tidak mengikuti Anda kembali',
+                uploadText: 'Seret file ZIP atau klik',
+                uploadHint: 'File data yang diunduh dari Instagram',
+                analyzeBtn: 'Analisis',
+                loadingText: 'Memeriksa status akun',
+                loadingWait: 'Harap tunggu',
+                following: 'Mengikuti',
+                followers: 'Pengikut',
+                mutual: 'Saling mengikuti',
+                unfollowTarget: 'Berhenti ikuti',
+                activeSectionTitle: 'Akun untuk berhenti diikuti',
+                inactiveSectionTitle: 'Akun yang dikecualikan',
+                fileSelected: 'File:',
+                viewProfile: 'Profil',
+                private: 'Privat',
+                deleted: 'Dihapus',
+                deletedOrRestricted: 'Dihapus',
+                restricted: 'Dibatasi',
+                unknown: 'Tidak diketahui',
+                statusError: 'Error',
+                unverified: 'Belum diverifikasi',
+                emptyMessage: 'Tidak ada akun yang perlu di-unfollow! 🎉',
+                errorZipOnly: 'Hanya file ZIP',
+                errorAnalysis: 'Error saat analisis',
+                limitTitle: 'Batas Analisis',
+                limitMessage: 'Total pengikut dan mengikuti melebihi 1 juta. Analisis data besar dibatasi untuk menjaga stabilitas layanan.',
+                limitClose: 'OK',
+                errorInvalidZip: 'File ZIP data Instagram tidak valid',
+                privacyPolicy: 'Privasi',
+                termsOfService: 'Ketentuan',
+                aboutUs: 'Tentang',
+                guideTitle: 'Cara mengunduh data Instagram',
+                platformMobile: 'Aplikasi Seluler',
+                platformWeb: 'Browser Web',
+                guideNoteText: 'Persiapan data bisa memakan waktu beberapa menit hingga 24 jam.',
+                copyId: 'Salin',
+                copied: 'Disalin',
+                privacyNotice: 'File Anda tidak pernah disimpan. Semua pemrosesan terjadi di browser Anda.',
+                sortAlphabet: 'A-Z',
+                sortNewest: 'Terbaru',
+                sortOldest: 'Terlama',
+                followedAt: 'Diikuti pada',
+                faqTitle: 'Pertanyaan yang Sering Diajukan',
+                faqQ1: 'Apakah layanan ini aman?',
+                faqA1: 'Ya, sepenuhnya aman. File Anda tidak pernah dikirim ke server — semua analisis terjadi di browser Anda.',
+                faqQ2: 'Berapa lama waktu untuk mengunduh data saya?',
+                faqA2: 'Instagram biasanya membutuhkan beberapa menit hingga 24 jam untuk menyiapkan file data Anda.',
+                faqQ3: 'Apa itu unfollower?',
+                faqA3: 'Unfollower adalah akun yang Anda ikuti tetapi tidak mengikuti Anda kembali.',
+                faqQ4: 'Apakah ada biayanya?',
+                faqA4: 'Tidak, UnfollowLens adalah layanan gratis. Namun, untuk menjaga stabilitas layanan, analisis dibatasi untuk akun dengan total pengikut dan mengikuti lebih dari 1 juta.',
+                faqQ5: 'Daftar unfollower terlihat berbeda dari yang diharapkan. Mengapa?',
+                faqA5: 'Data Instagram adalah snapshot dari waktu permintaan Anda. Perubahan setelah itu tidak akan tercermin.',
+                faqQ6: 'Keamanan Data & Privasi',
+                faqA6: 'UnfollowLens tidak mengumpulkan atau menyimpan data pribadi. Semua pemrosesan terjadi di browser Anda.'
+            },
+            ms: {
+                title: 'UnfollowLens - Pemeriksa Unfollow Instagram',
+                subtitle: 'Cari akaun yang tidak mengikuti anda kembali',
+                uploadText: 'Seret fail ZIP atau klik',
+                uploadHint: 'Fail data yang dimuat turun dari Instagram',
+                analyzeBtn: 'Analisis',
+                loadingText: 'Memeriksa status akaun',
+                loadingWait: 'Sila tunggu',
+                following: 'Mengikuti',
+                followers: 'Pengikut',
+                mutual: 'Saling mengikuti',
+                unfollowTarget: 'Nyahikut',
+                activeSectionTitle: 'Akaun untuk dinyahikut',
+                inactiveSectionTitle: 'Akaun yang dikecualikan',
+                fileSelected: 'Fail:',
+                viewProfile: 'Profil',
+                private: 'Peribadi',
+                deleted: 'Dipadam',
+                deletedOrRestricted: 'Dipadam',
+                restricted: 'Terhad',
+                unknown: 'Tidak diketahui',
+                statusError: 'Ralat',
+                unverified: 'Belum disahkan',
+                emptyMessage: 'Tiada akaun untuk dinyahikut! 🎉',
+                errorZipOnly: 'Fail ZIP sahaja',
+                errorAnalysis: 'Ralat analisis',
+                limitTitle: 'Had Analisis',
+                limitMessage: 'Jumlah pengikut dan mengikuti melebihi 1 juta. Analisis data besar dihadkan untuk memastikan kestabilan perkhidmatan.',
+                limitClose: 'OK',
+                errorInvalidZip: 'Fail ZIP data Instagram tidak sah',
+                privacyPolicy: 'Privasi',
+                termsOfService: 'Terma',
+                aboutUs: 'Mengenai',
+                guideTitle: 'Cara memuat turun data Instagram',
+                platformMobile: 'Aplikasi Mudah Alih',
+                platformWeb: 'Pelayar Web',
+                guideNoteText: 'Penyediaan data mungkin mengambil masa beberapa minit hingga 24 jam.',
+                copyId: 'Salin',
+                copied: 'Disalin',
+                privacyNotice: 'Fail anda tidak pernah disimpan. Semua pemprosesan berlaku dalam pelayar anda.',
+                sortAlphabet: 'A-Z',
+                sortNewest: 'Terbaru',
+                sortOldest: 'Terlama',
+                followedAt: 'Diikuti pada',
+                faqTitle: 'Soalan Lazim',
+                faqQ1: 'Adakah perkhidmatan ini selamat?',
+                faqA1: 'Ya, sepenuhnya selamat. Fail anda tidak pernah dihantar ke pelayan — semua analisis berlaku dalam pelayar anda.',
+                faqQ2: 'Berapa lama masa untuk memuat turun data saya?',
+                faqA2: 'Instagram biasanya mengambil masa beberapa minit hingga 24 jam untuk menyediakan fail data anda.',
+                faqQ3: 'Apa itu unfollower?',
+                faqA3: 'Unfollower ialah akaun yang anda ikuti tetapi tidak mengikuti anda kembali.',
+                faqQ4: 'Adakah ia berbayar?',
+                faqA4: 'Tidak, UnfollowLens adalah perkhidmatan percuma. Walau bagaimanapun, untuk memastikan kestabilan perkhidmatan, analisis dihadkan untuk akaun dengan jumlah pengikut dan mengikuti melebihi 1 juta.',
+                faqQ5: 'Senarai unfollower kelihatan berbeza dari yang dijangka. Mengapa?',
+                faqA5: 'Data Instagram adalah snapshot dari masa permintaan anda. Perubahan selepas itu tidak akan dipaparkan.',
+                faqQ6: 'Keselamatan Data & Privasi',
+                faqA6: 'UnfollowLens tidak mengumpul atau menyimpan data peribadi. Semua pemprosesan berlaku dalam pelayar anda.'
             }
+        };
+
+        const langMeta = {
+            ko: { flag: '🇰🇷', name: '한국어' },
+            en: { flag: '🇺🇸', name: 'English' },
+            ja: { flag: '🇯🇵', name: '日本語' },
+            zh: { flag: '🇨🇳', name: '中文' },
+            es: { flag: '🇪🇸', name: 'Español' },
+            fr: { flag: '🇫🇷', name: 'Français' },
+            de: { flag: '🇩🇪', name: 'Deutsch' },
+            pt: { flag: '🇧🇷', name: 'Português' },
+            hi: { flag: '🇮🇳', name: 'हिन्दी' },
+            ru: { flag: '🇷🇺', name: 'Русский' },
+            ar: { flag: '🇸🇦', name: 'العربية' },
+            tr: { flag: '🇹🇷', name: 'Türkçe' },
+            vi: { flag: '🇻🇳', name: 'Tiếng Việt' },
+            th: { flag: '🇹🇭', name: 'ไทย' },
+            id: { flag: '🇮🇩', name: 'Indonesia' },
+            ms: { flag: '🇲🇾', name: 'Malay' }
         };
 
         let currentLang = 'ko';
 
+        function getLangFromPath() {
+            const seg = window.location.pathname.replace(/\/$/, '').split('/')[1];
+            return (seg && langMeta[seg]) ? seg : null;
+        }
+
         function detectLanguage() {
+            const pathLang = getLangFromPath();
+            if (pathLang) return pathLang;
+            const saved = localStorage.getItem('preferredLang');
+            if (saved && translations[saved]) return saved;
             const browserLang = (navigator.language || navigator.userLanguage).split('-')[0];
             return translations[browserLang] ? browserLang : 'en';
         }
 
-        function setLanguage(lang) {
+        function setLanguage(lang, options) {
+            var useReplaceState = options && options.replaceState;
             currentLang = lang;
             localStorage.setItem('preferredLang', lang);
             document.documentElement.lang = lang;
+
+            var target = '/' + lang;
+            if (window.location.pathname !== target && window.location.pathname !== target + '/') {
+                if (useReplaceState) {
+                    history.replaceState({ lang: lang }, '', target);
+                } else {
+                    history.pushState({ lang: lang }, '', target);
+                }
+            }
+
+            var canonical = document.querySelector('link[rel="canonical"]');
+            if (canonical) canonical.href = 'https://unfollowlens.com/' + lang;
 
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
@@ -1769,7 +2836,15 @@
                 }
             });
 
-            document.querySelectorAll('.lang-btn').forEach(btn => {
+            const meta = langMeta[lang];
+            if (meta) {
+                const flagEl = document.getElementById('langFlag');
+                const nameEl = document.getElementById('langName');
+                if (flagEl) flagEl.textContent = meta.flag;
+                if (nameEl) nameEl.textContent = meta.name;
+            }
+
+            document.querySelectorAll('.lang-dropdown__option').forEach(btn => {
                 btn.classList.toggle('active', btn.dataset.lang === lang);
             });
         }
@@ -1779,12 +2854,39 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            const savedLang = localStorage.getItem('preferredLang');
-            setLanguage(savedLang || detectLanguage());
+            // Build language dropdown
+            const langMenu = document.getElementById('langMenu');
+            const langDropdown = document.getElementById('langDropdown');
+            const langTrigger = document.getElementById('langTrigger');
 
-            document.querySelectorAll('.lang-btn').forEach(btn => {
-                btn.addEventListener('click', () => setLanguage(btn.dataset.lang));
+            if (langMenu) {
+                Object.entries(langMeta).forEach(([code, meta]) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'lang-dropdown__option';
+                    btn.dataset.lang = code;
+                    btn.innerHTML = '<span style="font-size:1.1rem;line-height:1">' + meta.flag + '</span>' + meta.name;
+                    btn.addEventListener('click', () => {
+                        setLanguage(code);
+                        langDropdown.classList.remove('open');
+                    });
+                    langMenu.appendChild(btn);
+                });
+            }
+
+            if (langTrigger) {
+                langTrigger.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    langDropdown.classList.toggle('open');
+                });
+            }
+
+            document.addEventListener('click', (e) => {
+                if (langDropdown && !langDropdown.contains(e.target)) {
+                    langDropdown.classList.remove('open');
+                }
             });
+
+            setLanguage(detectLanguage(), { replaceState: true });
 
             const guideHeader = document.getElementById('guideHeader');
             const guideContent = document.getElementById('guideContent');
@@ -1803,6 +2905,22 @@
                     document.querySelectorAll('.platform-content').forEach(c => c.classList.remove('show'));
                     document.getElementById(platform === 'mobile' ? 'mobileGuide' : 'webGuide').classList.add('show');
                 });
+            });
+
+            // FAQ accordion
+            document.querySelectorAll('.faq-question').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const item = btn.closest('.faq-item');
+                    const isOpen = item.classList.contains('open');
+                    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+                    if (!isOpen) item.classList.add('open');
+                });
+            });
+
+            // Browser back/forward language restore
+            window.addEventListener('popstate', function(e) {
+                var lang = (e.state && e.state.lang) || getLangFromPath() || detectLanguage();
+                setLanguage(lang, { replaceState: true });
             });
         });
 
@@ -1938,6 +3056,24 @@
                         .map(entry => entry.value)
                         .filter(Boolean)
                         .forEach(username => followersSet.add(username));
+                }
+
+                var totalCount = followingSet.size + followersSet.size;
+                if (totalCount > 1000000) {
+                    loading.style.display = 'none';
+                    analyzeBtn.disabled = false;
+                    var limitModal = document.getElementById('limitModal');
+                    limitModal.classList.add('show');
+                    document.getElementById('limitCloseBtn').onclick = function() {
+                        limitModal.classList.remove('show');
+                    };
+                    limitModal.addEventListener('click', function handleOverlay(e) {
+                        if (e.target === limitModal) {
+                            limitModal.classList.remove('show');
+                            limitModal.removeEventListener('click', handleOverlay);
+                        }
+                    });
+                    return;
                 }
 
                 const nonFollowers = [...followingSet]

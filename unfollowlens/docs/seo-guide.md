@@ -45,18 +45,32 @@
 <meta name="twitter:description" content="나를 팔로우하지 않는 계정을 찾아보세요.">
 <meta name="twitter:image" content="https://unfollowlens.com/static/og-image.png">
 
-<!-- Canonical & 다국어 -->
+<!-- Canonical & 다국어 (서브디렉토리 방식, 16개 언어 + x-default) -->
 <link rel="canonical" href="https://unfollowlens.com">
-<link rel="alternate" hreflang="ko" href="https://unfollowlens.com?lang=ko">
-<link rel="alternate" hreflang="en" href="https://unfollowlens.com?lang=en">
-<link rel="alternate" hreflang="ja" href="https://unfollowlens.com?lang=ja">
-<link rel="alternate" hreflang="zh" href="https://unfollowlens.com?lang=zh">
-<link rel="alternate" hreflang="es" href="https://unfollowlens.com?lang=es">
+<link rel="alternate" hreflang="x-default" href="https://unfollowlens.com/">
+<link rel="alternate" hreflang="ko" href="https://unfollowlens.com/ko">
+<link rel="alternate" hreflang="en" href="https://unfollowlens.com/en">
+<link rel="alternate" hreflang="ja" href="https://unfollowlens.com/ja">
+<link rel="alternate" hreflang="zh" href="https://unfollowlens.com/zh">
+<link rel="alternate" hreflang="es" href="https://unfollowlens.com/es">
+<link rel="alternate" hreflang="fr" href="https://unfollowlens.com/fr">
+<link rel="alternate" hreflang="de" href="https://unfollowlens.com/de">
+<link rel="alternate" hreflang="pt" href="https://unfollowlens.com/pt">
+<link rel="alternate" hreflang="hi" href="https://unfollowlens.com/hi">
+<link rel="alternate" hreflang="ru" href="https://unfollowlens.com/ru">
+<link rel="alternate" hreflang="ar" href="https://unfollowlens.com/ar">
+<link rel="alternate" hreflang="tr" href="https://unfollowlens.com/tr">
+<link rel="alternate" hreflang="vi" href="https://unfollowlens.com/vi">
+<link rel="alternate" hreflang="th" href="https://unfollowlens.com/th">
+<link rel="alternate" hreflang="id" href="https://unfollowlens.com/id">
+<link rel="alternate" hreflang="ms" href="https://unfollowlens.com/ms">
 ```
 
 ### 구조화 데이터 (JSON-LD)
 
-`dist/index.html` 하단에 `WebApplication` 스키마:
+`dist/index.html` 하단에 2개의 JSON-LD 스키마:
+
+**1. WebApplication 스키마:**
 
 ```json
 {
@@ -80,11 +94,40 @@
 }
 ```
 
+**2. FAQPage 스키마 (Google 리치 스니펫용):**
+
+```json
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is UnfollowLens safe to use?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, completely safe. All data is processed only in your browser..."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does it cost anything?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No, UnfollowLens is a free service. However, analysis is restricted for accounts with more than 1 million combined followers and following."
+      }
+    }
+  ]
+}
+```
+
+> 총 6개 FAQ 질문: 서비스 안전성, 데이터 다운로드 시간, 언팔로워 정의, 비용/제한, 결과 차이, 개인정보 보호
+
 ### 정적 파일
 
 | 파일 | 위치 | 용도 |
 |------|------|------|
-| `sitemap.xml` | `dist/sitemap.xml` | 검색엔진 크롤링용 사이트맵 (5개 언어 hreflang 포함) |
+| `sitemap.xml` | `dist/sitemap.xml` | 16개 언어 서브디렉토리 URL + hreflang 상호 참조 |
 | `robots.txt` | `dist/robots.txt` | 크롤러 접근 허용 + 사이트맵 참조 |
 | `ads.txt` | `dist/ads.txt` | AdSense 퍼블리셔 인증 |
 | `og-image.png` | `dist/static/og-image.png` | 소셜 공유 미리보기 이미지 (1200x630) |
@@ -128,39 +171,77 @@
 - **참여(Engagement)**: 페이지별 조회수, 체류 시간
 - **이벤트**: 자동 수집 이벤트 (page_view, scroll, click 등)
 
-## 3. Preview 배포 noindex 설정
+## 3. Cloudflare Pages 미들웨어 (`functions/_middleware.js`)
 
-### 문제
+미들웨어는 3가지 역할을 수행:
 
-Cloudflare Pages는 production 외에 `*.unfollowlens.pages.dev` preview URL도 생성.
-검색엔진이 preview URL을 인덱싱하면 중복 콘텐츠 문제 발생.
+1. **`?lang=ko` → 301 `/ko`**: 하위 호환 리다이렉트
+2. **`/ko`, `/en` 등 → `index.html` 서빙**: 서브디렉토리 i18n URL 라우팅
+3. **Preview noindex**: `*.pages.dev` URL에 `X-Robots-Tag: noindex` 추가
 
-### 해결
-
-`functions/_middleware.js`에서 hostname 기반으로 조건부 `X-Robots-Tag` 헤더 추가:
+### 전체 코드
 
 ```javascript
+const LANGS = new Set([
+  'ko','en','ja','zh','es','fr','de','pt',
+  'hi','ru','ar','tr','vi','th','id','ms'
+]);
+
 export async function onRequest(context) {
-  const response = await context.next();
   const url = new URL(context.request.url);
 
-  if (url.hostname.endsWith('.pages.dev')) {
-    const newResponse = new Response(response.body, response);
-    newResponse.headers.set('X-Robots-Tag', 'noindex');
-    return newResponse;
+  // 1) ?lang=ko → 301 /ko
+  const qLang = url.searchParams.get('lang');
+  if (qLang && LANGS.has(qLang)) {
+    url.searchParams.delete('lang');
+    url.pathname = '/' + qLang;
+    return Response.redirect(url.toString(), 301);
   }
 
+  // 2) /ko, /en 등 → index.html 서빙
+  const seg = url.pathname.replace(/\/$/, '').split('/')[1];
+  if (seg && LANGS.has(seg)) {
+    const assetUrl = new URL(url);
+    assetUrl.pathname = '/index.html';
+    const resp = await context.env.ASSETS.fetch(new Request(assetUrl, context.request));
+    return addPreviewHeader(new Response(resp.body, resp), url);
+  }
+
+  // 3) 나머지 → 그대로 통과
+  const resp = await context.next();
+  return addPreviewHeader(resp, url);
+}
+
+function addPreviewHeader(response, url) {
+  if (url.hostname.endsWith('.pages.dev')) {
+    const r = new Response(response.body, response);
+    r.headers.set('X-Robots-Tag', 'noindex');
+    return r;
+  }
   return response;
 }
 ```
 
-### 동작
+### 동작 흐름
 
 ```
-요청 → _middleware.js
-  ├─ unfollowlens.com      → 그대로 통과 (인덱싱 허용)
-  └─ *.pages.dev            → X-Robots-Tag: noindex (인덱싱 차단)
+사용자 요청 → _middleware.js
+  ├─ ?lang=ko             → 301 → /ko
+  ├─ /ko                  → index.html 서빙 → JS가 한국어 적용
+  ├─ /en                  → index.html 서빙 → JS가 영어 적용
+  ├─ /                    → index.html → JS가 브라우저 언어 감지 → replaceState /{lang}
+  ├─ /about, /privacy     → 그대로 통과
+  └─ *.pages.dev          → X-Robots-Tag: noindex (인덱싱 차단)
 ```
+
+### 클라이언트 사이드 i18n
+
+| 함수 | 역할 |
+|------|------|
+| `getLangFromPath()` | URL 경로에서 언어 코드 추출 |
+| `detectLanguage()` | 우선순위: URL 경로 → localStorage → 브라우저 → `en` |
+| `setLanguage(lang, options)` | DOM 번역 + `pushState`/`replaceState`로 URL 업데이트 |
+| `popstate` 리스너 | 브라우저 뒤로/앞으로 버튼 시 언어 복원 |
 
 ### 검증
 
@@ -170,6 +251,10 @@ curl -sI https://<preview-hash>.unfollowlens.pages.dev/ | grep -i x-robots
 
 # Production → noindex 헤더 없어야 함
 curl -sI https://unfollowlens.com/ | grep -i x-robots
+
+# 하위 호환 리다이렉트 확인
+curl -sI "https://unfollowlens.com/?lang=ko" | grep -i location
+# → Location: https://unfollowlens.com/ko
 ```
 
 ## 4. AdSense
@@ -276,15 +361,23 @@ google.com, pub-4674053917795285, DIRECT, f08c47fec0942fa0
 
 ### 파일 구성
 
-- [x] `dist/index.html` — 메타태그, OG, Twitter Card, JSON-LD, GA4, AdSense
+- [x] `dist/index.html` — 메타태그, OG, Twitter Card, JSON-LD (WebApplication + FAQPage), GA4, AdSense
 - [x] `dist/about/index.html` — 메타태그, canonical, GA4, AdSense
 - [x] `dist/privacy/index.html` — 메타태그, canonical, GA4, AdSense
 - [x] `dist/terms/index.html` — 메타태그, canonical, GA4, AdSense
-- [x] `dist/sitemap.xml` — 다국어 hreflang, lastmod, priority
+- [x] `dist/sitemap.xml` — 16개 언어 서브디렉토리 URL + hreflang 상호 참조
 - [x] `dist/robots.txt` — Allow: /, Sitemap 참조
 - [x] `dist/ads.txt` — AdSense 퍼블리셔 인증
 - [x] `dist/static/og-image.png` — 1200x630 소셜 공유 이미지
-- [x] `functions/_middleware.js` — Preview 배포 noindex
+- [x] `functions/_middleware.js` — i18n URL 라우팅 + `?lang=` 301 리다이렉트 + Preview noindex
+
+### 다국어 SEO
+
+- [x] hreflang 16개 언어 서브디렉토리 URL + x-default
+- [x] `?lang=ko` → `/ko` 301 리다이렉트 (하위 호환)
+- [x] FAQPage JSON-LD 구조화 데이터 (6개 질문)
+- [x] canonical URL 동적 업데이트 (언어 전환 시)
+- [x] sitemap.xml 언어별 URL 엔트리 (상호 hreflang 참조)
 
 ### 검색엔진 인증
 
