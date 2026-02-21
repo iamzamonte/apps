@@ -19,9 +19,14 @@ class Toolbar(QWidget):
     export_requested = pyqtSignal()      # 내보내기 버튼 클릭
     batch_export_requested = pyqtSignal()  # 일괄 내보내기 버튼 클릭
     properties_changed = pyqtSignal(str, int, object)  # pen_color, pen_width, fill_color
+    crop_mode_toggled = pyqtSignal(bool)     # 자르기 모드 전환
+    crop_undo_requested = pyqtSignal()       # 자르기 되돌리기
     zoom_in_requested = pyqtSignal()
     zoom_out_requested = pyqtSignal()
     zoom_reset_requested = pyqtSignal()
+    save_requested = pyqtSignal()               # 저장 버튼 클릭
+    save_undo_requested = pyqtSignal()          # 저장 되돌리기
+    reset_requested = pyqtSignal()              # 초기화 버튼 클릭
 
     def __init__(self, parent: Optional[QWidget] = None) -> None:
         super().__init__(parent)
@@ -31,7 +36,11 @@ class Toolbar(QWidget):
         layout.setSpacing(4)
         self.tool_buttons: List[QPushButton] = []
 
-        # 파일 버튼 (불러오기 / 내보내기 / 일괄 내보내기)
+        # 파일 버튼 (초기화 / 불러오기 / 내보내기 / 일괄 내보내기)
+        self.reset_btn = self._make_file_btn("초기화")
+        self.reset_btn.clicked.connect(self.reset_requested.emit)
+        layout.addWidget(self.reset_btn)
+
         self.open_btn = self._make_file_btn("불러오기")
         self.open_btn.clicked.connect(self.open_requested.emit)
         layout.addWidget(self.open_btn)
@@ -43,6 +52,17 @@ class Toolbar(QWidget):
         self.batch_export_btn = self._make_file_btn("일괄 내보내기")
         self.batch_export_btn.clicked.connect(self.batch_export_requested.emit)
         layout.addWidget(self.batch_export_btn)
+
+        self.save_btn = self._make_file_btn("저장")
+        self.save_btn.clicked.connect(self.save_requested.emit)
+        layout.addWidget(self.save_btn)
+
+        self._save_undo_btn = QPushButton("↩")
+        self._save_undo_btn.setFixedWidth(32)
+        self._save_undo_btn.setStyleSheet(TOOL_BTN_FILE_STYLE)
+        self._save_undo_btn.setEnabled(False)
+        self._save_undo_btn.clicked.connect(self.save_undo_requested.emit)
+        layout.addWidget(self._save_undo_btn)
 
         # 구분선
         layout.addWidget(self._make_separator())
@@ -77,6 +97,21 @@ class Toolbar(QWidget):
         self._width_spin.setValue(DEFAULT_PEN_WIDTH)
         self._width_spin.valueChanged.connect(self._emit_properties)
         layout.addWidget(self._width_spin)
+
+        # 구분선 + 자르기 버튼
+        layout.addWidget(self._make_separator())
+        self._crop_btn = QPushButton("자르기")
+        self._crop_btn.setCheckable(True)
+        self._crop_btn.setStyleSheet(TOOL_BTN_SHAPE_STYLE)
+        self._crop_btn.clicked.connect(self._on_crop_toggled)
+        layout.addWidget(self._crop_btn)
+
+        self._crop_undo_btn = QPushButton("↩")
+        self._crop_undo_btn.setFixedWidth(32)
+        self._crop_undo_btn.setStyleSheet(TOOL_BTN_FILE_STYLE)
+        self._crop_undo_btn.setEnabled(False)
+        self._crop_undo_btn.clicked.connect(self.crop_undo_requested.emit)
+        layout.addWidget(self._crop_undo_btn)
 
         layout.addStretch()
 
@@ -154,9 +189,33 @@ class Toolbar(QWidget):
         btn = QPushButton(label)
         btn.setCheckable(True)
         btn.setStyleSheet(TOOL_BTN_SHAPE_STYLE)
-        btn.clicked.connect(lambda _, t=shape_type: self.tool_changed.emit(t))
+        btn.clicked.connect(lambda _, t=shape_type: self._on_tool_clicked(t))
         self.tool_buttons.append(btn)
         self.layout().addWidget(btn)
+
+    def _on_tool_clicked(self, shape_type: Optional[ShapeType]) -> None:
+        if hasattr(self, '_crop_btn'):
+            self._crop_btn.setChecked(False)
+        self.tool_changed.emit(shape_type)
+
+    def _on_crop_toggled(self) -> None:
+        is_checked = self._crop_btn.isChecked()
+        if is_checked:
+            for btn in self.tool_buttons:
+                btn.setChecked(False)
+        self.crop_mode_toggled.emit(is_checked)
+
+    def exit_crop_mode(self) -> None:
+        """자르기 완료 후 자르기 모드를 해제합니다."""
+        self._crop_btn.setChecked(False)
+
+    def set_crop_undo_enabled(self, enabled: bool) -> None:
+        """자르기 되돌리기 버튼 활성/비활성."""
+        self._crop_undo_btn.setEnabled(enabled)
+
+    def set_save_undo_enabled(self, enabled: bool) -> None:
+        """저장 되돌리기 버튼 활성/비활성."""
+        self._save_undo_btn.setEnabled(enabled)
 
     def _pick_pen_color(self) -> None:
         color = QColorDialog.getColor(QColor(self._pen_color), self)
@@ -166,6 +225,13 @@ class Toolbar(QWidget):
             self._emit_properties()
 
     def _pick_fill_color(self) -> None:
+        if self._fill_color is not None:
+            # 채움 색상이 있으면 → 채움 없음으로 토글
+            self._fill_color = None
+            self._fill_btn.setText("채움 없음")
+            self._fill_btn.setStyleSheet(FILL_NONE_STYLE)
+            self._emit_properties()
+            return
         color = QColorDialog.getColor(parent=self)
         if color.isValid():
             self._fill_color = color.name()

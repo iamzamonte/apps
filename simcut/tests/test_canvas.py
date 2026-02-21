@@ -613,3 +613,157 @@ def test_canvas_scale_unaffected_by_zoom(app, sample_image):
     base = canvas.scale
     canvas.set_zoom(2.0)
     assert canvas.scale == base
+
+
+# ── clear_image 테스트 ─────────────────────────────────────────
+
+def test_canvas_clear_image(app, sample_image):
+    canvas = Canvas(ShapeManager())
+    canvas.load_image(sample_image)
+    assert canvas.image is not None
+    canvas.clear_image()
+    assert canvas.image is None
+
+
+# ── 자르기 모드 테스트 ─────────────────────────────────────────
+
+def test_canvas_crop_mode_default_false(app):
+    canvas = Canvas(ShapeManager())
+    assert canvas.crop_mode is False
+
+
+def test_canvas_crop_mode_toggle(app):
+    canvas = Canvas(ShapeManager())
+    canvas.crop_mode = True
+    assert canvas.crop_mode is True
+    assert canvas.select_mode is False
+
+
+def test_crop_mode_clears_select_mode(app):
+    canvas = Canvas(ShapeManager())
+    canvas.select_mode = True
+    canvas.crop_mode = True
+    assert canvas.select_mode is False
+
+
+def test_select_mode_clears_crop_mode(app):
+    canvas = Canvas(ShapeManager())
+    canvas.crop_mode = True
+    canvas.select_mode = True
+    assert canvas.crop_mode is False
+
+
+def test_crop_mode_initializes_crop_rect(app, sample_image):
+    """자르기 모드 진입 시 crop_rect가 전체 이미지 크기로 초기화된다."""
+    canvas = Canvas(ShapeManager())
+    canvas.load_image(sample_image)
+    canvas.crop_mode = True
+    assert canvas._crop_rect is not None
+    assert canvas._crop_rect.width() == canvas._pixmap.width()
+    assert canvas._crop_rect.height() == canvas._pixmap.height()
+
+
+def test_crop_performed_signal(app, sample_image):
+    """Enter 키로 자르기 확정 시 crop_performed 시그널이 발생한다."""
+    from PyQt6.QtGui import QKeyEvent
+    from PyQt6.QtCore import QEvent
+    canvas = Canvas(ShapeManager())
+    canvas.load_image(sample_image)
+    canvas.crop_mode = True
+    received = []
+    canvas.crop_performed.connect(received.append)
+    key_event = QKeyEvent(
+        QEvent.Type.KeyPress, Qt.Key.Key_Return,
+        Qt.KeyboardModifier.NoModifier,
+    )
+    canvas.keyPressEvent(key_event)
+    assert len(received) == 1
+    assert 'image' in received[0]
+    assert 'crop_box' in received[0]
+
+
+def test_crop_too_small_ignored(app, sample_image):
+    """너무 작은 영역은 크롭하지 않는다."""
+    from PyQt6.QtGui import QKeyEvent
+    from PyQt6.QtCore import QEvent, QRect
+    canvas = Canvas(ShapeManager())
+    canvas.load_image(sample_image)
+    canvas.crop_mode = True
+    canvas._crop_rect = QRect(10, 10, 1, 1)
+    received = []
+    canvas.crop_performed.connect(received.append)
+    key_event = QKeyEvent(
+        QEvent.Type.KeyPress, Qt.Key.Key_Return,
+        Qt.KeyboardModifier.NoModifier,
+    )
+    canvas.keyPressEvent(key_event)
+    assert len(received) == 0
+
+
+def test_crop_no_image_ignored(app):
+    """이미지 없이 크롭 시도하면 무시된다."""
+    from PyQt6.QtGui import QKeyEvent
+    from PyQt6.QtCore import QEvent
+    canvas = Canvas(ShapeManager())
+    canvas.crop_mode = True
+    assert canvas._crop_rect is None
+    received = []
+    canvas.crop_performed.connect(received.append)
+    key_event = QKeyEvent(
+        QEvent.Type.KeyPress, Qt.Key.Key_Return,
+        Qt.KeyboardModifier.NoModifier,
+    )
+    canvas.keyPressEvent(key_event)
+    assert len(received) == 0
+
+
+def test_crop_esc_cancels(app, sample_image):
+    """Esc 키로 자르기 모드를 취소한다."""
+    from PyQt6.QtGui import QKeyEvent
+    from PyQt6.QtCore import QEvent
+    canvas = Canvas(ShapeManager())
+    canvas.load_image(sample_image)
+    canvas.crop_mode = True
+    assert canvas.crop_mode is True
+    cancelled = []
+    canvas.crop_cancelled.connect(lambda: cancelled.append(True))
+    key_event = QKeyEvent(
+        QEvent.Type.KeyPress, Qt.Key.Key_Escape,
+        Qt.KeyboardModifier.NoModifier,
+    )
+    canvas.keyPressEvent(key_event)
+    assert canvas.crop_mode is False
+    assert canvas._crop_rect is None
+    assert len(cancelled) == 1
+
+
+def test_crop_handle_resize(app, sample_image):
+    """크롭 핸들 드래그로 영역 크기가 변경된다."""
+    canvas = Canvas(ShapeManager())
+    canvas.load_image(sample_image)
+    canvas.crop_mode = True
+    original_width = canvas._crop_rect.width()
+    # E(오른쪽) 핸들 위치에서 마우스 프레스
+    e_handle_x = canvas._crop_rect.x() + canvas._crop_rect.width()
+    e_handle_y = (canvas._crop_rect.y()
+                  + canvas._crop_rect.height() // 2)
+    press = QMouseEvent(
+        QMouseEvent.Type.MouseButtonPress,
+        QPointF(e_handle_x, e_handle_y),
+        Qt.MouseButton.LeftButton,
+        Qt.MouseButton.LeftButton,
+        Qt.KeyboardModifier.NoModifier,
+    )
+    canvas.mousePressEvent(press)
+    assert canvas._crop_handle == 'e'
+    # 왼쪽으로 드래그하여 폭 줄이기
+    new_x = e_handle_x - 50
+    move = QMouseEvent(
+        QMouseEvent.Type.MouseMove,
+        QPointF(new_x, e_handle_y),
+        Qt.MouseButton.LeftButton,
+        Qt.MouseButton.LeftButton,
+        Qt.KeyboardModifier.NoModifier,
+    )
+    canvas.mouseMoveEvent(move)
+    assert canvas._crop_rect.width() < original_width

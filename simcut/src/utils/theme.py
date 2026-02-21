@@ -25,7 +25,7 @@ QMainWindow {{
 QWidget {{
     background-color: {BG_DARK};
     color: {TEXT_PRIMARY};
-    font-family: "Helvetica Neue", "Pretendard", sans-serif;
+    font-family: "Helvetica Neue", sans-serif;
     font-size: 13px;
 }}
 

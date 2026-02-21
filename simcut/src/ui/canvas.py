@@ -15,6 +15,9 @@ from src.utils.constants import (
 HANDLE_SIZE = 8
 # 도형 최소 크기 (리사이즈 하한)
 MIN_SHAPE_SIZE = 4
+# 자르기 핸들
+CROP_HANDLE_SIZE = 10
+MIN_CROP_SIZE = 20
 # 줌 범위
 MIN_ZOOM = 0.25
 MAX_ZOOM = 4.0
@@ -33,6 +36,10 @@ class Canvas(QWidget):
     selection_changed = pyqtSignal(object)
     # 줌 레벨 변경 시 발생 (float: 줌 비율)
     zoom_changed = pyqtSignal(float)
+    # 자르기 완료 시 발생 (dict: image, crop_box, crop_box_base_scale)
+    crop_performed = pyqtSignal(object)
+    # 자르기 모드 취소 (Esc) 시 발생
+    crop_cancelled = pyqtSignal()
 
     def __init__(self, shape_manager: ShapeManager, parent: Optional[QWidget] = None) -> None:
         super().__init__(parent)
@@ -46,6 +53,12 @@ class Canvas(QWidget):
         # 그리기 모드 상태
         self._draw_start: Optional[QPoint] = None
         self._draw_preview: Optional[QRect] = None
+
+        # 자르기 모드 상태
+        self._crop_mode: bool = False
+        self._crop_rect: Optional[QRect] = None
+        self._crop_handle: Optional[str] = None
+        self._crop_move_start: Optional[QPoint] = None
 
         # 선택/이동/리사이즈 모드 상태
         self._select_mode: bool = False
@@ -86,9 +99,34 @@ class Canvas(QWidget):
     @select_mode.setter
     def select_mode(self, value: bool) -> None:
         self._select_mode = value
+        if value:
+            self._crop_mode = False
+            self._crop_rect = None
+            self._crop_handle = None
+            self._crop_move_start = None
         if not value:
             self._selected_index = None
             self._resize_handle = None
+        self.update()
+
+    # ── 자르기 모드 ──────────────────────────────────────────────
+    @property
+    def crop_mode(self) -> bool:
+        return self._crop_mode
+
+    @crop_mode.setter
+    def crop_mode(self, value: bool) -> None:
+        self._crop_mode = value
+        if value and self._pixmap:
+            self._crop_rect = QRect(0, 0, self._pixmap.width(), self._pixmap.height())
+        else:
+            self._crop_rect = None
+        self._crop_handle = None
+        self._crop_move_start = None
+        self._draw_start = None
+        if value:
+            self._select_mode = False
+            self._selected_index = None
         self.update()
 
     # ── 도형 도구 속성 (검증 포함) ──────────────────────────────
@@ -209,6 +247,10 @@ class Canvas(QWidget):
         self._draw_preview = None
         self._is_dragging = False
         self._resize_handle = None
+        self._crop_mode = False
+        self._crop_rect = None
+        self._crop_handle = None
+        self._crop_move_start = None
         if abs(zoom - 1.0) < 0.001:
             self._pixmap = pixmap
             self.setFixedSize(pixmap.width(), pixmap.height())
@@ -229,6 +271,20 @@ class Canvas(QWidget):
         if orig_w <= 0 or orig_h <= 0:
             return 1.0
         return min(max_w / orig_w, max_h / orig_h, 1.0)  # 원본보다 크게 확대하지 않음
+
+    def clear_image(self) -> None:
+        """이미지를 제거하고 초기 상태로 되돌립니다."""
+        self._image = None
+        self._pixmap = None
+        self._selected_index = None
+        self._draw_start = None
+        self._draw_preview = None
+        self._is_dragging = False
+        self._resize_handle = None
+        self._zoom = 1.0
+        self.setFixedSize(0, 0)
+        self.update()
+        self.zoom_changed.emit(self._zoom)
 
     def clear_shapes(self) -> None:
         self._shape_manager.clear()
@@ -338,6 +394,8 @@ class Canvas(QWidget):
                 self._draw_selection_indicator(painter, shape, z)
         if self._draw_preview:
             self._draw_preview_shape(painter, z)
+        if self._crop_rect:
+            self._draw_crop_preview(painter)
 
     def _draw_shape(self, painter: QPainter, shape: Shape, z: float) -> None:
         pen = QPen(QColor(shape.pen_color), max(1, shape.pen_width * z))
@@ -388,6 +446,15 @@ class Canvas(QWidget):
             return
         display_pos = event.position().toPoint()
         pos = self._to_shape_space(display_pos)
+        if self._crop_mode:
+            if self._crop_rect is None:
+                return
+            handle = self._get_crop_handle_at(display_pos)
+            if handle:
+                self._crop_handle = handle
+            elif self._crop_rect.contains(display_pos):
+                self._crop_move_start = display_pos
+            return
         if self._select_mode:
             handle = self._get_handle_at(pos)
             if handle:
@@ -417,6 +484,17 @@ class Canvas(QWidget):
     def mouseMoveEvent(self, event) -> None:
         display_pos = event.position().toPoint()
         pos = self._to_shape_space(display_pos)
+        if self._crop_mode:
+            if self._crop_handle and self._crop_rect:
+                self._resize_crop_rect(display_pos)
+                self.update()
+            elif self._crop_move_start and self._crop_rect:
+                dx = display_pos.x() - self._crop_move_start.x()
+                dy = display_pos.y() - self._crop_move_start.y()
+                self._crop_rect.translate(dx, dy)
+                self._crop_move_start = display_pos
+                self.update()
+            return
         if self._select_mode:
             if self._resize_handle is not None and self._selected_index is not None:
                 self._handle_resize_move(pos)
@@ -485,6 +563,10 @@ class Canvas(QWidget):
     def mouseReleaseEvent(self, event) -> None:
         if event.button() != Qt.MouseButton.LeftButton:
             return
+        if self._crop_mode:
+            self._crop_handle = None
+            self._crop_move_start = None
+            return
         if self._select_mode:
             self._is_dragging = False
             self._resize_handle = None
@@ -512,8 +594,127 @@ class Canvas(QWidget):
             self._draw_preview = None
             self.update()
 
+    # ── 자르기 핸들 ────────────────────────────────────────────────
+    def _crop_handle_rects(self) -> Dict[str, QRect]:
+        """크롭 영역의 8개 핸들 QRect (디스플레이 좌표)."""
+        r = self._crop_rect
+        if r is None:
+            return {}
+        hs = CROP_HANDLE_SIZE // 2
+        cx = r.x() + r.width() // 2
+        cy = r.y() + r.height() // 2
+        rr = r.x() + r.width()
+        rb = r.y() + r.height()
+        s = CROP_HANDLE_SIZE
+        return {
+            'nw': QRect(r.x() - hs, r.y() - hs, s, s),
+            'n':  QRect(cx - hs,    r.y() - hs, s, s),
+            'ne': QRect(rr - hs,    r.y() - hs, s, s),
+            'w':  QRect(r.x() - hs, cy - hs,    s, s),
+            'e':  QRect(rr - hs,    cy - hs,    s, s),
+            'sw': QRect(r.x() - hs, rb - hs,    s, s),
+            's':  QRect(cx - hs,    rb - hs,    s, s),
+            'se': QRect(rr - hs,    rb - hs,    s, s),
+        }
+
+    def _get_crop_handle_at(self, pos: QPoint) -> Optional[str]:
+        """클릭 위치에 해당하는 크롭 핸들 이름을 반환합니다."""
+        for name, rect in self._crop_handle_rects().items():
+            hit = QRect(
+                rect.x() - 3, rect.y() - 3,
+                rect.width() + 6, rect.height() + 6,
+            )
+            if hit.contains(pos):
+                return name
+        return None
+
+    def _resize_crop_rect(self, pos: QPoint) -> None:
+        """크롭 핸들 드래그로 영역 크기를 변경합니다."""
+        if self._crop_rect is None or self._crop_handle is None:
+            return
+        handle = self._crop_handle
+        x, y = self._crop_rect.x(), self._crop_rect.y()
+        right = x + self._crop_rect.width()
+        bottom = y + self._crop_rect.height()
+
+        if 'n' in handle:
+            new_y = pos.y()
+            if bottom - new_y >= MIN_CROP_SIZE:
+                y = new_y
+        if 's' in handle:
+            new_bottom = pos.y()
+            if new_bottom - y >= MIN_CROP_SIZE:
+                bottom = new_bottom
+        if 'w' in handle:
+            new_x = pos.x()
+            if right - new_x >= MIN_CROP_SIZE:
+                x = new_x
+        if 'e' in handle:
+            new_right = pos.x()
+            if new_right - x >= MIN_CROP_SIZE:
+                right = new_right
+
+        self._crop_rect = QRect(x, y, right - x, bottom - y)
+
+    # ── 자르기 ──────────────────────────────────────────────────
+    def _apply_crop(self, display_rect: QRect) -> None:
+        """크롭 영역을 적용하여 이미지를 잘라냅니다."""
+        if self._image is None:
+            return
+        eff = self._base_scale * self._zoom
+        if eff <= 0:
+            return
+        # 디스플레이 좌표 → 원본 픽셀 좌표
+        left = max(0, int(display_rect.x() / eff))
+        top = max(0, int(display_rect.y() / eff))
+        right = min(self._image.width, int((display_rect.x() + display_rect.width()) / eff))
+        bottom = min(self._image.height, int((display_rect.y() + display_rect.height()) / eff))
+        if right - left < 2 or bottom - top < 2:
+            return
+        crop_left_bs = int(left * self._base_scale)
+        crop_top_bs = int(top * self._base_scale)
+        self.crop_performed.emit({
+            'image': self._image.crop((left, top, right, bottom)),
+            'crop_box': (left, top, right, bottom),
+            'crop_box_base_scale': (crop_left_bs, crop_top_bs),
+        })
+
+    def _draw_crop_preview(self, painter: QPainter) -> None:
+        """자르기 영역 미리보기: 영역 외부를 어둡게, 테두리와 핸들을 표시합니다."""
+        cr = self._crop_rect
+        if cr is None:
+            return
+        full = self.rect()
+        overlay = QColor(0, 0, 0, 80)
+        # 상단
+        painter.fillRect(QRect(0, 0, full.width(), cr.top()), overlay)
+        # 하단
+        painter.fillRect(QRect(0, cr.bottom(), full.width(), full.height() - cr.bottom()), overlay)
+        # 좌측 (상단/하단 사이)
+        painter.fillRect(QRect(0, cr.top(), cr.left(), cr.height()), overlay)
+        # 우측
+        painter.fillRect(QRect(cr.right(), cr.top(), full.width() - cr.right(), cr.height()), overlay)
+        # 점선 테두리
+        pen = QPen(QColor("#FFFFFF"), 2, Qt.PenStyle.DashLine)
+        painter.setPen(pen)
+        painter.setBrush(Qt.BrushStyle.NoBrush)
+        painter.drawRect(cr)
+        # 8개 핸들 (흰 배경 + 파란 테두리)
+        painter.setPen(QPen(QColor("#0080FF"), 1))
+        painter.setBrush(QBrush(QColor("#FFFFFF")))
+        for handle_rect in self._crop_handle_rects().values():
+            painter.drawRect(handle_rect)
+
     # ── 키보드 이벤트 ──────────────────────────────────────────────
     def keyPressEvent(self, event) -> None:
+        if self._crop_mode:
+            if event.key() in (Qt.Key.Key_Return, Qt.Key.Key_Enter):
+                if self._crop_rect and self._image:
+                    self._apply_crop(self._crop_rect)
+            elif event.key() == Qt.Key.Key_Escape:
+                self.crop_mode = False
+                self.crop_cancelled.emit()
+            return
         if event.key() in (Qt.Key.Key_Delete, Qt.Key.Key_Backspace):
             self.delete_selected()
         else:

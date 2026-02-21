@@ -1,6 +1,8 @@
 import pytest
 from PIL import Image
 from PyQt6.QtWidgets import QApplication
+from PyQt6.QtCore import Qt, QEvent
+from PyQt6.QtGui import QKeyEvent
 from src.ui.file_explorer import FileExplorer
 from src.ui.canvas import _pil_to_pixmap
 
@@ -62,3 +64,59 @@ def test_file_explorer_set_current(app):
     explorer.add_file("/a/b.png", _thumb())
     explorer.set_current(0)
     assert explorer._list.currentRow() == 0
+
+
+# ── 파일 삭제 테스트 ──────────────────────────────────────────
+
+def test_remove_file_decreases_count(app):
+    explorer = FileExplorer()
+    explorer.add_file("/a/one.png", _thumb())
+    explorer.add_file("/a/two.png", _thumb())
+    explorer.remove_file(0)
+    assert explorer.count() == 1
+
+
+def test_remove_file_out_of_range_ignored(app):
+    explorer = FileExplorer()
+    explorer.add_file("/a/test.png", _thumb())
+    explorer.remove_file(5)
+    assert explorer.count() == 1
+
+
+def test_file_delete_requested_on_delete_key(app):
+    explorer = FileExplorer()
+    explorer.add_file("/a/test.png", _thumb())
+    explorer.set_current(0)
+    received = []
+    explorer.file_delete_requested.connect(received.append)
+    key_event = QKeyEvent(QEvent.Type.KeyPress, Qt.Key.Key_Delete, Qt.KeyboardModifier.NoModifier)
+    explorer.eventFilter(explorer._list, key_event)
+    assert received == [0]
+
+
+def test_file_delete_requested_on_backspace(app):
+    explorer = FileExplorer()
+    explorer.add_file("/a/test.png", _thumb())
+    explorer.set_current(0)
+    received = []
+    explorer.file_delete_requested.connect(received.append)
+    key_event = QKeyEvent(QEvent.Type.KeyPress, Qt.Key.Key_Backspace, Qt.KeyboardModifier.NoModifier)
+    explorer.eventFilter(explorer._list, key_event)
+    assert received == [0]
+
+
+def test_no_delete_signal_when_no_selection(app):
+    explorer = FileExplorer()
+    received = []
+    explorer.file_delete_requested.connect(received.append)
+    key_event = QKeyEvent(QEvent.Type.KeyPress, Qt.Key.Key_Delete, Qt.KeyboardModifier.NoModifier)
+    explorer.eventFilter(explorer._list, key_event)
+    assert received == []
+
+
+def test_update_thumbnail(app):
+    explorer = FileExplorer()
+    explorer.add_file("/a/test.png", _thumb())
+    new_thumb = _thumb()
+    explorer.update_thumbnail(0, new_thumb)
+    assert explorer.count() == 1

@@ -135,3 +135,38 @@ def test_toolbar_update_zoom_label(app):
 def test_toolbar_zoom_label_default(app):
     toolbar = Toolbar()
     assert toolbar._zoom_label.text() == "100%"
+
+
+# ── 자르기 버튼 테스트 ────────────────────────────────────────
+
+def test_toolbar_has_crop_button(app):
+    toolbar = Toolbar()
+    assert toolbar._crop_btn is not None
+    assert toolbar._crop_btn.isCheckable()
+
+
+def test_toolbar_crop_mode_signal(app, qtbot):
+    toolbar = Toolbar()
+    with qtbot.waitSignal(toolbar.crop_mode_toggled, timeout=500):
+        toolbar._crop_btn.click()
+
+
+def test_crop_unchecks_shape_tools(app):
+    toolbar = Toolbar()
+    toolbar.tool_buttons[1].setChecked(True)
+    toolbar._crop_btn.click()
+    assert all(not btn.isChecked() for btn in toolbar.tool_buttons)
+
+
+def test_shape_tool_unchecks_crop(app):
+    toolbar = Toolbar()
+    toolbar._crop_btn.setChecked(True)
+    toolbar.tool_buttons[0].click()
+    assert not toolbar._crop_btn.isChecked()
+
+
+def test_exit_crop_mode(app):
+    toolbar = Toolbar()
+    toolbar._crop_btn.setChecked(True)
+    toolbar.exit_crop_mode()
+    assert not toolbar._crop_btn.isChecked()

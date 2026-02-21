@@ -14,7 +14,7 @@ from PIL import Image
 from src.ui.canvas import Canvas, _pil_to_pixmap
 from src.ui.toolbar import Toolbar
 from src.ui.file_explorer import FileExplorer
-from src.core.shape_manager import ShapeManager
+from src.core.shape_manager import ShapeManager, Shape
 from src.core.image_handler import ImageHandler
 from src.utils.constants import (
     APP_NAME, OPEN_FILE_FILTER, SAVE_FILE_FILTER, SUPPORTED_FORMATS,
@@ -44,6 +44,9 @@ class MainWindow(QMainWindow):
         self._handler = ImageHandler()
         self._file_slots: List[_FileSlot] = []
         self._current_slot_index: int = -1
+        self._pre_crop_slot: Optional[_FileSlot] = None
+        self._pre_crop_slot_index: int = -1
+        self._pre_save_slots: dict[int, _FileSlot] = {}
         # 기본 ShapeManager (파일 로드 전 캔버스용)
         self._default_sm = ShapeManager()
         self._setup_menubar()
@@ -158,7 +161,10 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(container)
 
         # 시그널 연결
+        self._toolbar.reset_requested.connect(self._reset_all)
         self._toolbar.open_requested.connect(self._open_file)
+        self._toolbar.save_requested.connect(self._save_file)
+        self._toolbar.save_undo_requested.connect(self._undo_save)
         self._toolbar.export_requested.connect(self._export_file)
         self._toolbar.batch_export_requested.connect(self._batch_export)
         self._toolbar.tool_changed.connect(self._on_tool_changed)
@@ -166,8 +172,13 @@ class MainWindow(QMainWindow):
         self._toolbar.zoom_in_requested.connect(self._canvas.zoom_in)
         self._toolbar.zoom_out_requested.connect(self._canvas.zoom_out)
         self._toolbar.zoom_reset_requested.connect(self._canvas.zoom_reset)
+        self._toolbar.crop_mode_toggled.connect(self._on_crop_mode_toggled)
+        self._toolbar.crop_undo_requested.connect(self._undo_crop)
         self._canvas.zoom_changed.connect(self._on_zoom_changed)
+        self._canvas.crop_performed.connect(self._on_crop_performed)
+        self._canvas.crop_cancelled.connect(self._toolbar.exit_crop_mode)
         self._explorer.file_selected.connect(self._switch_to_file)
+        self._explorer.file_delete_requested.connect(self._delete_file)
         self._canvas.selection_changed.connect(self._on_selection_changed)
 
     # ── 상태바 ──────────────────────────────────────────────────
@@ -205,6 +216,13 @@ class MainWindow(QMainWindow):
         """파일 탐색기에서 파일 선택 시 캔버스를 전환합니다."""
         if not (0 <= index < len(self._file_slots)):
             return
+        # crop 모드 해제
+        if self._canvas.crop_mode:
+            self._canvas.crop_mode = False
+            self._toolbar.exit_crop_mode()
+        # 되돌리기 히스토리 초기화
+        self._pre_crop_slot = None
+        self._toolbar.set_crop_undo_enabled(False)
         # 현재 슬롯의 줌 레벨 저장
         if 0 <= self._current_slot_index < len(self._file_slots):
             self._file_slots[self._current_slot_index].zoom = self._canvas.zoom
@@ -212,7 +230,63 @@ class MainWindow(QMainWindow):
         slot = self._file_slots[index]
         self._canvas.set_slot(slot.image, slot.scale, slot.pixmap, slot.shape_manager, slot.zoom)
         self._explorer.set_current(index)
+        self._toolbar.set_save_undo_enabled(index in self._pre_save_slots)
         self._status_label.setText(slot.path.split("/")[-1])
+
+    def _delete_file(self, index: int) -> None:
+        """파일 탐색기에서 파일을 삭제합니다."""
+        if not (0 <= index < len(self._file_slots)):
+            return
+        # 되돌리기 히스토리 초기화
+        self._pre_crop_slot = None
+        self._toolbar.set_crop_undo_enabled(False)
+        # 저장 되돌리기: 삭제된 인덱스 제거 + 인덱스 재조정
+        new_pre_save: dict[int, _FileSlot] = {}
+        for k, v in self._pre_save_slots.items():
+            if k < index:
+                new_pre_save[k] = v
+            elif k > index:
+                new_pre_save[k - 1] = v
+        self._pre_save_slots = new_pre_save
+
+        was_current = (index == self._current_slot_index)
+
+        # 불변 방식으로 슬롯 제거
+        self._file_slots = [*self._file_slots[:index], *self._file_slots[index + 1:]]
+        self._explorer.remove_file(index)
+
+        if not self._file_slots:
+            # 모든 파일이 삭제됨
+            self._current_slot_index = -1
+            self._canvas._shape_manager = self._default_sm
+            self._canvas.clear_image()
+            self._status_label.setText("Ready")
+            return
+
+        if was_current:
+            # 현재 파일 삭제: 같은 위치(또는 마지막)로 전환
+            new_index = min(index, len(self._file_slots) - 1)
+            self._current_slot_index = -1  # force re-switch
+            self._switch_to_file(new_index)
+        elif index < self._current_slot_index:
+            # 현재 파일 이전 삭제: 인덱스 조정
+            self._current_slot_index -= 1
+
+    def _reset_all(self) -> None:
+        """모든 작업을 초기화하고 빈 상태로 되돌립니다."""
+        if self._canvas.crop_mode:
+            self._canvas.crop_mode = False
+            self._toolbar.exit_crop_mode()
+        self._file_slots = []
+        self._current_slot_index = -1
+        self._pre_crop_slot = None
+        self._pre_save_slots = {}
+        self._toolbar.set_crop_undo_enabled(False)
+        self._toolbar.set_save_undo_enabled(False)
+        self._explorer.clear()
+        self._canvas.clear_image()
+        self._canvas._shape_manager = self._default_sm
+        self._status_label.setText("Ready")
 
     # ── 액션 핸들러 ─────────────────────────────────────────────
     def _open_file(self) -> None:
@@ -250,6 +324,79 @@ class MainWindow(QMainWindow):
         except Exception as e:
             QMessageBox.warning(self, "내보내기 실패", f"이미지를 저장할 수 없습니다.\n{e}")
             self._status_label.setText("Ready")
+
+    def _save_file(self) -> None:
+        """현재 편집 중인 파일을 원본 경로에 덮어쓰기 저장합니다."""
+        idx = self._current_slot_index
+        if not (0 <= idx < len(self._file_slots)):
+            QMessageBox.information(self, "저장", "먼저 이미지를 불러오세요.")
+            return
+        slot = self._file_slots[idx]
+        try:
+            # 되돌리기용 이전 상태 저장
+            self._pre_save_slots[idx] = slot
+            # 도형 합성 이미지 생성 및 저장
+            composite = self._render_slot_to_image(slot)
+            self._handler.save(composite, slot.path)
+            # 저장된 이미지로 슬롯 교체 (도형은 이미 합성됨)
+            vp = self._scroll.viewport().size()
+            max_size = (max(vp.width() - 10, 400), max(vp.height() - 10, 300))
+            new_scale = self._canvas._calc_scale(composite.size, max_size)
+            display_w = int(composite.width * new_scale)
+            display_h = int(composite.height * new_scale)
+            display_img = (
+                composite.resize((display_w, display_h), Image.LANCZOS)
+                if new_scale != 1.0 else composite
+            )
+            new_pixmap = _pil_to_pixmap(display_img)
+            new_slot = _FileSlot(
+                path=slot.path,
+                image=composite,
+                scale=new_scale,
+                pixmap=new_pixmap,
+                shape_manager=ShapeManager(),
+                zoom=1.0,
+            )
+            self._file_slots = [
+                *self._file_slots[:idx], new_slot, *self._file_slots[idx + 1:]
+            ]
+            # 캔버스/썸네일 갱신
+            self._canvas.set_slot(
+                new_slot.image, new_slot.scale, new_slot.pixmap,
+                new_slot.shape_manager, new_slot.zoom,
+            )
+            thumb = self._make_thumbnail(composite)
+            self._explorer.update_thumbnail(idx, thumb)
+            self._toolbar.set_save_undo_enabled(True)
+            self._status_label.setText(f"저장 완료: {slot.path.split('/')[-1]}")
+        except Exception as e:
+            QMessageBox.warning(self, "저장 실패", f"이미지를 저장할 수 없습니다.\n{e}")
+
+    def _undo_save(self) -> None:
+        """저장 되돌리기: 저장 전 상태로 복원합니다."""
+        idx = self._current_slot_index
+        if idx not in self._pre_save_slots:
+            return
+        old_slot = self._pre_save_slots[idx]
+        try:
+            # 원본 이미지를 파일에 다시 저장
+            self._handler.save(old_slot.image, old_slot.path)
+        except Exception as e:
+            QMessageBox.warning(self, "되돌리기 실패", f"파일을 복원할 수 없습니다.\n{e}")
+            return
+        # 슬롯 복원
+        self._file_slots = [
+            *self._file_slots[:idx], old_slot, *self._file_slots[idx + 1:]
+        ]
+        self._canvas.set_slot(
+            old_slot.image, old_slot.scale, old_slot.pixmap,
+            old_slot.shape_manager, old_slot.zoom,
+        )
+        thumb = self._make_thumbnail(old_slot.image)
+        self._explorer.update_thumbnail(idx, thumb)
+        del self._pre_save_slots[idx]
+        self._toolbar.set_save_undo_enabled(idx in self._pre_save_slots)
+        self._status_label.setText(f"저장 되돌리기 완료: {old_slot.path.split('/')[-1]}")
 
     def _batch_export(self) -> None:
         """선택한 파일에 도형 합성 결과를 일괄 내보내기합니다."""
@@ -416,11 +563,120 @@ class MainWindow(QMainWindow):
         self._canvas.update()
 
     def _on_tool_changed(self, shape_type) -> None:
+        self._canvas.crop_mode = False
         if shape_type is None:
             self._canvas.select_mode = True
         else:
             self._canvas.select_mode = False
             self._canvas.current_shape_type = shape_type
+
+    def _on_crop_mode_toggled(self, active: bool) -> None:
+        """자르기 모드 전환."""
+        self._canvas.crop_mode = active
+        if active:
+            self._status_label.setText(
+                "자르기 영역을 조절한 뒤 Enter로 확정, Esc로 취소"
+            )
+
+    def _on_crop_performed(self, crop_data: dict) -> None:
+        """자르기 완료 후 이미지·슬롯을 갱신합니다."""
+        if not (0 <= self._current_slot_index < len(self._file_slots)):
+            return
+
+        cropped_image = crop_data['image']
+        crop_box = crop_data['crop_box']  # (left, top, right, bottom) 원본 px
+        crop_bs = crop_data['crop_box_base_scale']  # (left_bs, top_bs)
+
+        slot = self._file_slots[self._current_slot_index]
+        # 되돌리기용 이전 상태 저장
+        self._pre_crop_slot = slot
+        self._pre_crop_slot_index = self._current_slot_index
+        crop_left_bs, crop_top_bs = crop_bs
+        crop_w_bs = int((crop_box[2] - crop_box[0]) * slot.scale)
+        crop_h_bs = int((crop_box[3] - crop_box[1]) * slot.scale)
+
+        # 도형 좌표 조정: 크롭 원점 기준으로 이동, 영역 밖 도형 제거
+        new_sm = ShapeManager()
+        for shape in slot.shape_manager.shapes:
+            new_x = shape.x - crop_left_bs
+            new_y = shape.y - crop_top_bs
+            if (new_x + shape.width > 0 and new_y + shape.height > 0
+                    and new_x < crop_w_bs and new_y < crop_h_bs):
+                clamped_x = max(0, new_x)
+                clamped_y = max(0, new_y)
+                clamped_w = min(new_x + shape.width, crop_w_bs) - clamped_x
+                clamped_h = min(new_y + shape.height, crop_h_bs) - clamped_y
+                if clamped_w > 2 and clamped_h > 2:
+                    new_sm.add(Shape(
+                        shape_type=shape.shape_type,
+                        x=clamped_x, y=clamped_y,
+                        width=clamped_w, height=clamped_h,
+                        pen_color=shape.pen_color,
+                        pen_width=shape.pen_width,
+                        fill_color=shape.fill_color,
+                    ))
+
+        # 새 스케일/픽스맵 계산
+        vp = self._scroll.viewport().size()
+        max_size = (max(vp.width() - 10, 400), max(vp.height() - 10, 300))
+        new_scale = self._canvas._calc_scale(cropped_image.size, max_size)
+        display_w = int(cropped_image.width * new_scale)
+        display_h = int(cropped_image.height * new_scale)
+        display_img = (
+            cropped_image.resize((display_w, display_h), Image.LANCZOS)
+            if new_scale != 1.0 else cropped_image
+        )
+        new_pixmap = _pil_to_pixmap(display_img)
+
+        # 불변 방식으로 슬롯 교체
+        new_slot = _FileSlot(
+            path=slot.path,
+            image=cropped_image,
+            scale=new_scale,
+            pixmap=new_pixmap,
+            shape_manager=new_sm,
+            zoom=1.0,
+        )
+        self._file_slots = [
+            *self._file_slots[:self._current_slot_index],
+            new_slot,
+            *self._file_slots[self._current_slot_index + 1:]
+        ]
+
+        # 썸네일 갱신
+        thumb = self._make_thumbnail(cropped_image)
+        self._explorer.update_thumbnail(self._current_slot_index, thumb)
+
+        # 캔버스 교체 + 자르기 모드 해제
+        self._canvas.set_slot(
+            new_slot.image, new_slot.scale, new_slot.pixmap,
+            new_slot.shape_manager, new_slot.zoom
+        )
+        self._canvas.crop_mode = False
+        self._toolbar.exit_crop_mode()
+        self._toolbar.set_crop_undo_enabled(True)
+
+    def _undo_crop(self) -> None:
+        """자르기 되돌리기: 직전 크롭 이전 상태로 복원합니다."""
+        if self._pre_crop_slot is None:
+            return
+        idx = self._pre_crop_slot_index
+        if not (0 <= idx < len(self._file_slots)):
+            return
+        old_slot = self._pre_crop_slot
+        self._file_slots = [
+            *self._file_slots[:idx], old_slot,
+            *self._file_slots[idx + 1:]
+        ]
+        thumb = self._make_thumbnail(old_slot.image)
+        self._explorer.update_thumbnail(idx, thumb)
+        if idx == self._current_slot_index:
+            self._canvas.set_slot(
+                old_slot.image, old_slot.scale, old_slot.pixmap,
+                old_slot.shape_manager, old_slot.zoom,
+            )
+        self._pre_crop_slot = None
+        self._toolbar.set_crop_undo_enabled(False)
 
     def _on_selection_changed(self, shape) -> None:
         """도형 선택/해제 시 툴바의 속성 컨트롤을 해당 도형의 값으로 동기화합니다."""
