@@ -54,7 +54,7 @@
     <!-- Canonical & Alternates -->
     <link rel="canonical" href="https://unfollowlens.com">
     <link rel="alternate" hreflang="x-default" href="https://unfollowlens.com/">
-    <link rel="alternate" hreflang="ko" href="https://unfollowlens.com/ko">
+    <link rel="alternate" hreflang="ko" href="https://unfollowlens.com/">
     <link rel="alternate" hreflang="en" href="https://unfollowlens.com/en">
     <link rel="alternate" hreflang="ja" href="https://unfollowlens.com/ja">
     <link rel="alternate" hreflang="zh" href="https://unfollowlens.com/zh">
@@ -2844,7 +2844,9 @@
 
         function getLangFromPath() {
             const seg = window.location.pathname.replace(/\/$/, '').split('/')[1];
-            return (seg && langMeta[seg]) ? seg : null;
+            if (seg && langMeta[seg]) return seg;
+            if (!seg) return 'ko';
+            return null;
         }
 
         function detectLanguage() {
@@ -2862,7 +2864,7 @@
             localStorage.setItem('preferredLang', lang);
             document.documentElement.lang = lang;
 
-            var target = '/' + lang;
+            var target = lang === 'ko' ? '/' : '/' + lang;
             if (window.location.pathname !== target && window.location.pathname !== target + '/') {
                 if (useReplaceState) {
                     history.replaceState({ lang: lang }, '', target);
@@ -2872,7 +2874,7 @@
             }
 
             var canonical = document.querySelector('link[rel="canonical"]');
-            if (canonical) canonical.href = 'https://unfollowlens.com/' + lang;
+            if (canonical) canonical.href = lang === 'ko' ? 'https://unfollowlens.com/' : 'https://unfollowlens.com/' + lang;
 
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
