@@ -26,7 +26,6 @@
     <meta name="naver-site-verification" content="3781c15de7bbcab595064ae3e86e9c559995391d" />
     <meta name="naver-site-verification" content="03c81f90acfff22752b604002e8ea31a5b83f01d" />
     <meta name="msvalidate.01" content="E81A63E682B98960472764A553F437B5" />
-    <meta name="google-adsense-account" content="ca-pub-4674053917795285">
 
     <!-- Open Graph -->
     <meta property="og:type" content="website">
@@ -70,9 +69,6 @@
     <link rel="alternate" hreflang="th" href="https://unfollowlens.com/th">
     <link rel="alternate" hreflang="id" href="https://unfollowlens.com/id">
     <link rel="alternate" hreflang="ms" href="https://unfollowlens.com/ms">
-
-    <!-- Google AdSense -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2330803849133692" crossorigin="anonymous"></script>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1034,6 +1030,92 @@
             animation: slideDown 0.3s ease-out;
         }
 
+        /* Guide Section */
+        .guide-section {
+            margin-top: 0;
+        }
+
+        .guide-title, .tips-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .tips-title {
+            margin-top: 36px;
+        }
+
+        .guide-title__icon, .tips-title__icon {
+            font-size: 1.3rem;
+        }
+
+        .guide-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .guide-step {
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+        }
+
+        .guide-step__number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            background: var(--accent);
+            color: white;
+            border-radius: 50%;
+            font-size: 0.9rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .guide-step__content h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 4px;
+        }
+
+        .guide-step__content p {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+        }
+
+        .tip-item {
+            background: var(--bg-alt);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .tip-item h3 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+
+        .tip-item p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
         /* Support */
         .support-buttons {
             display: flex;
@@ -1130,92 +1212,6 @@
             padding: 24px 28px 32px;
         }
 
-        .modal-lang-switch {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 24px;
-        }
-
-        .modal-lang-btn {
-            padding: 10px 20px;
-            background: transparent;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            color: var(--text-secondary);
-            font-family: inherit;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .modal-lang-btn:hover {
-            border-color: var(--text);
-        }
-
-        .modal-lang-btn.active {
-            background: var(--text);
-            border-color: var(--text);
-            color: white;
-        }
-
-        .privacy-content {
-            display: none;
-            line-height: 1.8;
-        }
-
-        .privacy-content.show {
-            display: block;
-        }
-
-        .privacy-content h2 {
-            font-family: 'DM Sans', 'Noto Sans KR', sans-serif;
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--text);
-            margin: 28px 0 12px;
-        }
-
-        .privacy-content h2:first-child {
-            margin-top: 0;
-        }
-
-        .privacy-content p {
-            color: var(--text-secondary);
-            margin-bottom: 12px;
-        }
-
-        .privacy-content ul {
-            padding-left: 20px;
-            margin-bottom: 16px;
-        }
-
-        .privacy-content li {
-            color: var(--text-secondary);
-            margin-bottom: 8px;
-        }
-
-        .privacy-content a {
-            color: var(--accent);
-            text-decoration: none;
-        }
-
-        .privacy-content a:hover {
-            text-decoration: underline;
-        }
-
-        .privacy-highlight {
-            background: var(--bg-alt);
-            padding: 16px 20px;
-            border-radius: 10px;
-            margin-bottom: 24px;
-            border-left: 3px solid var(--accent);
-        }
-
-        .privacy-highlight p {
-            margin: 0;
-            color: var(--text);
-        }
-
         .last-updated {
             color: var(--text-muted);
             font-size: 0.85rem;
@@ -1288,11 +1284,6 @@
             .modal-header { padding: 20px; }
             .modal-title { font-size: 1.1rem; }
             .modal-body { padding: 16px 20px 24px; }
-            .modal-lang-switch { flex-wrap: wrap; gap: 6px; }
-            .modal-lang-btn { padding: 8px 14px; font-size: 0.85rem; }
-            .privacy-content h2 { font-size: 0.95rem; margin: 24px 0 10px; }
-            .privacy-content p, .privacy-content li { font-size: 0.9rem; }
-            .privacy-highlight { padding: 14px 16px; }
         }
 
         /* Responsive - Small Mobile */
@@ -1667,6 +1658,65 @@
             </div>
         </section>
 
+        <!-- Guide -->
+        <section class="section section--delay-3">
+            <div class="card guide-section">
+                <div class="guide-title">
+                    <span class="guide-title__icon">&#128218;</span>
+                    <span data-i18n="guideTitle">Instagram 데이터 다운로드 방법</span>
+                </div>
+                <div class="guide-steps">
+                    <div class="guide-step">
+                        <div class="guide-step__number">1</div>
+                        <div class="guide-step__content">
+                            <h3 data-i18n="guideStep1Title">Instagram에서 데이터 요청하기</h3>
+                            <p data-i18n="guideStep1Desc">Instagram 앱 → 설정 → 계정 센터 → 내 정보 및 권한 → 정보 다운로드에서 데이터를 요청하세요. 형식은 반드시 JSON을 선택하세요.</p>
+                        </div>
+                    </div>
+                    <div class="guide-step">
+                        <div class="guide-step__number">2</div>
+                        <div class="guide-step__content">
+                            <h3 data-i18n="guideStep2Title">다운로드 대기</h3>
+                            <p data-i18n="guideStep2Desc">Instagram에서 데이터를 준비하는 데 보통 10분에서 최대 48시간이 소요됩니다. 준비가 완료되면 이메일로 알림이 발송됩니다.</p>
+                        </div>
+                    </div>
+                    <div class="guide-step">
+                        <div class="guide-step__number">3</div>
+                        <div class="guide-step__content">
+                            <h3 data-i18n="guideStep3Title">ZIP 파일 다운로드</h3>
+                            <p data-i18n="guideStep3Desc">이메일의 다운로드 링크를 클릭하여 ZIP 파일을 기기에 저장하세요. 압축을 풀지 않은 상태로 보관하세요.</p>
+                        </div>
+                    </div>
+                    <div class="guide-step">
+                        <div class="guide-step__number">4</div>
+                        <div class="guide-step__content">
+                            <h3 data-i18n="guideStep4Title">UnfollowLens에서 분석하기</h3>
+                            <p data-i18n="guideStep4Desc">이 페이지에서 다운로드한 ZIP 파일을 업로드하면, 브라우저에서 직접 분석하여 맞팔하지 않는 계정 목록을 보여줍니다. 데이터는 서버로 전송되지 않습니다.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tips-title">
+                    <span class="tips-title__icon">&#128161;</span>
+                    <span data-i18n="tipsTitle">언팔로워 관리 팁</span>
+                </div>
+                <div class="tips-grid">
+                    <div class="tip-item">
+                        <h3 data-i18n="tip1Title">정기적으로 확인하세요</h3>
+                        <p data-i18n="tip1Desc">Instagram 데이터는 요청 시점의 스냅샷입니다. 월 1회 정도 새 데이터를 다운로드하여 확인하면 팔로우 관계 변화를 추적할 수 있습니다.</p>
+                    </div>
+                    <div class="tip-item">
+                        <h3 data-i18n="tip2Title">비공개 계정과 탈퇴 계정</h3>
+                        <p data-i18n="tip2Desc">UnfollowLens는 비공개 계정과 탈퇴한 계정을 자동으로 분류합니다. 탈퇴 계정은 팔로우 해제할 필요가 없으므로, 활성 계정만 확인하세요.</p>
+                    </div>
+                    <div class="tip-item">
+                        <h3 data-i18n="tip3Title">개인정보 보호</h3>
+                        <p data-i18n="tip3Desc">UnfollowLens는 Instagram 비밀번호를 요구하지 않으며, 업로드한 파일은 서버로 전송되지 않습니다. 분석이 끝나면 페이지를 닫아 모든 데이터를 삭제하세요.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- Loading -->
         <section class="section">
             <div class="card loading" id="loading">
@@ -1726,11 +1776,11 @@
         <!-- Footer -->
         <footer class="footer">
             <div class="footer-links">
-                <a href="#" class="footer-link" id="privacyLink" data-i18n="privacyPolicy">개인정보 처리방침</a>
+                <a href="/privacy" class="footer-link" data-i18n="privacyPolicy">개인정보 처리방침</a>
                 <a href="/terms" class="footer-link" data-i18n="termsOfService">이용약관</a>
                 <a href="/about" class="footer-link" data-i18n="aboutUs">서비스 소개</a>
             </div>
-            <p class="copyright">© 2025 UnfollowLens</p>
+            <p class="copyright">© 2026 UnfollowLens</p>
         </footer>
     </div>
 
@@ -1751,67 +1801,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Modal -->
-    <div class="modal-overlay" id="privacyModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title" id="modalTitle">개인정보 처리방침</h2>
-                <button class="modal-close" id="modalClose">×</button>
-            </div>
-            <div class="modal-body">
-                <div class="modal-lang-switch">
-                    <button class="modal-lang-btn active" data-modal-lang="ko">한국어</button>
-                    <button class="modal-lang-btn" data-modal-lang="en">English</button>
-                </div>
-
-                <div class="privacy-content show" id="privacy-ko">
-                    <p class="last-updated">최종 업데이트: 2025년 1월</p>
-                    <div class="privacy-highlight">
-                        <p><strong>UnfollowLens는 사용자의 개인정보를 수집하거나 저장하지 않습니다.</strong></p>
-                    </div>
-                    <h2>1. 서비스 개요</h2>
-                    <p>UnfollowLens는 Instagram 데이터 파일을 분석하여 맞팔하지 않는 계정을 찾아주는 무료 웹 서비스입니다.</p>
-                    <h2>2. 데이터 처리 방식</h2>
-                    <ul>
-                        <li><strong>업로드된 파일:</strong> 서버로 전송되지 않으며, 브라우저에서만 처리됩니다.</li>
-                        <li><strong>데이터 저장:</strong> 분석 결과는 브라우저에만 표시됩니다.</li>
-                        <li><strong>계정 정보:</strong> 회원가입이나 로그인이 필요하지 않습니다.</li>
-                    </ul>
-                    <h2>3. 데이터 보안</h2>
-                    <ul>
-                        <li>모든 통신은 HTTPS를 통해 암호화됩니다.</li>
-                        <li>업로드된 파일은 서버로 전송되지 않으며, 브라우저에서만 처리됩니다.</li>
-                    </ul>
-                    <h2>4. 문의</h2>
-                    <p>문의사항은 <a href="mailto:unfollowlens@gmail.com">unfollowlens@gmail.com</a>으로 연락해 주세요.</p>
-                </div>
-
-                <div class="privacy-content" id="privacy-en">
-                    <p class="last-updated">Last updated: January 2025</p>
-                    <div class="privacy-highlight">
-                        <p><strong>UnfollowLens does not collect or store any personal information.</strong></p>
-                    </div>
-                    <h2>1. Service Overview</h2>
-                    <p>UnfollowLens is a free web service that analyzes Instagram data files to find accounts that don't follow you back.</p>
-                    <h2>2. Data Processing</h2>
-                    <ul>
-                        <li><strong>Uploaded Files:</strong> Never sent to a server. Processed entirely in your browser.</li>
-                        <li><strong>Data Storage:</strong> Results are only displayed in your browser.</li>
-                        <li><strong>Account Info:</strong> No registration or login required.</li>
-                    </ul>
-                    <h2>3. Security</h2>
-                    <ul>
-                        <li>All communications encrypted via HTTPS.</li>
-                        <li>Uploaded files are never sent to a server. Processed entirely in your browser.</li>
-                    </ul>
-                    <h2>4. Contact</h2>
-                    <p>Contact us at <a href="mailto:unfollowlens@gmail.com">unfollowlens@gmail.com</a>.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
 
     <script>
         const translations = {
@@ -1895,7 +1884,23 @@
                 faqQ6: '데이터 보안 및 개인정보는 어떻게 보호되나요?',
                 faqA6: '모든 분석은 100% 브라우저에서 처리됩니다. 데이터는 서버로 업로드되지 않으며, 페이지를 닫으면 모든 데이터가 자동으로 삭제됩니다.',
                 faqQ7: 'ZIP 파일을 선택할 수 없어요',
-                faqA7: 'Instagram에서 보낸 이메일의 다운로드 링크를 클릭하여 ZIP 파일을 기기에 저장하세요. iPhone은 \'파일\' 앱, Android는 \'내 파일\' 또는 \'다운로드\' 폴더에서 파일을 찾을 수 있습니다. 파일이 .zip 형식인지 확인하고, 압축을 풀지 않은 상태로 업로드해 주세요.'
+                faqA7: 'Instagram에서 보낸 이메일의 다운로드 링크를 클릭하여 ZIP 파일을 기기에 저장하세요. iPhone은 \'파일\' 앱, Android는 \'내 파일\' 또는 \'다운로드\' 폴더에서 파일을 찾을 수 있습니다. 파일이 .zip 형식인지 확인하고, 압축을 풀지 않은 상태로 업로드해 주세요.',
+                guideTitle: 'Instagram 데이터 다운로드 방법',
+                guideStep1Title: 'Instagram에서 데이터 요청하기',
+                guideStep1Desc: 'Instagram 앱 → 설정 → 계정 센터 → 내 정보 및 권한 → 정보 다운로드에서 데이터를 요청하세요. 형식은 반드시 JSON을 선택하세요.',
+                guideStep2Title: '다운로드 대기',
+                guideStep2Desc: 'Instagram에서 데이터를 준비하는 데 보통 10분에서 최대 48시간이 소요됩니다. 준비가 완료되면 이메일로 알림이 발송됩니다.',
+                guideStep3Title: 'ZIP 파일 다운로드',
+                guideStep3Desc: '이메일의 다운로드 링크를 클릭하여 ZIP 파일을 기기에 저장하세요. 압축을 풀지 않은 상태로 보관하세요.',
+                guideStep4Title: 'UnfollowLens에서 분석하기',
+                guideStep4Desc: '이 페이지에서 다운로드한 ZIP 파일을 업로드하면, 브라우저에서 직접 분석하여 맞팔하지 않는 계정 목록을 보여줍니다. 데이터는 서버로 전송되지 않습니다.',
+                tipsTitle: '언팔로워 관리 팁',
+                tip1Title: '정기적으로 확인하세요',
+                tip1Desc: 'Instagram 데이터는 요청 시점의 스냅샷입니다. 월 1회 정도 새 데이터를 다운로드하여 확인하면 팔로우 관계 변화를 추적할 수 있습니다.',
+                tip2Title: '비공개 계정과 탈퇴 계정',
+                tip2Desc: 'UnfollowLens는 비공개 계정과 탈퇴한 계정을 자동으로 분류합니다. 탈퇴 계정은 팔로우 해제할 필요가 없으므로, 활성 계정만 확인하세요.',
+                tip3Title: '개인정보 보호',
+                tip3Desc: 'UnfollowLens는 Instagram 비밀번호를 요구하지 않으며, 업로드한 파일은 서버로 전송되지 않습니다. 분석이 끝나면 페이지를 닫아 모든 데이터를 삭제하세요.'
             },
             en: {
                 title: 'UnfollowLens - Instagram Unfollow Checker',
@@ -1977,7 +1982,23 @@
                 faqQ6: 'How is my data security and privacy protected?',
                 faqA6: 'All analysis is processed 100% in your browser. Data is never uploaded to any server, and all data is automatically deleted when you close the page.',
                 faqQ7: 'I can\'t select my ZIP file',
-                faqA7: 'Click the download link in the email from Instagram to save the ZIP file to your device. On iPhone, find it in the Files app; on Android, check the My Files or Downloads folder. Make sure the file is in .zip format and upload it without extracting.'
+                faqA7: 'Click the download link in the email from Instagram to save the ZIP file to your device. On iPhone, find it in the Files app; on Android, check the My Files or Downloads folder. Make sure the file is in .zip format and upload it without extracting.',
+                guideTitle: 'How to Download Instagram Data',
+                guideStep1Title: 'Request Your Data from Instagram',
+                guideStep1Desc: 'Go to Instagram app → Settings → Accounts Center → Your information and permissions → Download your information. Make sure to select JSON format.',
+                guideStep2Title: 'Wait for Download',
+                guideStep2Desc: 'It usually takes 10 minutes to up to 48 hours for Instagram to prepare your data. You will receive an email notification when it is ready.',
+                guideStep3Title: 'Download ZIP File',
+                guideStep3Desc: 'Click the download link in the email to save the ZIP file to your device. Keep it without extracting.',
+                guideStep4Title: 'Analyze with UnfollowLens',
+                guideStep4Desc: 'Upload the downloaded ZIP file on this page. It will be analyzed directly in your browser to show accounts that don\'t follow you back. No data is sent to any server.',
+                tipsTitle: 'Unfollower Management Tips',
+                tip1Title: 'Check Regularly',
+                tip1Desc: 'Instagram data is a snapshot from when you requested it. Download new data about once a month to track changes in your follow relationships.',
+                tip2Title: 'Private and Deactivated Accounts',
+                tip2Desc: 'UnfollowLens automatically categorizes private and deactivated accounts. Since deactivated accounts don\'t need to be unfollowed, focus on active accounts only.',
+                tip3Title: 'Privacy Protection',
+                tip3Desc: 'UnfollowLens never asks for your Instagram password, and uploaded files are never sent to a server. Close the page after analysis to delete all data.'
             },
             ja: {
                 title: 'UnfollowLens - インスタグラムアンフォローチェッカー',
@@ -2037,7 +2058,23 @@
                 faqQ6: 'データのセキュリティとプライバシーはどのように保護されますか？',
                 faqA6: 'すべての分析は100%ブラウザ内で処理されます。データがサーバーにアップロードされることはなく、ページを閉じるとすべてのデータが自動的に削除されます。',
                 faqQ7: 'ZIPファイルを選択できません',
-                faqA7: 'Instagramから届いたメールのダウンロードリンクをクリックして、ZIPファイルをデバイスに保存してください。iPhoneの場合は「ファイル」アプリ、Androidの場合は「マイファイル」またはダウンロードフォルダで見つけられます。ファイルが.zip形式であることを確認し、解凍せずにアップロードしてください。'
+                faqA7: 'Instagramから届いたメールのダウンロードリンクをクリックして、ZIPファイルをデバイスに保存してください。iPhoneの場合は「ファイル」アプリ、Androidの場合は「マイファイル」またはダウンロードフォルダで見つけられます。ファイルが.zip形式であることを確認し、解凍せずにアップロードしてください。',
+                guideTitle: 'Instagramデータのダウンロード方法',
+                guideStep1Title: 'Instagramでデータをリクエスト',
+                guideStep1Desc: 'Instagramアプリ → 設定 → アカウントセンター → あなたの情報と権限 → 情報のダウンロードからデータをリクエストしてください。形式は必ずJSONを選択してください。',
+                guideStep2Title: 'ダウンロード待機',
+                guideStep2Desc: 'Instagramがデータを準備するのに通常10分から最大48時間かかります。準備が完了するとメールで通知されます。',
+                guideStep3Title: 'ZIPファイルをダウンロード',
+                guideStep3Desc: 'メールのダウンロードリンクをクリックしてZIPファイルをデバイスに保存してください。解凍せずに保管してください。',
+                guideStep4Title: 'UnfollowLensで分析',
+                guideStep4Desc: 'このページでダウンロードしたZIPファイルをアップロードすると、ブラウザで直接分析してフォローバックしていないアカウントの一覧を表示します。データはサーバーに送信されません。',
+                tipsTitle: 'アンフォロワー管理のヒント',
+                tip1Title: '定期的に確認しましょう',
+                tip1Desc: 'Instagramデータはリクエスト時点のスナップショットです。月に1回程度新しいデータをダウンロードして確認すると、フォロー関係の変化を追跡できます。',
+                tip2Title: '非公開アカウントと退会アカウント',
+                tip2Desc: 'UnfollowLensは非公開アカウントと退会したアカウントを自動的に分類します。退会アカウントはフォロー解除の必要がないため、アクティブなアカウントのみ確認してください。',
+                tip3Title: 'プライバシー保護',
+                tip3Desc: 'UnfollowLensはInstagramのパスワードを要求せず、アップロードしたファイルはサーバーに送信されません。分析が終わったらページを閉じてすべてのデータを削除してください。'
             },
             zh: {
                 title: 'UnfollowLens - Instagram取关检查器',
@@ -2097,7 +2134,23 @@
                 faqQ6: '数据安全和隐私是如何保护的？',
                 faqA6: '所有分析100%在您的浏览器中处理。数据不会上传到任何服务器，关闭页面后所有数据会自动删除。',
                 faqQ7: '无法选择ZIP文件',
-                faqA7: '请点击Instagram发送的邮件中的下载链接，将ZIP文件保存到设备上。iPhone用户可在"文件"应用中查找，Android用户请查看"我的文件"或"下载"文件夹。请确认文件为.zip格式，并在未解压的状态下上传。'
+                faqA7: '请点击Instagram发送的邮件中的下载链接，将ZIP文件保存到设备上。iPhone用户可在"文件"应用中查找，Android用户请查看"我的文件"或"下载"文件夹。请确认文件为.zip格式，并在未解压的状态下上传。',
+                guideTitle: 'Instagram数据下载方法',
+                guideStep1Title: '在Instagram中请求数据',
+                guideStep1Desc: 'Instagram应用 → 设置 → 账户中心 → 您的信息和权限 → 下载信息，在此处请求数据。格式请务必选择JSON。',
+                guideStep2Title: '等待下载',
+                guideStep2Desc: 'Instagram准备数据通常需要10分钟到最长48小时。准备完成后会通过邮件通知您。',
+                guideStep3Title: '下载ZIP文件',
+                guideStep3Desc: '点击邮件中的下载链接，将ZIP文件保存到设备上。请保持未解压状态。',
+                guideStep4Title: '在UnfollowLens中分析',
+                guideStep4Desc: '在本页面上传下载的ZIP文件，浏览器将直接分析并显示未回关您的账户列表。数据不会发送到任何服务器。',
+                tipsTitle: '取关者管理技巧',
+                tip1Title: '定期检查',
+                tip1Desc: 'Instagram数据是请求时的快照。每月下载一次新数据进行检查，可以追踪关注关系的变化。',
+                tip2Title: '私密账户和注销账户',
+                tip2Desc: 'UnfollowLens会自动分类私密账户和已注销的账户。已注销的账户无需取消关注，请只关注活跃账户。',
+                tip3Title: '隐私保护',
+                tip3Desc: 'UnfollowLens不会要求您的Instagram密码，上传的文件也不会发送到服务器。分析完成后请关闭页面以删除所有数据。'
             },
             es: {
                 title: 'UnfollowLens - Verificador de Unfollows',
@@ -2157,7 +2210,23 @@
                 faqQ6: '¿Cómo se protegen la seguridad de mis datos y mi privacidad?',
                 faqA6: 'Todo el análisis se procesa 100% en tu navegador. Los datos nunca se suben a ningún servidor y se eliminan automáticamente al cerrar la página.',
                 faqQ7: 'No puedo seleccionar mi archivo ZIP',
-                faqA7: 'Haz clic en el enlace de descarga del correo enviado por Instagram para guardar el archivo ZIP en tu dispositivo. En iPhone, búscalo en la app Archivos; en Android, revisa la carpeta Mis Archivos o Descargas. Asegúrate de que el archivo esté en formato .zip y súbelo sin descomprimir.'
+                faqA7: 'Haz clic en el enlace de descarga del correo enviado por Instagram para guardar el archivo ZIP en tu dispositivo. En iPhone, búscalo en la app Archivos; en Android, revisa la carpeta Mis Archivos o Descargas. Asegúrate de que el archivo esté en formato .zip y súbelo sin descomprimir.',
+                guideTitle: 'Cómo descargar datos de Instagram',
+                guideStep1Title: 'Solicita tus datos en Instagram',
+                guideStep1Desc: 'Ve a Instagram → Configuración → Centro de cuentas → Tu información y permisos → Descargar tu información. Asegúrate de seleccionar el formato JSON.',
+                guideStep2Title: 'Espera la descarga',
+                guideStep2Desc: 'Instagram suele tardar entre 10 minutos y hasta 48 horas en preparar tus datos. Recibirás una notificación por correo cuando estén listos.',
+                guideStep3Title: 'Descarga el archivo ZIP',
+                guideStep3Desc: 'Haz clic en el enlace de descarga del correo para guardar el archivo ZIP en tu dispositivo. Guárdalo sin descomprimir.',
+                guideStep4Title: 'Analiza con UnfollowLens',
+                guideStep4Desc: 'Sube el archivo ZIP descargado en esta página. Se analizará directamente en tu navegador para mostrar las cuentas que no te siguen de vuelta. No se envían datos a ningún servidor.',
+                tipsTitle: 'Consejos para gestionar seguidores',
+                tip1Title: 'Revisa periódicamente',
+                tip1Desc: 'Los datos de Instagram son una instantánea del momento de la solicitud. Descarga nuevos datos aproximadamente una vez al mes para rastrear cambios en tus relaciones de seguimiento.',
+                tip2Title: 'Cuentas privadas y desactivadas',
+                tip2Desc: 'UnfollowLens clasifica automáticamente las cuentas privadas y desactivadas. Como las cuentas desactivadas no necesitan ser dejadas de seguir, concéntrate solo en las cuentas activas.',
+                tip3Title: 'Protección de privacidad',
+                tip3Desc: 'UnfollowLens nunca solicita tu contraseña de Instagram y los archivos subidos nunca se envían a un servidor. Cierra la página después del análisis para eliminar todos los datos.'
             },
             fr: {
                 title: 'UnfollowLens - Vérificateur Instagram',
@@ -2217,7 +2286,23 @@
                 faqQ6: 'Comment la sécurité de mes données et ma vie privée sont-elles protégées ?',
                 faqA6: 'Toute l\'analyse est traitée à 100 % dans votre navigateur. Les données ne sont jamais téléversées sur un serveur et sont automatiquement supprimées lorsque vous fermez la page.',
                 faqQ7: 'Je ne peux pas sélectionner mon fichier ZIP',
-                faqA7: 'Cliquez sur le lien de téléchargement dans l\'e-mail d\'Instagram pour enregistrer le fichier ZIP sur votre appareil. Sur iPhone, trouvez-le dans l\'app Fichiers ; sur Android, vérifiez le dossier Mes fichiers ou Téléchargements. Assurez-vous que le fichier est au format .zip et téléversez-le sans le décompresser.'
+                faqA7: 'Cliquez sur le lien de téléchargement dans l\'e-mail d\'Instagram pour enregistrer le fichier ZIP sur votre appareil. Sur iPhone, trouvez-le dans l\'app Fichiers ; sur Android, vérifiez le dossier Mes fichiers ou Téléchargements. Assurez-vous que le fichier est au format .zip et téléversez-le sans le décompresser.',
+                guideTitle: 'Comment télécharger les données Instagram',
+                guideStep1Title: 'Demandez vos données sur Instagram',
+                guideStep1Desc: 'Allez dans Instagram → Paramètres → Espace Comptes → Vos informations et autorisations → Télécharger vos informations. Assurez-vous de sélectionner le format JSON.',
+                guideStep2Title: 'Attendez le téléchargement',
+                guideStep2Desc: 'Instagram met généralement entre 10 minutes et 48 heures pour préparer vos données. Vous recevrez une notification par e-mail lorsqu\'elles seront prêtes.',
+                guideStep3Title: 'Téléchargez le fichier ZIP',
+                guideStep3Desc: 'Cliquez sur le lien de téléchargement dans l\'e-mail pour sauvegarder le fichier ZIP sur votre appareil. Conservez-le sans le décompresser.',
+                guideStep4Title: 'Analysez avec UnfollowLens',
+                guideStep4Desc: 'Téléversez le fichier ZIP sur cette page. Il sera analysé directement dans votre navigateur pour afficher les comptes qui ne vous suivent pas en retour. Aucune donnée n\'est envoyée à un serveur.',
+                tipsTitle: 'Conseils de gestion des abonnements',
+                tip1Title: 'Vérifiez régulièrement',
+                tip1Desc: 'Les données Instagram sont un instantané du moment de la demande. Téléchargez de nouvelles données environ une fois par mois pour suivre les changements dans vos relations d\'abonnement.',
+                tip2Title: 'Comptes privés et désactivés',
+                tip2Desc: 'UnfollowLens classe automatiquement les comptes privés et désactivés. Les comptes désactivés n\'ont pas besoin d\'être désabonnés, concentrez-vous uniquement sur les comptes actifs.',
+                tip3Title: 'Protection de la vie privée',
+                tip3Desc: 'UnfollowLens ne demande jamais votre mot de passe Instagram et les fichiers téléversés ne sont jamais envoyés à un serveur. Fermez la page après l\'analyse pour supprimer toutes les données.'
             },
             de: {
                 title: 'UnfollowLens - Instagram Entfolgen-Checker',
@@ -2277,7 +2362,23 @@
                 faqQ6: 'Wie werden meine Datensicherheit und Privatsphäre geschützt?',
                 faqA6: 'Die gesamte Analyse wird zu 100 % in Ihrem Browser verarbeitet. Daten werden nie auf einen Server hochgeladen und beim Schließen der Seite automatisch gelöscht.',
                 faqQ7: 'Ich kann meine ZIP-Datei nicht auswählen',
-                faqA7: 'Klicken Sie auf den Download-Link in der E-Mail von Instagram, um die ZIP-Datei auf Ihrem Gerät zu speichern. Auf dem iPhone finden Sie sie in der Dateien-App; auf Android im Ordner Meine Dateien oder Downloads. Stellen Sie sicher, dass die Datei im .zip-Format vorliegt, und laden Sie sie ohne Entpacken hoch.'
+                faqA7: 'Klicken Sie auf den Download-Link in der E-Mail von Instagram, um die ZIP-Datei auf Ihrem Gerät zu speichern. Auf dem iPhone finden Sie sie in der Dateien-App; auf Android im Ordner Meine Dateien oder Downloads. Stellen Sie sicher, dass die Datei im .zip-Format vorliegt, und laden Sie sie ohne Entpacken hoch.',
+                guideTitle: 'So laden Sie Instagram-Daten herunter',
+                guideStep1Title: 'Daten bei Instagram anfordern',
+                guideStep1Desc: 'Öffnen Sie Instagram → Einstellungen → Kontocenter → Ihre Informationen und Berechtigungen → Informationen herunterladen. Wählen Sie unbedingt das JSON-Format.',
+                guideStep2Title: 'Auf Download warten',
+                guideStep2Desc: 'Instagram benötigt normalerweise 10 Minuten bis maximal 48 Stunden zur Datenvorbereitung. Sie erhalten eine E-Mail-Benachrichtigung, wenn die Daten bereit sind.',
+                guideStep3Title: 'ZIP-Datei herunterladen',
+                guideStep3Desc: 'Klicken Sie auf den Download-Link in der E-Mail, um die ZIP-Datei auf Ihrem Gerät zu speichern. Bewahren Sie sie ohne Entpacken auf.',
+                guideStep4Title: 'Mit UnfollowLens analysieren',
+                guideStep4Desc: 'Laden Sie die heruntergeladene ZIP-Datei auf dieser Seite hoch. Sie wird direkt in Ihrem Browser analysiert und zeigt Konten an, die Ihnen nicht zurückfolgen. Es werden keine Daten an einen Server gesendet.',
+                tipsTitle: 'Tipps zur Verwaltung von Unfollowern',
+                tip1Title: 'Regelmäßig überprüfen',
+                tip1Desc: 'Instagram-Daten sind eine Momentaufnahme vom Zeitpunkt der Anfrage. Laden Sie etwa einmal im Monat neue Daten herunter, um Änderungen in Ihren Follow-Beziehungen zu verfolgen.',
+                tip2Title: 'Private und deaktivierte Konten',
+                tip2Desc: 'UnfollowLens kategorisiert automatisch private und deaktivierte Konten. Da deaktivierten Konten nicht entfolgt werden müssen, konzentrieren Sie sich nur auf aktive Konten.',
+                tip3Title: 'Datenschutz',
+                tip3Desc: 'UnfollowLens fragt nie nach Ihrem Instagram-Passwort und hochgeladene Dateien werden nie an einen Server gesendet. Schließen Sie die Seite nach der Analyse, um alle Daten zu löschen.'
             },
             pt: {
                 title: 'UnfollowLens - Verificador de Unfollow do Instagram',
@@ -2337,7 +2438,23 @@
                 faqQ6: 'Como a segurança dos meus dados e minha privacidade são protegidas?',
                 faqA6: 'Toda a análise é processada 100% no seu navegador. Os dados nunca são enviados a nenhum servidor e são automaticamente excluídos quando você fecha a página.',
                 faqQ7: 'Não consigo selecionar meu arquivo ZIP',
-                faqA7: 'Clique no link de download no e-mail do Instagram para salvar o arquivo ZIP no seu dispositivo. No iPhone, encontre-o no app Arquivos; no Android, verifique a pasta Meus Arquivos ou Downloads. Certifique-se de que o arquivo está no formato .zip e faça o upload sem descompactar.'
+                faqA7: 'Clique no link de download no e-mail do Instagram para salvar o arquivo ZIP no seu dispositivo. No iPhone, encontre-o no app Arquivos; no Android, verifique a pasta Meus Arquivos ou Downloads. Certifique-se de que o arquivo está no formato .zip e faça o upload sem descompactar.',
+                guideTitle: 'Como baixar dados do Instagram',
+                guideStep1Title: 'Solicite seus dados no Instagram',
+                guideStep1Desc: 'Vá para Instagram → Configurações → Central de Contas → Suas informações e permissões → Baixar suas informações. Certifique-se de selecionar o formato JSON.',
+                guideStep2Title: 'Aguarde o download',
+                guideStep2Desc: 'O Instagram geralmente leva de 10 minutos a até 48 horas para preparar seus dados. Você receberá uma notificação por e-mail quando estiverem prontos.',
+                guideStep3Title: 'Baixe o arquivo ZIP',
+                guideStep3Desc: 'Clique no link de download no e-mail para salvar o arquivo ZIP no seu dispositivo. Mantenha-o sem descompactar.',
+                guideStep4Title: 'Analise com UnfollowLens',
+                guideStep4Desc: 'Envie o arquivo ZIP baixado nesta página. Ele será analisado diretamente no seu navegador para mostrar contas que não seguem você de volta. Nenhum dado é enviado a qualquer servidor.',
+                tipsTitle: 'Dicas de gerenciamento de seguidores',
+                tip1Title: 'Verifique regularmente',
+                tip1Desc: 'Os dados do Instagram são um instantâneo do momento da solicitação. Baixe novos dados aproximadamente uma vez por mês para acompanhar mudanças nas suas relações de seguimento.',
+                tip2Title: 'Contas privadas e desativadas',
+                tip2Desc: 'O UnfollowLens categoriza automaticamente contas privadas e desativadas. Como contas desativadas não precisam ser deixadas de seguir, concentre-se apenas nas contas ativas.',
+                tip3Title: 'Proteção de privacidade',
+                tip3Desc: 'O UnfollowLens nunca pede sua senha do Instagram e os arquivos enviados nunca são transmitidos a um servidor. Feche a página após a análise para excluir todos os dados.'
             },
             hi: {
                 title: 'UnfollowLens - Instagram अनफॉलो चेकर',
@@ -2397,7 +2514,23 @@
                 faqQ6: 'मेरे डेटा की सुरक्षा और गोपनीयता कैसे सुरक्षित है?',
                 faqA6: 'सारा विश्लेषण 100% आपके ब्राउज़र में प्रोसेस होता है। डेटा कभी किसी सर्वर पर अपलोड नहीं होता और पेज बंद करने पर सारा डेटा अपने आप डिलीट हो जाता है।',
                 faqQ7: 'ZIP फाइल सेलेक्ट नहीं हो रही',
-                faqA7: 'Instagram से आए ईमेल में दिए गए डाउनलोड लिंक पर क्लिक करके ZIP फाइल को अपने डिवाइस में सेव करें। iPhone पर Files ऐप में, Android पर My Files या Downloads फोल्डर में फाइल मिलेगी। सुनिश्चित करें कि फाइल .zip फॉर्मेट में है और बिना एक्सट्रैक्ट किए अपलोड करें।'
+                faqA7: 'Instagram से आए ईमेल में दिए गए डाउनलोड लिंक पर क्लिक करके ZIP फाइल को अपने डिवाइस में सेव करें। iPhone पर Files ऐप में, Android पर My Files या Downloads फोल्डर में फाइल मिलेगी। सुनिश्चित करें कि फाइल .zip फॉर्मेट में है और बिना एक्सट्रैक्ट किए अपलोड करें।',
+                guideTitle: 'Instagram डेटा डाउनलोड करने का तरीका',
+                guideStep1Title: 'Instagram से डेटा का अनुरोध करें',
+                guideStep1Desc: 'Instagram ऐप → सेटिंग्स → अकाउंट्स सेंटर → आपकी जानकारी और अनुमतियां → जानकारी डाउनलोड करें पर जाएं। फॉर्मेट में JSON चुनना सुनिश्चित करें।',
+                guideStep2Title: 'डाउनलोड की प्रतीक्षा करें',
+                guideStep2Desc: 'Instagram को डेटा तैयार करने में आमतौर पर 10 मिनट से लेकर अधिकतम 48 घंटे लगते हैं। तैयार होने पर ईमेल द्वारा सूचित किया जाएगा।',
+                guideStep3Title: 'ZIP फ़ाइल डाउनलोड करें',
+                guideStep3Desc: 'ईमेल में दिए गए डाउनलोड लिंक पर क्लिक करके ZIP फ़ाइल को अपने डिवाइस पर सेव करें। इसे बिना एक्सट्रैक्ट किए रखें।',
+                guideStep4Title: 'UnfollowLens से विश्लेषण करें',
+                guideStep4Desc: 'इस पेज पर डाउनलोड की गई ZIP फ़ाइल अपलोड करें। यह सीधे आपके ब्राउज़र में विश्लेषित होगी और उन अकाउंट्स की सूची दिखाएगी जो आपको वापस फॉलो नहीं करते। कोई डेटा सर्वर पर नहीं भेजा जाता।',
+                tipsTitle: 'अनफॉलोअर प्रबंधन टिप्स',
+                tip1Title: 'नियमित रूप से जांचें',
+                tip1Desc: 'Instagram डेटा अनुरोध के समय का स्नैपशॉट है। फॉलो संबंधों में बदलावों को ट्रैक करने के लिए महीने में एक बार नया डेटा डाउनलोड करें।',
+                tip2Title: 'प्राइवेट और निष्क्रिय अकाउंट',
+                tip2Desc: 'UnfollowLens स्वचालित रूप से प्राइवेट और निष्क्रिय अकाउंट्स को वर्गीकृत करता है। निष्क्रिय अकाउंट्स को अनफॉलो करने की आवश्यकता नहीं है, इसलिए केवल सक्रिय अकाउंट्स पर ध्यान दें।',
+                tip3Title: 'गोपनीयता सुरक्षा',
+                tip3Desc: 'UnfollowLens कभी भी आपका Instagram पासवर्ड नहीं मांगता और अपलोड की गई फ़ाइलें सर्वर पर नहीं भेजी जातीं। विश्लेषण के बाद सभी डेटा हटाने के लिए पेज बंद करें।'
             },
             ru: {
                 title: 'UnfollowLens - Проверка отписок Instagram',
@@ -2457,7 +2590,23 @@
                 faqQ6: 'Как защищены безопасность моих данных и конфиденциальность?',
                 faqA6: 'Весь анализ на 100% обрабатывается в вашем браузере. Данные никогда не загружаются на сервер и автоматически удаляются при закрытии страницы.',
                 faqQ7: 'Не удаётся выбрать ZIP-файл',
-                faqA7: 'Нажмите на ссылку для скачивания в письме от Instagram, чтобы сохранить ZIP-файл на устройство. На iPhone найдите его в приложении «Файлы», на Android — в папке «Мои файлы» или «Загрузки». Убедитесь, что файл в формате .zip, и загрузите его без распаковки.'
+                faqA7: 'Нажмите на ссылку для скачивания в письме от Instagram, чтобы сохранить ZIP-файл на устройство. На iPhone найдите его в приложении «Файлы», на Android — в папке «Мои файлы» или «Загрузки». Убедитесь, что файл в формате .zip, и загрузите его без распаковки.',
+                guideTitle: 'Как скачать данные Instagram',
+                guideStep1Title: 'Запросите данные в Instagram',
+                guideStep1Desc: 'Откройте Instagram → Настройки → Центр аккаунтов → Ваша информация и разрешения → Скачать информацию. Обязательно выберите формат JSON.',
+                guideStep2Title: 'Ожидайте загрузку',
+                guideStep2Desc: 'Instagram обычно готовит данные от 10 минут до 48 часов. Когда данные будут готовы, вы получите уведомление по электронной почте.',
+                guideStep3Title: 'Скачайте ZIP-файл',
+                guideStep3Desc: 'Нажмите на ссылку для скачивания в письме, чтобы сохранить ZIP-файл на устройство. Храните его без распаковки.',
+                guideStep4Title: 'Проанализируйте с UnfollowLens',
+                guideStep4Desc: 'Загрузите скачанный ZIP-файл на этой странице. Он будет проанализирован прямо в вашем браузере, показывая аккаунты, которые не подписаны на вас в ответ. Данные не отправляются на сервер.',
+                tipsTitle: 'Советы по управлению отписчиками',
+                tip1Title: 'Проверяйте регулярно',
+                tip1Desc: 'Данные Instagram — это снимок на момент запроса. Загружайте новые данные примерно раз в месяц, чтобы отслеживать изменения в подписках.',
+                tip2Title: 'Закрытые и деактивированные аккаунты',
+                tip2Desc: 'UnfollowLens автоматически классифицирует закрытые и деактивированные аккаунты. От деактивированных аккаунтов отписываться не нужно — сосредоточьтесь только на активных.',
+                tip3Title: 'Защита конфиденциальности',
+                tip3Desc: 'UnfollowLens никогда не запрашивает ваш пароль Instagram, а загруженные файлы не отправляются на сервер. Закройте страницу после анализа, чтобы удалить все данные.'
             },
             ar: {
                 title: 'UnfollowLens - فاحص إلغاء المتابعة في Instagram',
@@ -2517,7 +2666,23 @@
                 faqQ6: 'كيف يتم حماية أمان بياناتي وخصوصيتي؟',
                 faqA6: 'يتم التحليل بالكامل 100% في متصفحك. لا يتم رفع البيانات إلى أي خادم، ويتم حذف جميع البيانات تلقائيًا عند إغلاق الصفحة.',
                 faqQ7: 'لا أستطيع تحديد ملف ZIP',
-                faqA7: 'انقر على رابط التحميل في البريد الإلكتروني من Instagram لحفظ ملف ZIP على جهازك. على iPhone، ابحث عنه في تطبيق الملفات؛ على Android، تحقق من مجلد ملفاتي أو التنزيلات. تأكد أن الملف بصيغة .zip وقم برفعه دون فك الضغط.'
+                faqA7: 'انقر على رابط التحميل في البريد الإلكتروني من Instagram لحفظ ملف ZIP على جهازك. على iPhone، ابحث عنه في تطبيق الملفات؛ على Android، تحقق من مجلد ملفاتي أو التنزيلات. تأكد أن الملف بصيغة .zip وقم برفعه دون فك الضغط.',
+                guideTitle: 'كيفية تحميل بيانات Instagram',
+                guideStep1Title: 'اطلب بياناتك من Instagram',
+                guideStep1Desc: 'انتقل إلى Instagram ← الإعدادات ← مركز الحسابات ← معلوماتك وأذوناتك ← تحميل معلوماتك. تأكد من اختيار تنسيق JSON.',
+                guideStep2Title: 'انتظر التحميل',
+                guideStep2Desc: 'يستغرق Instagram عادةً من 10 دقائق إلى 48 ساعة لإعداد بياناتك. ستتلقى إشعاراً بالبريد الإلكتروني عندما تكون جاهزة.',
+                guideStep3Title: 'حمّل ملف ZIP',
+                guideStep3Desc: 'انقر على رابط التحميل في البريد الإلكتروني لحفظ ملف ZIP على جهازك. احتفظ به دون فك الضغط.',
+                guideStep4Title: 'حلّل مع UnfollowLens',
+                guideStep4Desc: 'ارفع ملف ZIP المحمّل على هذه الصفحة. سيتم تحليله مباشرة في متصفحك لعرض الحسابات التي لا تتابعك. لا يتم إرسال أي بيانات إلى أي خادم.',
+                tipsTitle: 'نصائح لإدارة المتابعين',
+                tip1Title: 'تحقق بانتظام',
+                tip1Desc: 'بيانات Instagram هي لقطة من وقت الطلب. قم بتحميل بيانات جديدة مرة شهرياً تقريباً لتتبع التغييرات في علاقات المتابعة.',
+                tip2Title: 'الحسابات الخاصة والمعطلة',
+                tip2Desc: 'يصنف UnfollowLens تلقائياً الحسابات الخاصة والمعطلة. لا حاجة لإلغاء متابعة الحسابات المعطلة، ركز فقط على الحسابات النشطة.',
+                tip3Title: 'حماية الخصوصية',
+                tip3Desc: 'لا يطلب UnfollowLens أبداً كلمة مرور Instagram الخاصة بك، ولا يتم إرسال الملفات المرفوعة إلى أي خادم. أغلق الصفحة بعد التحليل لحذف جميع البيانات.'
             },
             tr: {
                 title: 'UnfollowLens - Instagram Takipten Çıkan Kontrol',
@@ -2577,7 +2742,23 @@
                 faqQ6: 'Veri güvenliğim ve gizliliğim nasıl korunuyor?',
                 faqA6: 'Tüm analiz %100 tarayıcınızda işlenir. Veriler asla bir sunucuya yüklenmez ve sayfa kapatıldığında tüm veriler otomatik olarak silinir.',
                 faqQ7: 'ZIP dosyamı seçemiyorum',
-                faqA7: 'Instagram\'dan gelen e-postadaki indirme bağlantısına tıklayarak ZIP dosyasını cihazınıza kaydedin. iPhone\'da Dosyalar uygulamasında, Android\'de Dosyalarım veya İndirilenler klasöründe bulabilirsiniz. Dosyanın .zip formatında olduğundan emin olun ve açmadan yükleyin.'
+                faqA7: 'Instagram\'dan gelen e-postadaki indirme bağlantısına tıklayarak ZIP dosyasını cihazınıza kaydedin. iPhone\'da Dosyalar uygulamasında, Android\'de Dosyalarım veya İndirilenler klasöründe bulabilirsiniz. Dosyanın .zip formatında olduğundan emin olun ve açmadan yükleyin.',
+                guideTitle: 'Instagram Verilerini İndirme Yöntemi',
+                guideStep1Title: 'Instagram\'dan Veri Talep Edin',
+                guideStep1Desc: 'Instagram uygulaması → Ayarlar → Hesap Merkezi → Bilgileriniz ve izinleriniz → Bilgilerinizi indirin bölümünden verilerinizi talep edin. Format olarak mutlaka JSON seçin.',
+                guideStep2Title: 'İndirmeyi Bekleyin',
+                guideStep2Desc: 'Instagram verilerinizi hazırlamak için genellikle 10 dakika ile 48 saat arasında süre gerektirir. Hazır olduğunda e-posta ile bildirim alırsınız.',
+                guideStep3Title: 'ZIP Dosyasını İndirin',
+                guideStep3Desc: 'E-postadaki indirme bağlantısına tıklayarak ZIP dosyasını cihazınıza kaydedin. Açmadan saklayın.',
+                guideStep4Title: 'UnfollowLens ile Analiz Edin',
+                guideStep4Desc: 'İndirilen ZIP dosyasını bu sayfaya yükleyin. Doğrudan tarayıcınızda analiz edilerek sizi takip etmeyen hesapların listesi gösterilir. Hiçbir veri sunucuya gönderilmez.',
+                tipsTitle: 'Takipçi Yönetim İpuçları',
+                tip1Title: 'Düzenli olarak kontrol edin',
+                tip1Desc: 'Instagram verileri talep anının anlık görüntüsüdür. Takip ilişkilerindeki değişiklikleri izlemek için ayda bir yeni veri indirin.',
+                tip2Title: 'Gizli ve devre dışı hesaplar',
+                tip2Desc: 'UnfollowLens gizli ve devre dışı bırakılmış hesapları otomatik olarak sınıflandırır. Devre dışı hesapların takibini bırakmanıza gerek yoktur, sadece aktif hesaplara odaklanın.',
+                tip3Title: 'Gizlilik Koruması',
+                tip3Desc: 'UnfollowLens asla Instagram şifrenizi sormaz ve yüklenen dosyalar sunucuya gönderilmez. Analiz bittikten sonra tüm verileri silmek için sayfayı kapatın.'
             },
             vi: {
                 title: 'UnfollowLens - Kiểm tra Unfollow Instagram',
@@ -2637,7 +2818,23 @@
                 faqQ6: 'Bảo mật dữ liệu và quyền riêng tư được bảo vệ như thế nào?',
                 faqA6: 'Toàn bộ phân tích được xử lý 100% trong trình duyệt. Dữ liệu không bao giờ được tải lên máy chủ và tất cả dữ liệu sẽ tự động bị xóa khi bạn đóng trang.',
                 faqQ7: 'Không thể chọn file ZIP',
-                faqA7: 'Nhấp vào liên kết tải xuống trong email từ Instagram để lưu file ZIP vào thiết bị. Trên iPhone, tìm trong ứng dụng Tệp; trên Android, kiểm tra thư mục Tệp của tôi hoặc Tải xuống. Đảm bảo file ở định dạng .zip và tải lên mà không giải nén.'
+                faqA7: 'Nhấp vào liên kết tải xuống trong email từ Instagram để lưu file ZIP vào thiết bị. Trên iPhone, tìm trong ứng dụng Tệp; trên Android, kiểm tra thư mục Tệp của tôi hoặc Tải xuống. Đảm bảo file ở định dạng .zip và tải lên mà không giải nén.',
+                guideTitle: 'Cách tải dữ liệu Instagram',
+                guideStep1Title: 'Yêu cầu dữ liệu từ Instagram',
+                guideStep1Desc: 'Vào Instagram → Cài đặt → Trung tâm tài khoản → Thông tin và quyền của bạn → Tải thông tin. Hãy chắc chắn chọn định dạng JSON.',
+                guideStep2Title: 'Chờ tải xuống',
+                guideStep2Desc: 'Instagram thường mất từ 10 phút đến 48 giờ để chuẩn bị dữ liệu. Bạn sẽ nhận được thông báo qua email khi sẵn sàng.',
+                guideStep3Title: 'Tải file ZIP',
+                guideStep3Desc: 'Nhấp vào liên kết tải xuống trong email để lưu file ZIP vào thiết bị. Giữ nguyên không giải nén.',
+                guideStep4Title: 'Phân tích với UnfollowLens',
+                guideStep4Desc: 'Tải file ZIP đã tải xuống lên trang này. File sẽ được phân tích trực tiếp trong trình duyệt để hiển thị các tài khoản không theo dõi lại bạn. Không có dữ liệu nào được gửi đến máy chủ.',
+                tipsTitle: 'Mẹo quản lý người hủy theo dõi',
+                tip1Title: 'Kiểm tra thường xuyên',
+                tip1Desc: 'Dữ liệu Instagram là ảnh chụp tại thời điểm yêu cầu. Tải dữ liệu mới khoảng mỗi tháng một lần để theo dõi thay đổi trong quan hệ theo dõi.',
+                tip2Title: 'Tài khoản riêng tư và đã hủy',
+                tip2Desc: 'UnfollowLens tự động phân loại tài khoản riêng tư và đã hủy kích hoạt. Không cần hủy theo dõi tài khoản đã hủy, chỉ tập trung vào tài khoản đang hoạt động.',
+                tip3Title: 'Bảo vệ quyền riêng tư',
+                tip3Desc: 'UnfollowLens không bao giờ yêu cầu mật khẩu Instagram và file tải lên không được gửi đến máy chủ. Đóng trang sau khi phân tích để xóa tất cả dữ liệu.'
             },
             th: {
                 title: 'UnfollowLens - ตรวจสอบ Unfollow Instagram',
@@ -2697,7 +2894,23 @@
                 faqQ6: 'ความปลอดภัยของข้อมูลและความเป็นส่วนตัวได้รับการปกป้องอย่างไร?',
                 faqA6: 'การวิเคราะห์ทั้งหมดถูกประมวลผล 100% ในเบราว์เซอร์ของคุณ ข้อมูลจะไม่ถูกอัปโหลดไปยังเซิร์ฟเวอร์ใดๆ และข้อมูลทั้งหมดจะถูกลบโดยอัตโนมัติเมื่อคุณปิดหน้า',
                 faqQ7: 'เลือกไฟล์ ZIP ไม่ได้',
-                faqA7: 'คลิกลิงก์ดาวน์โหลดในอีเมลจาก Instagram เพื่อบันทึกไฟล์ ZIP ลงในอุปกรณ์ของคุณ บน iPhone ค้นหาในแอป Files บน Android ตรวจสอบโฟลเดอร์ My Files หรือ Downloads ตรวจสอบให้แน่ใจว่าไฟล์อยู่ในรูปแบบ .zip และอัปโหลดโดยไม่ต้องแตกไฟล์'
+                faqA7: 'คลิกลิงก์ดาวน์โหลดในอีเมลจาก Instagram เพื่อบันทึกไฟล์ ZIP ลงในอุปกรณ์ของคุณ บน iPhone ค้นหาในแอป Files บน Android ตรวจสอบโฟลเดอร์ My Files หรือ Downloads ตรวจสอบให้แน่ใจว่าไฟล์อยู่ในรูปแบบ .zip และอัปโหลดโดยไม่ต้องแตกไฟล์',
+                guideTitle: 'วิธีดาวน์โหลดข้อมูล Instagram',
+                guideStep1Title: 'ขอข้อมูลจาก Instagram',
+                guideStep1Desc: 'ไปที่แอป Instagram → การตั้งค่า → ศูนย์บัญชี → ข้อมูลและการอนุญาตของคุณ → ดาวน์โหลดข้อมูล ต้องเลือกรูปแบบ JSON',
+                guideStep2Title: 'รอการดาวน์โหลด',
+                guideStep2Desc: 'Instagram ใช้เวลาประมาณ 10 นาทีถึง 48 ชั่วโมงในการเตรียมข้อมูล เมื่อพร้อมจะได้รับแจ้งทางอีเมล',
+                guideStep3Title: 'ดาวน์โหลดไฟล์ ZIP',
+                guideStep3Desc: 'คลิกลิงก์ดาวน์โหลดในอีเมลเพื่อบันทึกไฟล์ ZIP ลงอุปกรณ์ เก็บไว้โดยไม่ต้องแตกไฟล์',
+                guideStep4Title: 'วิเคราะห์ด้วย UnfollowLens',
+                guideStep4Desc: 'อัปโหลดไฟล์ ZIP ที่ดาวน์โหลดมาในหน้านี้ ระบบจะวิเคราะห์โดยตรงในเบราว์เซอร์เพื่อแสดงบัญชีที่ไม่ได้ติดตามคุณกลับ ข้อมูลจะไม่ถูกส่งไปยังเซิร์ฟเวอร์',
+                tipsTitle: 'เคล็ดลับจัดการผู้เลิกติดตาม',
+                tip1Title: 'ตรวจสอบเป็นประจำ',
+                tip1Desc: 'ข้อมูล Instagram เป็นสแนปช็อตจากเวลาที่ขอ ดาวน์โหลดข้อมูลใหม่ประมาณเดือนละครั้งเพื่อติดตามการเปลี่ยนแปลงความสัมพันธ์การติดตาม',
+                tip2Title: 'บัญชีส่วนตัวและปิดการใช้งาน',
+                tip2Desc: 'UnfollowLens จัดหมวดหมู่บัญชีส่วนตัวและปิดการใช้งานโดยอัตโนมัติ ไม่จำเป็นต้องเลิกติดตามบัญชีที่ปิดการใช้งาน ให้โฟกัสเฉพาะบัญชีที่ใช้งานอยู่',
+                tip3Title: 'การปกป้องความเป็นส่วนตัว',
+                tip3Desc: 'UnfollowLens ไม่เคยขอรหัสผ่าน Instagram และไฟล์ที่อัปโหลดจะไม่ถูกส่งไปยังเซิร์ฟเวอร์ ปิดหน้าเว็บหลังวิเคราะห์เพื่อลบข้อมูลทั้งหมด'
             },
             id: {
                 title: 'UnfollowLens - Pemeriksa Unfollow Instagram',
@@ -2757,7 +2970,23 @@
                 faqQ6: 'Bagaimana keamanan data dan privasi saya dilindungi?',
                 faqA6: 'Semua analisis diproses 100% di browser Anda. Data tidak pernah diunggah ke server mana pun dan semua data otomatis dihapus saat Anda menutup halaman.',
                 faqQ7: 'Tidak bisa memilih file ZIP',
-                faqA7: 'Klik tautan unduhan di email dari Instagram untuk menyimpan file ZIP ke perangkat Anda. Di iPhone, cari di app Files; di Android, periksa folder File Saya atau Unduhan. Pastikan file dalam format .zip dan unggah tanpa mengekstrak.'
+                faqA7: 'Klik tautan unduhan di email dari Instagram untuk menyimpan file ZIP ke perangkat Anda. Di iPhone, cari di app Files; di Android, periksa folder File Saya atau Unduhan. Pastikan file dalam format .zip dan unggah tanpa mengekstrak.',
+                guideTitle: 'Cara Mengunduh Data Instagram',
+                guideStep1Title: 'Minta Data dari Instagram',
+                guideStep1Desc: 'Buka Instagram → Pengaturan → Pusat Akun → Informasi dan izin Anda → Unduh informasi Anda. Pastikan memilih format JSON.',
+                guideStep2Title: 'Tunggu Unduhan',
+                guideStep2Desc: 'Instagram biasanya membutuhkan 10 menit hingga 48 jam untuk menyiapkan data Anda. Anda akan menerima notifikasi email saat siap.',
+                guideStep3Title: 'Unduh File ZIP',
+                guideStep3Desc: 'Klik tautan unduhan di email untuk menyimpan file ZIP ke perangkat Anda. Simpan tanpa mengekstrak.',
+                guideStep4Title: 'Analisis dengan UnfollowLens',
+                guideStep4Desc: 'Unggah file ZIP yang diunduh di halaman ini. File akan dianalisis langsung di browser Anda untuk menampilkan akun yang tidak mengikuti Anda balik. Tidak ada data yang dikirim ke server.',
+                tipsTitle: 'Tips Mengelola Unfollower',
+                tip1Title: 'Periksa secara rutin',
+                tip1Desc: 'Data Instagram adalah snapshot dari waktu permintaan. Unduh data baru sekitar sebulan sekali untuk melacak perubahan hubungan pengikut.',
+                tip2Title: 'Akun privat dan nonaktif',
+                tip2Desc: 'UnfollowLens secara otomatis mengkategorikan akun privat dan nonaktif. Akun nonaktif tidak perlu di-unfollow, fokus hanya pada akun aktif.',
+                tip3Title: 'Perlindungan Privasi',
+                tip3Desc: 'UnfollowLens tidak pernah meminta kata sandi Instagram Anda dan file yang diunggah tidak pernah dikirim ke server. Tutup halaman setelah analisis untuk menghapus semua data.'
             },
             ms: {
                 title: 'UnfollowLens - Pemeriksa Unfollow Instagram',
@@ -2817,7 +3046,23 @@
                 faqQ6: 'Bagaimana keselamatan data dan privasi saya dilindungi?',
                 faqA6: 'Semua analisis diproses 100% dalam pelayar anda. Data tidak pernah dimuat naik ke mana-mana pelayan dan semua data dipadamkan secara automatik apabila anda menutup halaman.',
                 faqQ7: 'Tidak dapat memilih fail ZIP',
-                faqA7: 'Klik pautan muat turun dalam e-mel dari Instagram untuk menyimpan fail ZIP ke peranti anda. Di iPhone, cari dalam app Files; di Android, semak folder My Files atau Downloads. Pastikan fail dalam format .zip dan muat naik tanpa mengekstrak.'
+                faqA7: 'Klik pautan muat turun dalam e-mel dari Instagram untuk menyimpan fail ZIP ke peranti anda. Di iPhone, cari dalam app Files; di Android, semak folder My Files atau Downloads. Pastikan fail dalam format .zip dan muat naik tanpa mengekstrak.',
+                guideTitle: 'Cara Memuat Turun Data Instagram',
+                guideStep1Title: 'Minta Data dari Instagram',
+                guideStep1Desc: 'Buka Instagram → Tetapan → Pusat Akaun → Maklumat dan kebenaran anda → Muat turun maklumat anda. Pastikan memilih format JSON.',
+                guideStep2Title: 'Tunggu Muat Turun',
+                guideStep2Desc: 'Instagram biasanya mengambil masa 10 minit hingga 48 jam untuk menyediakan data anda. Anda akan menerima pemberitahuan e-mel apabila siap.',
+                guideStep3Title: 'Muat Turun Fail ZIP',
+                guideStep3Desc: 'Klik pautan muat turun dalam e-mel untuk menyimpan fail ZIP ke peranti anda. Simpan tanpa mengekstrak.',
+                guideStep4Title: 'Analisis dengan UnfollowLens',
+                guideStep4Desc: 'Muat naik fail ZIP yang dimuat turun di halaman ini. Ia akan dianalisis terus dalam pelayar anda untuk menunjukkan akaun yang tidak mengikuti anda kembali. Tiada data dihantar ke pelayan.',
+                tipsTitle: 'Tips Pengurusan Pengikut',
+                tip1Title: 'Semak secara berkala',
+                tip1Desc: 'Data Instagram adalah tangkapan skrin dari masa permintaan. Muat turun data baharu kira-kira sebulan sekali untuk menjejak perubahan hubungan pengikut.',
+                tip2Title: 'Akaun peribadi dan nyahaktif',
+                tip2Desc: 'UnfollowLens mengkategorikan secara automatik akaun peribadi dan nyahaktif. Akaun nyahaktif tidak perlu dinyahikuti, fokus hanya pada akaun aktif.',
+                tip3Title: 'Perlindungan Privasi',
+                tip3Desc: 'UnfollowLens tidak pernah meminta kata laluan Instagram anda dan fail yang dimuat naik tidak pernah dihantar ke pelayan. Tutup halaman selepas analisis untuk memadam semua data.'
             }
         };
 
@@ -3321,39 +3566,6 @@
             errorMessage.style.display = 'none';
         }
 
-        const privacyLink = document.getElementById('privacyLink');
-        const privacyModal = document.getElementById('privacyModal');
-        const modalClose = document.getElementById('modalClose');
-        const modalTitle = document.getElementById('modalTitle');
-        const modalTitles = { ko: '개인정보 처리방침', en: 'Privacy Policy' };
-
-        privacyLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            const modalLang = ['ko', 'ja', 'zh'].includes(currentLang) ? 'ko' : 'en';
-            setModalLanguage(modalLang);
-            privacyModal.classList.add('show');
-            document.body.style.overflow = 'hidden';
-        });
-
-        modalClose.addEventListener('click', closeModal);
-        privacyModal.addEventListener('click', (e) => { if (e.target === privacyModal) closeModal(); });
-        document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && privacyModal.classList.contains('show')) closeModal(); });
-
-        function closeModal() {
-            privacyModal.classList.remove('show');
-            document.body.style.overflow = '';
-        }
-
-        function setModalLanguage(lang) {
-            document.querySelectorAll('.modal-lang-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.modalLang === lang));
-            document.querySelectorAll('.privacy-content').forEach(c => c.classList.remove('show'));
-            document.getElementById('privacy-' + lang).classList.add('show');
-            modalTitle.textContent = modalTitles[lang];
-        }
-
-        document.querySelectorAll('.modal-lang-btn').forEach(btn => {
-            btn.addEventListener('click', () => setModalLanguage(btn.dataset.modalLang));
-        });
     </script>
 </body>
 </html>

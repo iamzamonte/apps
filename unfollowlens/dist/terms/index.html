@@ -14,7 +14,6 @@
     <title>이용약관 - UnfollowLens</title>
     <meta name="description" content="UnfollowLens 서비스 이용약관">
     <meta name="robots" content="index, follow">
-    <meta name="google-adsense-account" content="ca-pub-4674053917795285">
     <link rel="canonical" href="https://unfollowlens.com/terms">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -209,6 +208,25 @@
             font-size: 0.85rem;
         }
 
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+
         @media (max-width: 640px) {
             .container { padding: 0 16px; }
             .header { padding: 40px 0 24px; }
@@ -372,7 +390,13 @@
         </div>
 
         <footer class="footer">
-            &copy; 2025 UnfollowLens. All rights reserved.
+            <div class="footer-links">
+                <a href="/">홈</a>
+                <a href="/privacy">개인정보 처리방침</a>
+                <a href="/terms">이용약관</a>
+                <a href="/about">서비스 소개</a>
+            </div>
+            <p>&copy; 2026 UnfollowLens. All rights reserved.</p>
         </footer>
     </div>
 
