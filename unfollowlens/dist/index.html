@@ -187,197 +187,6 @@
             box-shadow: 0 4px 50px rgba(0,0,0,0.08);
         }
 
-        /* Guide Section */
-        .guide-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            cursor: pointer;
-            padding: 4px 0;
-        }
-
-        .guide-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .guide-title__icon {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 28px;
-            height: 28px;
-            background: linear-gradient(135deg, #833AB4, #E1306C, #F77737);
-            color: white;
-            border-radius: 8px;
-            font-size: 0.85rem;
-        }
-
-        .guide-toggle {
-            width: 36px;
-            height: 36px;
-            border: 1px solid var(--border);
-            border-radius: 50%;
-            background: transparent;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: var(--transition);
-        }
-
-        .guide-toggle:hover {
-            border-color: var(--text);
-        }
-
-        .guide-toggle svg {
-            width: 14px;
-            height: 14px;
-            transition: transform 0.3s ease;
-        }
-
-        .guide-toggle.open svg {
-            transform: rotate(180deg);
-        }
-
-        .guide-content {
-            display: none;
-            margin-top: 28px;
-            padding-top: 28px;
-            border-top: 1px solid var(--border);
-        }
-
-        .guide-content.show {
-            display: block;
-            animation: slideDown 0.3s ease-out;
-        }
-
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Platform Tabs */
-        .platform-tabs {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 28px;
-        }
-
-        .platform-tab {
-            flex: 1;
-            padding: 14px 20px;
-            background: transparent;
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            font-family: inherit;
-            font-size: 0.9rem;
-            font-weight: 500;
-            color: var(--text-secondary);
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .platform-tab:hover {
-            border-color: var(--text);
-            color: var(--text);
-        }
-
-        .platform-tab.active {
-            background: var(--text);
-            border-color: var(--text);
-            color: white;
-        }
-
-        .platform-content {
-            display: none;
-        }
-
-        .platform-content.show {
-            display: block;
-        }
-
-        /* Steps */
-        .steps {
-            list-style: none;
-            counter-reset: step;
-        }
-
-        .step {
-            position: relative;
-            padding-left: 48px;
-            padding-bottom: 24px;
-            margin-bottom: 24px;
-            border-bottom: 1px solid var(--border);
-            counter-increment: step;
-        }
-
-        .step:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-            padding-bottom: 0;
-        }
-
-        .step::before {
-            content: counter(step);
-            position: absolute;
-            left: 0;
-            top: 2px;
-            width: 28px;
-            height: 28px;
-            background: var(--bg-alt);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--text-secondary);
-        }
-
-        .step__title {
-            font-weight: 600;
-            margin-bottom: 6px;
-            color: var(--text);
-        }
-
-        .step__desc {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-            line-height: 1.7;
-        }
-
-        .step__highlight {
-            background: linear-gradient(120deg, rgba(230, 57, 70, 0.1) 0%, rgba(230, 57, 70, 0.05) 100%);
-            padding: 2px 8px;
-            border-radius: 4px;
-            color: var(--accent);
-            font-weight: 500;
-        }
-
-        .guide-note {
-            background: var(--bg-alt);
-            border-radius: 10px;
-            padding: 16px 20px;
-            margin-top: 24px;
-            display: flex;
-            gap: 12px;
-            align-items: flex-start;
-        }
-
-        .guide-note__icon {
-            font-size: 1.2rem;
-            line-height: 1.4;
-        }
-
-        .guide-note__text {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
         /* Upload Section */
         .upload-section {
             text-align: center;
@@ -1048,7 +857,19 @@
             margin-top: 36px;
         }
 
-        .guide-title__icon, .tips-title__icon {
+        .guide-title__icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #833AB4, #E1306C, #F77737);
+            color: white;
+            border-radius: 8px;
+            font-size: 0.85rem;
+        }
+
+        .tips-title__icon {
             font-size: 1.3rem;
         }
 
@@ -1114,6 +935,67 @@
             font-size: 0.9rem;
             color: var(--text-secondary);
             line-height: 1.7;
+        }
+
+        .guide-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 12px;
+            margin-top: 28px;
+        }
+
+        .guide-link-card {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 16px 20px;
+            background: var(--bg-alt);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .guide-link-card:hover {
+            border-color: var(--accent);
+            background: white;
+            text-decoration: none;
+        }
+
+        .guide-link-card__icon {
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .guide-link-card__text {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .guide-link-card__text strong {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .guide-link-card__text small {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .guide-link-card__arrow {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            flex-shrink: 0;
+            transition: var(--transition);
+        }
+
+        .guide-link-card:hover .guide-link-card__arrow {
+            color: var(--accent);
+            transform: translateX(3px);
         }
 
         /* Support */
@@ -1243,12 +1125,6 @@
             .card { padding: 24px 20px; }
             .guide-title { font-size: 1rem; gap: 10px; }
             .guide-title__icon { width: 24px; height: 24px; }
-            .guide-content { margin-top: 20px; padding-top: 20px; }
-            .platform-tabs { flex-direction: column; gap: 8px; }
-            .platform-tab { padding: 12px 16px; }
-            .step { padding-left: 40px; padding-bottom: 20px; margin-bottom: 20px; }
-            .step::before { width: 24px; height: 24px; font-size: 0.75rem; }
-            .step__title { font-size: 0.95rem; }
             .step__desc { font-size: 0.9rem; }
             .upload-area { padding: 40px 20px; }
             .upload-icon { width: 48px; height: 48px; font-size: 20px; border-radius: 12px; }
@@ -1293,15 +1169,6 @@
             .logo__text { font-size: 1.8rem; }
             .tagline { font-size: 0.85rem; }
             .card { padding: 20px 16px; border-radius: 12px; }
-            .guide-header { padding: 2px 0; }
-            .guide-title { font-size: 0.9rem; }
-            .guide-toggle { width: 32px; height: 32px; }
-            .step { padding-left: 32px; }
-            .step::before { width: 22px; height: 22px; font-size: 0.7rem; }
-            .step__title { font-size: 0.9rem; }
-            .step__desc { font-size: 0.85rem; line-height: 1.6; }
-            .step__highlight { padding: 1px 6px; font-size: 0.85rem; }
-            .guide-note { padding: 12px 14px; gap: 10px; flex-direction: column; text-align: center; }
             .upload-area { padding: 32px 16px; border-radius: 12px; }
             .upload-icon { width: 44px; height: 44px; font-size: 18px; }
             .upload-text { font-size: 0.9rem; }
@@ -1484,88 +1351,6 @@
             <p class="privacy-notice" data-i18n="privacyNotice">업로드된 파일은 서버에 저장되지 않으며, 브라우저에서만 처리됩니다.</p>
         </header>
 
-        <!-- Guide -->
-        <section class="section section--delay-1">
-            <div class="card">
-                <div class="guide-header" id="guideHeader">
-                    <div class="guide-title">
-                        <span class="guide-title__icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="white" stroke="none"/></svg></span>
-                        <span data-i18n="guideTitle">Instagram 데이터 다운로드 방법</span>
-                    </div>
-                    <button class="guide-toggle" id="guideToggle">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M6 9l6 6 6-6"/>
-                        </svg>
-                    </button>
-                </div>
-                <div class="guide-content" id="guideContent">
-                    <div class="platform-tabs">
-                        <button class="platform-tab active" data-platform="mobile" data-i18n="platformMobile">모바일 앱</button>
-                        <button class="platform-tab" data-platform="web" data-i18n="platformWeb">웹 브라우저</button>
-                    </div>
-
-                    <div class="platform-content show" id="mobileGuide">
-                        <ol class="steps">
-                            <li class="step">
-                                <div class="step__title" data-i18n="mobileStep1Title">Instagram 앱 실행</div>
-                                <div class="step__desc" data-i18n="mobileStep1Desc">Instagram 앱을 열고 <span class="step__highlight">프로필</span> 탭 → <span class="step__highlight">☰ 메뉴</span>를 탭합니다.</div>
-                            </li>
-                            <li class="step">
-                                <div class="step__title" data-i18n="mobileStep2Title">계정 센터 접속</div>
-                                <div class="step__desc" data-i18n="mobileStep2Desc"><span class="step__highlight">설정 및 활동</span> → <span class="step__highlight">계정 센터</span> → <span class="step__highlight">내 정보 및 권한</span>을 탭합니다.</div>
-                            </li>
-                            <li class="step">
-                                <div class="step__title" data-i18n="mobileStep3Title">정보 다운로드 선택</div>
-                                <div class="step__desc" data-i18n="mobileStep3Desc"><span class="step__highlight">내 정보 다운로드</span> → <span class="step__highlight">정보 다운로드</span>를 선택합니다.</div>
-                            </li>
-                            <li class="step">
-                                <div class="step__title" data-i18n="mobileStep4Title">다운로드할 정보 선택</div>
-                                <div class="step__desc" data-i18n="mobileStep4Desc"><span class="step__highlight">일부 정보</span>를 선택하고, <span class="step__highlight">팔로워 및 팔로잉</span>만 체크합니다.</div>
-                            </li>
-                            <li class="step">
-                                <div class="step__title" data-i18n="mobileStep5Title">형식 및 기간 설정</div>
-                                <div class="step__desc" data-i18n="mobileStep5Desc">형식: <span class="step__highlight">JSON</span>, 기간: <span class="step__highlight">전체 기간</span> 선택 후 <span class="step__highlight">파일 생성</span>을 탭합니다.</div>
-                            </li>
-                            <li class="step">
-                                <div class="step__title" data-i18n="mobileStep6Title">파일 다운로드</div>
-                                <div class="step__desc" data-i18n="mobileStep6Desc">이메일로 다운로드 링크가 도착하면 ZIP 파일을 다운로드합니다.</div>
-                            </li>
-                        </ol>
-                    </div>
-
-                    <div class="platform-content" id="webGuide">
-                        <ol class="steps">
-                            <li class="step">
-                                <div class="step__title" data-i18n="webStep1Title">Instagram 웹사이트 접속</div>
-                                <div class="step__desc" data-i18n="webStep1Desc"><span class="step__highlight">instagram.com</span>에 로그인 → <span class="step__highlight">더 보기</span> → <span class="step__highlight">설정</span>을 클릭합니다.</div>
-                            </li>
-                            <li class="step">
-                                <div class="step__title" data-i18n="webStep2Title">계정 센터 이동</div>
-                                <div class="step__desc" data-i18n="webStep2Desc"><span class="step__highlight">계정 센터</span> → <span class="step__highlight">내 정보 및 권한</span> → <span class="step__highlight">내 정보 다운로드</span>를 클릭합니다.</div>
-                            </li>
-                            <li class="step">
-                                <div class="step__title" data-i18n="webStep3Title">다운로드 요청</div>
-                                <div class="step__desc" data-i18n="webStep3Desc"><span class="step__highlight">일부 정보</span> 선택 → <span class="step__highlight">팔로워 및 팔로잉</span>만 체크합니다.</div>
-                            </li>
-                            <li class="step">
-                                <div class="step__title" data-i18n="webStep4Title">형식 설정 및 요청</div>
-                                <div class="step__desc" data-i18n="webStep4Desc">형식: <span class="step__highlight">JSON</span>, 기간: <span class="step__highlight">전체 기간</span> 선택 후 <span class="step__highlight">파일 생성</span>을 클릭합니다.</div>
-                            </li>
-                            <li class="step">
-                                <div class="step__title" data-i18n="webStep5Title">이메일 확인 및 다운로드</div>
-                                <div class="step__desc" data-i18n="webStep5Desc">등록된 이메일로 다운로드 링크가 발송됩니다.</div>
-                            </li>
-                        </ol>
-                    </div>
-
-                    <div class="guide-note">
-                        <span class="guide-note__icon">💡</span>
-                        <span class="guide-note__text" data-i18n="guideNoteText">데이터 준비에는 몇 분에서 최대 24시간이 소요될 수 있습니다.</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
         <!-- Upload -->
         <section class="section section--delay-2">
             <div class="card">
@@ -1579,6 +1364,84 @@
                     <div class="file-selected" id="fileSelected"></div>
                     <button class="btn" id="analyzeBtn" disabled data-i18n="analyzeBtn">분석 시작</button>
                     <div class="error-message" id="errorMessage"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Guide -->
+        <section class="section section--delay-2">
+            <div class="card guide-section">
+                <div class="guide-title">
+                    <span class="guide-title__icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="white" stroke="none"/></svg></span>
+                    <span data-i18n="guideTitle">Instagram 데이터 다운로드 방법</span>
+                </div>
+                <div class="guide-steps">
+                    <div class="guide-step">
+                        <div class="guide-step__number">1</div>
+                        <div class="guide-step__content">
+                            <h3 data-i18n="guideStep1Title">Instagram에서 데이터 요청하기</h3>
+                            <p data-i18n="guideStep1Desc">Instagram 앱 → 설정 → 계정 센터 → 내 정보 및 권한 → 정보 다운로드에서 데이터를 요청하세요. 형식은 반드시 JSON을 선택하세요.</p>
+                        </div>
+                    </div>
+                    <div class="guide-step">
+                        <div class="guide-step__number">2</div>
+                        <div class="guide-step__content">
+                            <h3 data-i18n="guideStep2Title">다운로드 대기</h3>
+                            <p data-i18n="guideStep2Desc">Instagram에서 데이터를 준비하는 데 보통 10분에서 최대 48시간이 소요됩니다. 준비가 완료되면 이메일로 알림이 발송됩니다.</p>
+                        </div>
+                    </div>
+                    <div class="guide-step">
+                        <div class="guide-step__number">3</div>
+                        <div class="guide-step__content">
+                            <h3 data-i18n="guideStep3Title">ZIP 파일 다운로드</h3>
+                            <p data-i18n="guideStep3Desc">이메일의 다운로드 링크를 클릭하여 ZIP 파일을 기기에 저장하세요. 압축을 풀지 않은 상태로 보관하세요.</p>
+                        </div>
+                    </div>
+                    <div class="guide-step">
+                        <div class="guide-step__number">4</div>
+                        <div class="guide-step__content">
+                            <h3 data-i18n="guideStep4Title">UnfollowLens에서 분석하기</h3>
+                            <p data-i18n="guideStep4Desc">이 페이지에서 다운로드한 ZIP 파일을 업로드하면, 브라우저에서 직접 분석하여 맞팔하지 않는 계정 목록을 보여줍니다. 데이터는 서버로 전송되지 않습니다.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="guide-links">
+                    <a href="https://instatweaks.pages.dev/posts/how-to-download-instagram-data-mobile" target="_blank" rel="noopener" class="guide-link-card">
+                        <span class="guide-link-card__icon">&#128241;</span>
+                        <span class="guide-link-card__text">
+                            <strong data-i18n="guideLinkMobile">모바일 다운로드 상세 가이드</strong>
+                            <small data-i18n="guideLinkMobileDesc">스크린샷과 함께 11단계로 설명</small>
+                        </span>
+                        <span class="guide-link-card__arrow">&#8594;</span>
+                    </a>
+                    <a href="https://instatweaks.pages.dev/posts/how-to-download-instagram-data-pc" target="_blank" rel="noopener" class="guide-link-card">
+                        <span class="guide-link-card__icon">&#128187;</span>
+                        <span class="guide-link-card__text">
+                            <strong data-i18n="guideLinkPC">PC 다운로드 상세 가이드</strong>
+                            <small data-i18n="guideLinkPCDesc">웹 브라우저에서 5단계로 설명</small>
+                        </span>
+                        <span class="guide-link-card__arrow">&#8594;</span>
+                    </a>
+                </div>
+
+                <div class="tips-title">
+                    <span class="tips-title__icon">&#128161;</span>
+                    <span data-i18n="tipsTitle">언팔로워 관리 팁</span>
+                </div>
+                <div class="tips-grid">
+                    <div class="tip-item">
+                        <h3 data-i18n="tip1Title">정기적으로 확인하세요</h3>
+                        <p data-i18n="tip1Desc">Instagram 데이터는 요청 시점의 스냅샷입니다. 월 1회 정도 새 데이터를 다운로드하여 확인하면 팔로우 관계 변화를 추적할 수 있습니다.</p>
+                    </div>
+                    <div class="tip-item">
+                        <h3 data-i18n="tip2Title">비공개 계정과 탈퇴 계정</h3>
+                        <p data-i18n="tip2Desc">UnfollowLens는 비공개 계정과 탈퇴한 계정을 자동으로 분류합니다. 탈퇴 계정은 팔로우 해제할 필요가 없으므로, 활성 계정만 확인하세요.</p>
+                    </div>
+                    <div class="tip-item">
+                        <h3 data-i18n="tip3Title">개인정보 보호</h3>
+                        <p data-i18n="tip3Desc">UnfollowLens는 Instagram 비밀번호를 요구하지 않으며, 업로드한 파일은 서버로 전송되지 않습니다. 분석이 끝나면 페이지를 닫아 모든 데이터를 삭제하세요.</p>
+                    </div>
                 </div>
             </div>
         </section>
@@ -1653,65 +1516,6 @@
                         <div class="faq-answer">
                             <p data-i18n="faqA6">모든 분석은 100% 브라우저에서 처리됩니다. 데이터는 서버로 업로드되지 않으며, 페이지를 닫으면 모든 데이터가 자동으로 삭제됩니다.</p>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Guide -->
-        <section class="section section--delay-3">
-            <div class="card guide-section">
-                <div class="guide-title">
-                    <span class="guide-title__icon">&#128218;</span>
-                    <span data-i18n="guideTitle">Instagram 데이터 다운로드 방법</span>
-                </div>
-                <div class="guide-steps">
-                    <div class="guide-step">
-                        <div class="guide-step__number">1</div>
-                        <div class="guide-step__content">
-                            <h3 data-i18n="guideStep1Title">Instagram에서 데이터 요청하기</h3>
-                            <p data-i18n="guideStep1Desc">Instagram 앱 → 설정 → 계정 센터 → 내 정보 및 권한 → 정보 다운로드에서 데이터를 요청하세요. 형식은 반드시 JSON을 선택하세요.</p>
-                        </div>
-                    </div>
-                    <div class="guide-step">
-                        <div class="guide-step__number">2</div>
-                        <div class="guide-step__content">
-                            <h3 data-i18n="guideStep2Title">다운로드 대기</h3>
-                            <p data-i18n="guideStep2Desc">Instagram에서 데이터를 준비하는 데 보통 10분에서 최대 48시간이 소요됩니다. 준비가 완료되면 이메일로 알림이 발송됩니다.</p>
-                        </div>
-                    </div>
-                    <div class="guide-step">
-                        <div class="guide-step__number">3</div>
-                        <div class="guide-step__content">
-                            <h3 data-i18n="guideStep3Title">ZIP 파일 다운로드</h3>
-                            <p data-i18n="guideStep3Desc">이메일의 다운로드 링크를 클릭하여 ZIP 파일을 기기에 저장하세요. 압축을 풀지 않은 상태로 보관하세요.</p>
-                        </div>
-                    </div>
-                    <div class="guide-step">
-                        <div class="guide-step__number">4</div>
-                        <div class="guide-step__content">
-                            <h3 data-i18n="guideStep4Title">UnfollowLens에서 분석하기</h3>
-                            <p data-i18n="guideStep4Desc">이 페이지에서 다운로드한 ZIP 파일을 업로드하면, 브라우저에서 직접 분석하여 맞팔하지 않는 계정 목록을 보여줍니다. 데이터는 서버로 전송되지 않습니다.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="tips-title">
-                    <span class="tips-title__icon">&#128161;</span>
-                    <span data-i18n="tipsTitle">언팔로워 관리 팁</span>
-                </div>
-                <div class="tips-grid">
-                    <div class="tip-item">
-                        <h3 data-i18n="tip1Title">정기적으로 확인하세요</h3>
-                        <p data-i18n="tip1Desc">Instagram 데이터는 요청 시점의 스냅샷입니다. 월 1회 정도 새 데이터를 다운로드하여 확인하면 팔로우 관계 변화를 추적할 수 있습니다.</p>
-                    </div>
-                    <div class="tip-item">
-                        <h3 data-i18n="tip2Title">비공개 계정과 탈퇴 계정</h3>
-                        <p data-i18n="tip2Desc">UnfollowLens는 비공개 계정과 탈퇴한 계정을 자동으로 분류합니다. 탈퇴 계정은 팔로우 해제할 필요가 없으므로, 활성 계정만 확인하세요.</p>
-                    </div>
-                    <div class="tip-item">
-                        <h3 data-i18n="tip3Title">개인정보 보호</h3>
-                        <p data-i18n="tip3Desc">UnfollowLens는 Instagram 비밀번호를 요구하지 않으며, 업로드한 파일은 서버로 전송되지 않습니다. 분석이 끝나면 페이지를 닫아 모든 데이터를 삭제하세요.</p>
                     </div>
                 </div>
             </div>
@@ -1837,31 +1641,6 @@
                 termsOfService: '이용약관',
                 aboutUs: '서비스 소개',
                 guideTitle: 'Instagram 데이터 다운로드 방법',
-                platformMobile: '모바일 앱',
-                platformWeb: '웹 브라우저',
-                mobileStep1Title: 'Instagram 앱 실행',
-                mobileStep1Desc: 'Instagram 앱을 열고 <span class="step__highlight">프로필</span> 탭 → <span class="step__highlight">☰ 메뉴</span>를 탭합니다.',
-                mobileStep2Title: '계정 센터 접속',
-                mobileStep2Desc: '<span class="step__highlight">설정 및 활동</span> → <span class="step__highlight">계정 센터</span> → <span class="step__highlight">내 정보 및 권한</span>을 탭합니다.',
-                mobileStep3Title: '정보 다운로드 선택',
-                mobileStep3Desc: '<span class="step__highlight">내 정보 다운로드</span> → <span class="step__highlight">정보 다운로드</span>를 선택합니다.',
-                mobileStep4Title: '다운로드할 정보 선택',
-                mobileStep4Desc: '<span class="step__highlight">일부 정보</span>를 선택하고, <span class="step__highlight">팔로워 및 팔로잉</span>만 체크합니다.',
-                mobileStep5Title: '형식 및 기간 설정',
-                mobileStep5Desc: '형식: <span class="step__highlight">JSON</span>, 기간: <span class="step__highlight">전체 기간</span> 선택 후 <span class="step__highlight">파일 생성</span>을 탭합니다.',
-                mobileStep6Title: '파일 다운로드',
-                mobileStep6Desc: '이메일로 다운로드 링크가 도착하면 ZIP 파일을 다운로드합니다.',
-                webStep1Title: 'Instagram 웹사이트 접속',
-                webStep1Desc: '<span class="step__highlight">instagram.com</span>에 로그인 → <span class="step__highlight">더 보기</span> → <span class="step__highlight">설정</span>을 클릭합니다.',
-                webStep2Title: '계정 센터 이동',
-                webStep2Desc: '<span class="step__highlight">계정 센터</span> → <span class="step__highlight">내 정보 및 권한</span> → <span class="step__highlight">내 정보 다운로드</span>를 클릭합니다.',
-                webStep3Title: '다운로드 요청',
-                webStep3Desc: '<span class="step__highlight">일부 정보</span> 선택 → <span class="step__highlight">팔로워 및 팔로잉</span>만 체크합니다.',
-                webStep4Title: '형식 설정 및 요청',
-                webStep4Desc: '형식: <span class="step__highlight">JSON</span>, 기간: <span class="step__highlight">전체 기간</span> 선택 후 <span class="step__highlight">파일 생성</span>을 클릭합니다.',
-                webStep5Title: '이메일 확인 및 다운로드',
-                webStep5Desc: '등록된 이메일로 다운로드 링크가 발송됩니다.',
-                guideNoteText: '데이터 준비에는 몇 분에서 최대 24시간이 소요될 수 있습니다.',
                 copyId: '복사',
                 copied: '복사됨',
                 errorInvalidZip: '올바른 Instagram 데이터 ZIP 파일이 아닙니다',
@@ -1894,6 +1673,10 @@
                 guideStep3Desc: '이메일의 다운로드 링크를 클릭하여 ZIP 파일을 기기에 저장하세요. 압축을 풀지 않은 상태로 보관하세요.',
                 guideStep4Title: 'UnfollowLens에서 분석하기',
                 guideStep4Desc: '이 페이지에서 다운로드한 ZIP 파일을 업로드하면, 브라우저에서 직접 분석하여 맞팔하지 않는 계정 목록을 보여줍니다. 데이터는 서버로 전송되지 않습니다.',
+                guideLinkMobile: '모바일 다운로드 상세 가이드',
+                guideLinkMobileDesc: '스크린샷과 함께 11단계로 설명',
+                guideLinkPC: 'PC 다운로드 상세 가이드',
+                guideLinkPCDesc: '웹 브라우저에서 5단계로 설명',
                 tipsTitle: '언팔로워 관리 팁',
                 tip1Title: '정기적으로 확인하세요',
                 tip1Desc: 'Instagram 데이터는 요청 시점의 스냅샷입니다. 월 1회 정도 새 데이터를 다운로드하여 확인하면 팔로우 관계 변화를 추적할 수 있습니다.',
@@ -1935,31 +1718,6 @@
                 termsOfService: 'Terms',
                 aboutUs: 'About',
                 guideTitle: 'How to Download Instagram Data',
-                platformMobile: 'Mobile App',
-                platformWeb: 'Web Browser',
-                mobileStep1Title: 'Open Instagram',
-                mobileStep1Desc: 'Open the app, go to <span class="step__highlight">Profile</span> → <span class="step__highlight">☰ Menu</span>.',
-                mobileStep2Title: 'Access Settings',
-                mobileStep2Desc: '<span class="step__highlight">Settings</span> → <span class="step__highlight">Accounts Center</span> → <span class="step__highlight">Your information</span>.',
-                mobileStep3Title: 'Select Download',
-                mobileStep3Desc: 'Select <span class="step__highlight">Download your information</span>.',
-                mobileStep4Title: 'Choose Data',
-                mobileStep4Desc: 'Select <span class="step__highlight">Some info</span>, check only <span class="step__highlight">Followers and following</span>.',
-                mobileStep5Title: 'Set Format',
-                mobileStep5Desc: 'Format: <span class="step__highlight">JSON</span>, Range: <span class="step__highlight">All time</span>, tap <span class="step__highlight">Create files</span>.',
-                mobileStep6Title: 'Download',
-                mobileStep6Desc: 'Download the ZIP file when the email arrives.',
-                webStep1Title: 'Visit Instagram',
-                webStep1Desc: 'Login to <span class="step__highlight">instagram.com</span> → <span class="step__highlight">More</span> → <span class="step__highlight">Settings</span>.',
-                webStep2Title: 'Go to Settings',
-                webStep2Desc: '<span class="step__highlight">Accounts Center</span> → <span class="step__highlight">Your information</span> → <span class="step__highlight">Download</span>.',
-                webStep3Title: 'Request Download',
-                webStep3Desc: 'Select <span class="step__highlight">Some info</span> → check only <span class="step__highlight">Followers and following</span>.',
-                webStep4Title: 'Set Format',
-                webStep4Desc: 'Format: <span class="step__highlight">JSON</span>, Range: <span class="step__highlight">All time</span>, click <span class="step__highlight">Create files</span>.',
-                webStep5Title: 'Check Email',
-                webStep5Desc: 'Download link will be sent to your email.',
-                guideNoteText: 'Data preparation may take minutes to 24 hours.',
                 copyId: 'Copy',
                 copied: 'Copied',
                 errorInvalidZip: 'Invalid Instagram data ZIP file',
@@ -1992,6 +1750,10 @@
                 guideStep3Desc: 'Click the download link in the email to save the ZIP file to your device. Keep it without extracting.',
                 guideStep4Title: 'Analyze with UnfollowLens',
                 guideStep4Desc: 'Upload the downloaded ZIP file on this page. It will be analyzed directly in your browser to show accounts that don\'t follow you back. No data is sent to any server.',
+                guideLinkMobile: 'Mobile Download Detailed Guide',
+                guideLinkMobileDesc: 'Explained in 11 steps with screenshots',
+                guideLinkPC: 'PC Download Detailed Guide',
+                guideLinkPCDesc: 'Explained in 5 steps via web browser',
                 tipsTitle: 'Unfollower Management Tips',
                 tip1Title: 'Check Regularly',
                 tip1Desc: 'Instagram data is a snapshot from when you requested it. Download new data about once a month to track changes in your follow relationships.',
@@ -2033,9 +1795,6 @@
                 termsOfService: '利用規約',
                 aboutUs: '紹介',
                 guideTitle: 'Instagramデータダウンロード方法',
-                platformMobile: 'モバイル',
-                platformWeb: 'ウェブ',
-                guideNoteText: 'データ準備には数分〜24時間かかります。',
                 copyId: 'コピー',
                 copied: 'コピー済',
                 errorInvalidZip: '無効なInstagramデータZIPファイルです',
@@ -2068,6 +1827,10 @@
                 guideStep3Desc: 'メールのダウンロードリンクをクリックしてZIPファイルをデバイスに保存してください。解凍せずに保管してください。',
                 guideStep4Title: 'UnfollowLensで分析',
                 guideStep4Desc: 'このページでダウンロードしたZIPファイルをアップロードすると、ブラウザで直接分析してフォローバックしていないアカウントの一覧を表示します。データはサーバーに送信されません。',
+                guideLinkMobile: 'モバイルダウンロード詳細ガイド',
+                guideLinkMobileDesc: 'スクリーンショット付きの11ステップで説明',
+                guideLinkPC: 'PCダウンロード詳細ガイド',
+                guideLinkPCDesc: 'ウェブブラウザで5ステップで説明',
                 tipsTitle: 'アンフォロワー管理のヒント',
                 tip1Title: '定期的に確認しましょう',
                 tip1Desc: 'Instagramデータはリクエスト時点のスナップショットです。月に1回程度新しいデータをダウンロードして確認すると、フォロー関係の変化を追跡できます。',
@@ -2109,9 +1872,6 @@
                 termsOfService: '条款',
                 aboutUs: '关于',
                 guideTitle: '如何下载Instagram数据',
-                platformMobile: '手机应用',
-                platformWeb: '网页',
-                guideNoteText: '数据准备可能需要几分钟到24小时。',
                 copyId: '复制',
                 copied: '已复制',
                 errorInvalidZip: '无效的Instagram数据ZIP文件',
@@ -2144,6 +1904,10 @@
                 guideStep3Desc: '点击邮件中的下载链接，将ZIP文件保存到设备上。请保持未解压状态。',
                 guideStep4Title: '在UnfollowLens中分析',
                 guideStep4Desc: '在本页面上传下载的ZIP文件，浏览器将直接分析并显示未回关您的账户列表。数据不会发送到任何服务器。',
+                guideLinkMobile: '手机下载详细指南',
+                guideLinkMobileDesc: '带截图的11步说明',
+                guideLinkPC: '电脑下载详细指南',
+                guideLinkPCDesc: '通过网页浏览器5步说明',
                 tipsTitle: '取关者管理技巧',
                 tip1Title: '定期检查',
                 tip1Desc: 'Instagram数据是请求时的快照。每月下载一次新数据进行检查，可以追踪关注关系的变化。',
@@ -2185,9 +1949,6 @@
                 termsOfService: 'Términos',
                 aboutUs: 'Acerca de',
                 guideTitle: 'Cómo descargar datos de Instagram',
-                platformMobile: 'App Móvil',
-                platformWeb: 'Navegador',
-                guideNoteText: 'La preparación puede tardar minutos a 24 horas.',
                 copyId: 'Copiar',
                 copied: 'Copiado',
                 errorInvalidZip: 'Archivo ZIP de datos de Instagram no valido',
@@ -2220,6 +1981,10 @@
                 guideStep3Desc: 'Haz clic en el enlace de descarga del correo para guardar el archivo ZIP en tu dispositivo. Guárdalo sin descomprimir.',
                 guideStep4Title: 'Analiza con UnfollowLens',
                 guideStep4Desc: 'Sube el archivo ZIP descargado en esta página. Se analizará directamente en tu navegador para mostrar las cuentas que no te siguen de vuelta. No se envían datos a ningún servidor.',
+                guideLinkMobile: 'Guía detallada de descarga móvil',
+                guideLinkMobileDesc: 'Explicado en 11 pasos con capturas',
+                guideLinkPC: 'Guía detallada de descarga en PC',
+                guideLinkPCDesc: 'Explicado en 5 pasos desde el navegador',
                 tipsTitle: 'Consejos para gestionar seguidores',
                 tip1Title: 'Revisa periódicamente',
                 tip1Desc: 'Los datos de Instagram son una instantánea del momento de la solicitud. Descarga nuevos datos aproximadamente una vez al mes para rastrear cambios en tus relaciones de seguimiento.',
@@ -2262,9 +2027,6 @@
                 termsOfService: 'Conditions',
                 aboutUs: 'À propos',
                 guideTitle: 'Comment télécharger vos données Instagram',
-                platformMobile: 'Application',
-                platformWeb: 'Navigateur',
-                guideNoteText: 'La préparation peut prendre de quelques minutes à 24 heures.',
                 copyId: 'Copier',
                 copied: 'Copié',
                 privacyNotice: 'Votre fichier n\'est jamais stocké. Tout est traité dans votre navigateur.',
@@ -2296,6 +2058,10 @@
                 guideStep3Desc: 'Cliquez sur le lien de téléchargement dans l\'e-mail pour sauvegarder le fichier ZIP sur votre appareil. Conservez-le sans le décompresser.',
                 guideStep4Title: 'Analysez avec UnfollowLens',
                 guideStep4Desc: 'Téléversez le fichier ZIP sur cette page. Il sera analysé directement dans votre navigateur pour afficher les comptes qui ne vous suivent pas en retour. Aucune donnée n\'est envoyée à un serveur.',
+                guideLinkMobile: 'Guide détaillé de téléchargement mobile',
+                guideLinkMobileDesc: 'Expliqué en 11 étapes avec captures',
+                guideLinkPC: 'Guide détaillé de téléchargement PC',
+                guideLinkPCDesc: 'Expliqué en 5 étapes via navigateur web',
                 tipsTitle: 'Conseils de gestion des abonnements',
                 tip1Title: 'Vérifiez régulièrement',
                 tip1Desc: 'Les données Instagram sont un instantané du moment de la demande. Téléchargez de nouvelles données environ une fois par mois pour suivre les changements dans vos relations d\'abonnement.',
@@ -2338,9 +2104,6 @@
                 termsOfService: 'AGB',
                 aboutUs: 'Über uns',
                 guideTitle: 'So laden Sie Instagram-Daten herunter',
-                platformMobile: 'Mobile App',
-                platformWeb: 'Webbrowser',
-                guideNoteText: 'Die Vorbereitung kann Minuten bis 24 Stunden dauern.',
                 copyId: 'Kopieren',
                 copied: 'Kopiert',
                 privacyNotice: 'Ihre Datei wird nie auf unseren Servern gespeichert. Alles wird in Ihrem Browser verarbeitet.',
@@ -2372,6 +2135,10 @@
                 guideStep3Desc: 'Klicken Sie auf den Download-Link in der E-Mail, um die ZIP-Datei auf Ihrem Gerät zu speichern. Bewahren Sie sie ohne Entpacken auf.',
                 guideStep4Title: 'Mit UnfollowLens analysieren',
                 guideStep4Desc: 'Laden Sie die heruntergeladene ZIP-Datei auf dieser Seite hoch. Sie wird direkt in Ihrem Browser analysiert und zeigt Konten an, die Ihnen nicht zurückfolgen. Es werden keine Daten an einen Server gesendet.',
+                guideLinkMobile: 'Detaillierte Anleitung für mobilen Download',
+                guideLinkMobileDesc: 'In 11 Schritten mit Screenshots erklärt',
+                guideLinkPC: 'Detaillierte Anleitung für PC-Download',
+                guideLinkPCDesc: 'In 5 Schritten über Webbrowser erklärt',
                 tipsTitle: 'Tipps zur Verwaltung von Unfollowern',
                 tip1Title: 'Regelmäßig überprüfen',
                 tip1Desc: 'Instagram-Daten sind eine Momentaufnahme vom Zeitpunkt der Anfrage. Laden Sie etwa einmal im Monat neue Daten herunter, um Änderungen in Ihren Follow-Beziehungen zu verfolgen.',
@@ -2414,9 +2181,6 @@
                 termsOfService: 'Termos',
                 aboutUs: 'Sobre',
                 guideTitle: 'Como baixar dados do Instagram',
-                platformMobile: 'App Móvel',
-                platformWeb: 'Navegador',
-                guideNoteText: 'A preparação pode levar de minutos a 24 horas.',
                 copyId: 'Copiar',
                 copied: 'Copiado',
                 privacyNotice: 'Seu arquivo nunca é armazenado. Todo o processamento acontece no seu navegador.',
@@ -2448,6 +2212,10 @@
                 guideStep3Desc: 'Clique no link de download no e-mail para salvar o arquivo ZIP no seu dispositivo. Mantenha-o sem descompactar.',
                 guideStep4Title: 'Analise com UnfollowLens',
                 guideStep4Desc: 'Envie o arquivo ZIP baixado nesta página. Ele será analisado diretamente no seu navegador para mostrar contas que não seguem você de volta. Nenhum dado é enviado a qualquer servidor.',
+                guideLinkMobile: 'Guia detalhado de download mobile',
+                guideLinkMobileDesc: 'Explicado em 11 passos com capturas',
+                guideLinkPC: 'Guia detalhado de download no PC',
+                guideLinkPCDesc: 'Explicado em 5 passos pelo navegador',
                 tipsTitle: 'Dicas de gerenciamento de seguidores',
                 tip1Title: 'Verifique regularmente',
                 tip1Desc: 'Os dados do Instagram são um instantâneo do momento da solicitação. Baixe novos dados aproximadamente uma vez por mês para acompanhar mudanças nas suas relações de seguimento.',
@@ -2490,9 +2258,6 @@
                 termsOfService: 'शर्तें',
                 aboutUs: 'हमारे बारे में',
                 guideTitle: 'Instagram डेटा कैसे डाउनलोड करें',
-                platformMobile: 'मोबाइल ऐप',
-                platformWeb: 'वेब ब्राउज़र',
-                guideNoteText: 'डेटा तैयारी में कुछ मिनट से 24 घंटे लग सकते हैं।',
                 copyId: 'कॉपी',
                 copied: 'कॉपी हो गया',
                 privacyNotice: 'आपकी फाइल कभी स्टोर नहीं होती। सब कुछ आपके ब्राउज़र में प्रोसेस होता है।',
@@ -2524,6 +2289,10 @@
                 guideStep3Desc: 'ईमेल में दिए गए डाउनलोड लिंक पर क्लिक करके ZIP फ़ाइल को अपने डिवाइस पर सेव करें। इसे बिना एक्सट्रैक्ट किए रखें।',
                 guideStep4Title: 'UnfollowLens से विश्लेषण करें',
                 guideStep4Desc: 'इस पेज पर डाउनलोड की गई ZIP फ़ाइल अपलोड करें। यह सीधे आपके ब्राउज़र में विश्लेषित होगी और उन अकाउंट्स की सूची दिखाएगी जो आपको वापस फॉलो नहीं करते। कोई डेटा सर्वर पर नहीं भेजा जाता।',
+                guideLinkMobile: 'मोबाइल डाउनलोड विस्तृत गाइड',
+                guideLinkMobileDesc: 'स्क्रीनशॉट के साथ 11 चरणों में समझाया',
+                guideLinkPC: 'PC डाउनलोड विस्तृत गाइड',
+                guideLinkPCDesc: 'वेब ब्राउज़र से 5 चरणों में समझाया',
                 tipsTitle: 'अनफॉलोअर प्रबंधन टिप्स',
                 tip1Title: 'नियमित रूप से जांचें',
                 tip1Desc: 'Instagram डेटा अनुरोध के समय का स्नैपशॉट है। फॉलो संबंधों में बदलावों को ट्रैक करने के लिए महीने में एक बार नया डेटा डाउनलोड करें।',
@@ -2566,9 +2335,6 @@
                 termsOfService: 'Условия',
                 aboutUs: 'О нас',
                 guideTitle: 'Как скачать данные Instagram',
-                platformMobile: 'Мобильное приложение',
-                platformWeb: 'Браузер',
-                guideNoteText: 'Подготовка данных может занять от нескольких минут до 24 часов.',
                 copyId: 'Копировать',
                 copied: 'Скопировано',
                 privacyNotice: 'Ваш файл никогда не сохраняется. Вся обработка происходит в вашем браузере.',
@@ -2600,6 +2366,10 @@
                 guideStep3Desc: 'Нажмите на ссылку для скачивания в письме, чтобы сохранить ZIP-файл на устройство. Храните его без распаковки.',
                 guideStep4Title: 'Проанализируйте с UnfollowLens',
                 guideStep4Desc: 'Загрузите скачанный ZIP-файл на этой странице. Он будет проанализирован прямо в вашем браузере, показывая аккаунты, которые не подписаны на вас в ответ. Данные не отправляются на сервер.',
+                guideLinkMobile: 'Подробное руководство для мобильных',
+                guideLinkMobileDesc: 'Объяснение в 11 шагах со скриншотами',
+                guideLinkPC: 'Подробное руководство для ПК',
+                guideLinkPCDesc: 'Объяснение в 5 шагах через браузер',
                 tipsTitle: 'Советы по управлению отписчиками',
                 tip1Title: 'Проверяйте регулярно',
                 tip1Desc: 'Данные Instagram — это снимок на момент запроса. Загружайте новые данные примерно раз в месяц, чтобы отслеживать изменения в подписках.',
@@ -2642,9 +2412,6 @@
                 termsOfService: 'الشروط',
                 aboutUs: 'عن الخدمة',
                 guideTitle: 'كيفية تحميل بيانات Instagram',
-                platformMobile: 'تطبيق الجوال',
-                platformWeb: 'المتصفح',
-                guideNoteText: 'قد يستغرق التحضير من دقائق إلى 24 ساعة.',
                 copyId: 'نسخ',
                 copied: 'تم النسخ',
                 privacyNotice: 'لا يتم تخزين ملفك أبدًا. تتم جميع المعالجة في متصفحك.',
@@ -2676,6 +2443,10 @@
                 guideStep3Desc: 'انقر على رابط التحميل في البريد الإلكتروني لحفظ ملف ZIP على جهازك. احتفظ به دون فك الضغط.',
                 guideStep4Title: 'حلّل مع UnfollowLens',
                 guideStep4Desc: 'ارفع ملف ZIP المحمّل على هذه الصفحة. سيتم تحليله مباشرة في متصفحك لعرض الحسابات التي لا تتابعك. لا يتم إرسال أي بيانات إلى أي خادم.',
+                guideLinkMobile: 'دليل التحميل المفصل للموبايل',
+                guideLinkMobileDesc: 'شرح في 11 خطوة مع لقطات شاشة',
+                guideLinkPC: 'دليل التحميل المفصل للكمبيوتر',
+                guideLinkPCDesc: 'شرح في 5 خطوات عبر المتصفح',
                 tipsTitle: 'نصائح لإدارة المتابعين',
                 tip1Title: 'تحقق بانتظام',
                 tip1Desc: 'بيانات Instagram هي لقطة من وقت الطلب. قم بتحميل بيانات جديدة مرة شهرياً تقريباً لتتبع التغييرات في علاقات المتابعة.',
@@ -2718,9 +2489,6 @@
                 termsOfService: 'Şartlar',
                 aboutUs: 'Hakkında',
                 guideTitle: 'Instagram verisi nasıl indirilir',
-                platformMobile: 'Mobil Uygulama',
-                platformWeb: 'Web Tarayıcı',
-                guideNoteText: 'Veri hazırlığı birkaç dakikadan 24 saate kadar sürebilir.',
                 copyId: 'Kopyala',
                 copied: 'Kopyalandı',
                 privacyNotice: 'Dosyanız asla sunucularda saklanmaz. Tüm işlem tarayıcınızda yapılır.',
@@ -2752,6 +2520,10 @@
                 guideStep3Desc: 'E-postadaki indirme bağlantısına tıklayarak ZIP dosyasını cihazınıza kaydedin. Açmadan saklayın.',
                 guideStep4Title: 'UnfollowLens ile Analiz Edin',
                 guideStep4Desc: 'İndirilen ZIP dosyasını bu sayfaya yükleyin. Doğrudan tarayıcınızda analiz edilerek sizi takip etmeyen hesapların listesi gösterilir. Hiçbir veri sunucuya gönderilmez.',
+                guideLinkMobile: 'Mobil indirme ayrıntılı kılavuzu',
+                guideLinkMobileDesc: 'Ekran görüntüleriyle 11 adımda anlatım',
+                guideLinkPC: 'PC indirme ayrıntılı kılavuzu',
+                guideLinkPCDesc: 'Web tarayıcısından 5 adımda anlatım',
                 tipsTitle: 'Takipçi Yönetim İpuçları',
                 tip1Title: 'Düzenli olarak kontrol edin',
                 tip1Desc: 'Instagram verileri talep anının anlık görüntüsüdür. Takip ilişkilerindeki değişiklikleri izlemek için ayda bir yeni veri indirin.',
@@ -2794,9 +2566,6 @@
                 termsOfService: 'Điều khoản',
                 aboutUs: 'Giới thiệu',
                 guideTitle: 'Cách tải dữ liệu Instagram',
-                platformMobile: 'Ứng dụng',
-                platformWeb: 'Trình duyệt',
-                guideNoteText: 'Việc chuẩn bị dữ liệu có thể mất vài phút đến 24 giờ.',
                 copyId: 'Sao chép',
                 copied: 'Đã sao chép',
                 privacyNotice: 'File của bạn không bao giờ được lưu trữ. Mọi xử lý diễn ra trong trình duyệt.',
@@ -2828,6 +2597,10 @@
                 guideStep3Desc: 'Nhấp vào liên kết tải xuống trong email để lưu file ZIP vào thiết bị. Giữ nguyên không giải nén.',
                 guideStep4Title: 'Phân tích với UnfollowLens',
                 guideStep4Desc: 'Tải file ZIP đã tải xuống lên trang này. File sẽ được phân tích trực tiếp trong trình duyệt để hiển thị các tài khoản không theo dõi lại bạn. Không có dữ liệu nào được gửi đến máy chủ.',
+                guideLinkMobile: 'Hướng dẫn tải trên di động chi tiết',
+                guideLinkMobileDesc: 'Giải thích trong 11 bước với ảnh chụp',
+                guideLinkPC: 'Hướng dẫn tải trên PC chi tiết',
+                guideLinkPCDesc: 'Giải thích trong 5 bước qua trình duyệt',
                 tipsTitle: 'Mẹo quản lý người hủy theo dõi',
                 tip1Title: 'Kiểm tra thường xuyên',
                 tip1Desc: 'Dữ liệu Instagram là ảnh chụp tại thời điểm yêu cầu. Tải dữ liệu mới khoảng mỗi tháng một lần để theo dõi thay đổi trong quan hệ theo dõi.',
@@ -2870,9 +2643,6 @@
                 termsOfService: 'ข้อกำหนด',
                 aboutUs: 'เกี่ยวกับเรา',
                 guideTitle: 'วิธีดาวน์โหลดข้อมูล Instagram',
-                platformMobile: 'แอปมือถือ',
-                platformWeb: 'เว็บเบราว์เซอร์',
-                guideNoteText: 'การเตรียมข้อมูลอาจใช้เวลาไม่กี่นาทีถึง 24 ชั่วโมง',
                 copyId: 'คัดลอก',
                 copied: 'คัดลอกแล้ว',
                 privacyNotice: 'ไฟล์ของคุณจะไม่ถูกจัดเก็บ ทุกอย่างประมวลผลในเบราว์เซอร์ของคุณ',
@@ -2904,6 +2674,10 @@
                 guideStep3Desc: 'คลิกลิงก์ดาวน์โหลดในอีเมลเพื่อบันทึกไฟล์ ZIP ลงอุปกรณ์ เก็บไว้โดยไม่ต้องแตกไฟล์',
                 guideStep4Title: 'วิเคราะห์ด้วย UnfollowLens',
                 guideStep4Desc: 'อัปโหลดไฟล์ ZIP ที่ดาวน์โหลดมาในหน้านี้ ระบบจะวิเคราะห์โดยตรงในเบราว์เซอร์เพื่อแสดงบัญชีที่ไม่ได้ติดตามคุณกลับ ข้อมูลจะไม่ถูกส่งไปยังเซิร์ฟเวอร์',
+                guideLinkMobile: 'คู่มือดาวน์โหลดบนมือถือแบบละเอียด',
+                guideLinkMobileDesc: 'อธิบายใน 11 ขั้นตอนพร้อมภาพ',
+                guideLinkPC: 'คู่มือดาวน์โหลดบน PC แบบละเอียด',
+                guideLinkPCDesc: 'อธิบายใน 5 ขั้นตอนผ่านเว็บเบราว์เซอร์',
                 tipsTitle: 'เคล็ดลับจัดการผู้เลิกติดตาม',
                 tip1Title: 'ตรวจสอบเป็นประจำ',
                 tip1Desc: 'ข้อมูล Instagram เป็นสแนปช็อตจากเวลาที่ขอ ดาวน์โหลดข้อมูลใหม่ประมาณเดือนละครั้งเพื่อติดตามการเปลี่ยนแปลงความสัมพันธ์การติดตาม',
@@ -2946,9 +2720,6 @@
                 termsOfService: 'Ketentuan',
                 aboutUs: 'Tentang',
                 guideTitle: 'Cara mengunduh data Instagram',
-                platformMobile: 'Aplikasi Seluler',
-                platformWeb: 'Browser Web',
-                guideNoteText: 'Persiapan data bisa memakan waktu beberapa menit hingga 24 jam.',
                 copyId: 'Salin',
                 copied: 'Disalin',
                 privacyNotice: 'File Anda tidak pernah disimpan. Semua pemrosesan terjadi di browser Anda.',
@@ -2980,6 +2751,10 @@
                 guideStep3Desc: 'Klik tautan unduhan di email untuk menyimpan file ZIP ke perangkat Anda. Simpan tanpa mengekstrak.',
                 guideStep4Title: 'Analisis dengan UnfollowLens',
                 guideStep4Desc: 'Unggah file ZIP yang diunduh di halaman ini. File akan dianalisis langsung di browser Anda untuk menampilkan akun yang tidak mengikuti Anda balik. Tidak ada data yang dikirim ke server.',
+                guideLinkMobile: 'Panduan unduhan mobile terperinci',
+                guideLinkMobileDesc: 'Dijelaskan dalam 11 langkah dengan tangkapan layar',
+                guideLinkPC: 'Panduan unduhan PC terperinci',
+                guideLinkPCDesc: 'Dijelaskan dalam 5 langkah melalui browser',
                 tipsTitle: 'Tips Mengelola Unfollower',
                 tip1Title: 'Periksa secara rutin',
                 tip1Desc: 'Data Instagram adalah snapshot dari waktu permintaan. Unduh data baru sekitar sebulan sekali untuk melacak perubahan hubungan pengikut.',
@@ -3022,9 +2797,6 @@
                 termsOfService: 'Terma',
                 aboutUs: 'Mengenai',
                 guideTitle: 'Cara memuat turun data Instagram',
-                platformMobile: 'Aplikasi Mudah Alih',
-                platformWeb: 'Pelayar Web',
-                guideNoteText: 'Penyediaan data mungkin mengambil masa beberapa minit hingga 24 jam.',
                 copyId: 'Salin',
                 copied: 'Disalin',
                 privacyNotice: 'Fail anda tidak pernah disimpan. Semua pemprosesan berlaku dalam pelayar anda.',
@@ -3056,6 +2828,10 @@
                 guideStep3Desc: 'Klik pautan muat turun dalam e-mel untuk menyimpan fail ZIP ke peranti anda. Simpan tanpa mengekstrak.',
                 guideStep4Title: 'Analisis dengan UnfollowLens',
                 guideStep4Desc: 'Muat naik fail ZIP yang dimuat turun di halaman ini. Ia akan dianalisis terus dalam pelayar anda untuk menunjukkan akaun yang tidak mengikuti anda kembali. Tiada data dihantar ke pelayan.',
+                guideLinkMobile: 'Panduan muat turun mudah alih terperinci',
+                guideLinkMobileDesc: 'Diterangkan dalam 11 langkah dengan tangkapan skrin',
+                guideLinkPC: 'Panduan muat turun PC terperinci',
+                guideLinkPCDesc: 'Diterangkan dalam 5 langkah melalui pelayar web',
                 tipsTitle: 'Tips Pengurusan Pengikut',
                 tip1Title: 'Semak secara berkala',
                 tip1Desc: 'Data Instagram adalah tangkapan skrin dari masa permintaan. Muat turun data baharu kira-kira sebulan sekali untuk menjejak perubahan hubungan pengikut.',
@@ -3183,25 +2959,6 @@
             });
 
             setLanguage(detectLanguage(), { replaceState: true });
-
-            const guideHeader = document.getElementById('guideHeader');
-            const guideContent = document.getElementById('guideContent');
-            const guideToggle = document.getElementById('guideToggle');
-
-            guideHeader.addEventListener('click', () => {
-                guideContent.classList.toggle('show');
-                guideToggle.classList.toggle('open');
-            });
-
-            document.querySelectorAll('.platform-tab').forEach(tab => {
-                tab.addEventListener('click', () => {
-                    document.querySelectorAll('.platform-tab').forEach(t => t.classList.remove('active'));
-                    tab.classList.add('active');
-                    const platform = tab.dataset.platform;
-                    document.querySelectorAll('.platform-content').forEach(c => c.classList.remove('show'));
-                    document.getElementById(platform === 'mobile' ? 'mobileGuide' : 'webGuide').classList.add('show');
-                });
-            });
 
             // FAQ accordion
             document.querySelectorAll('.faq-question').forEach(btn => {
