@@ -16,9 +16,10 @@ class Shape:
     y: int
     width: int
     height: int
-    pen_color: str
+    pen_color: Optional[str]
     pen_width: int
     fill_color: Optional[str]
+    blur_radius: int = 0
 
 
 class ShapeManager:

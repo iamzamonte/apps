@@ -47,6 +47,7 @@ class MainWindow(QMainWindow):
         self._pre_crop_slot: Optional[_FileSlot] = None
         self._pre_crop_slot_index: int = -1
         self._pre_save_slots: dict[int, _FileSlot] = {}
+        self._clipboard_shape: Optional[Shape] = None
         # 기본 ShapeManager (파일 로드 전 캔버스용)
         self._default_sm = ShapeManager()
         self._setup_menubar()
@@ -97,8 +98,17 @@ class MainWindow(QMainWindow):
         redo_action = QAction("Redo", self)
         redo_action.setShortcut(QKeySequence("Ctrl+Shift+Z"))
         redo_action.triggered.connect(self._redo)
+        copy_action = QAction("Copy", self)
+        copy_action.setShortcut(QKeySequence("Ctrl+C"))
+        copy_action.triggered.connect(self._copy_selected)
+        paste_action = QAction("Paste", self)
+        paste_action.setShortcut(QKeySequence("Ctrl+V"))
+        paste_action.triggered.connect(self._paste_shape)
         edit_menu.addAction(undo_action)
         edit_menu.addAction(redo_action)
+        edit_menu.addSeparator()
+        edit_menu.addAction(copy_action)
+        edit_menu.addAction(paste_action)
 
         # View
         view_menu = mb.addMenu("View")
@@ -172,6 +182,7 @@ class MainWindow(QMainWindow):
         self._toolbar.zoom_in_requested.connect(self._canvas.zoom_in)
         self._toolbar.zoom_out_requested.connect(self._canvas.zoom_out)
         self._toolbar.zoom_reset_requested.connect(self._canvas.zoom_reset)
+        self._toolbar.blur_requested.connect(self._apply_blur_to_selected)
         self._toolbar.crop_mode_toggled.connect(self._on_crop_mode_toggled)
         self._toolbar.crop_undo_requested.connect(self._undo_crop)
         self._canvas.zoom_changed.connect(self._on_zoom_changed)
@@ -534,7 +545,6 @@ class MainWindow(QMainWindow):
         from src.core.shape_manager import ShapeType
 
         result = slot.image.copy()
-        draw = ImageDraw.Draw(result, "RGBA")
         inv = (1.0 / slot.scale) if slot.scale > 0 else 1.0
 
         for shape in slot.shape_manager.shapes:
@@ -544,11 +554,34 @@ class MainWindow(QMainWindow):
             h = int(shape.height * inv)
             width = max(1, int(shape.pen_width * inv))
             box = [x, y, x + w, y + h]
-            fill = shape.fill_color or None
+            # 모자이크 처리
+            if shape.blur_radius > 0:
+                clamped = [max(0, box[0]), max(0, box[1]),
+                           min(result.width, box[2]), min(result.height, box[3])]
+                if clamped[2] > clamped[0] and clamped[3] > clamped[1]:
+                    region = result.crop(clamped)
+                    factor = max(2, int(shape.blur_radius * inv) * 2 // 5)
+                    rw, rh = region.size
+                    small = region.resize(
+                        (max(1, rw // factor), max(1, rh // factor)), Image.NEAREST,
+                    )
+                    mosaic = small.resize((rw, rh), Image.NEAREST)
+                    if shape.shape_type == ShapeType.ELLIPSE:
+                        mask = Image.new('L', region.size, 0)
+                        ImageDraw.Draw(mask).ellipse(
+                            [0, 0, rw - 1, rh - 1], fill=255,
+                        )
+                        result.paste(mosaic, (clamped[0], clamped[1]), mask)
+                    else:
+                        result.paste(mosaic, (clamped[0], clamped[1]))
+            # 윤곽선 (블러 시 fill 무시)
+            draw = ImageDraw.Draw(result, "RGBA")
+            fill = None if shape.blur_radius > 0 else (shape.fill_color or None)
+            outline = shape.pen_color or None
             if shape.shape_type == ShapeType.RECTANGLE:
-                draw.rectangle(box, fill=fill, outline=shape.pen_color, width=width)
+                draw.rectangle(box, fill=fill, outline=outline, width=width)
             elif shape.shape_type == ShapeType.ELLIPSE:
-                draw.ellipse(box, fill=fill, outline=shape.pen_color, width=width)
+                draw.ellipse(box, fill=fill, outline=outline, width=width)
 
         return result
 
@@ -614,6 +647,7 @@ class MainWindow(QMainWindow):
                         pen_color=shape.pen_color,
                         pen_width=shape.pen_width,
                         fill_color=shape.fill_color,
+                        blur_radius=shape.blur_radius,
                     ))
 
         # 새 스케일/픽스맵 계산
@@ -688,9 +722,62 @@ class MainWindow(QMainWindow):
         if 0 <= self._current_slot_index < len(self._file_slots):
             self._file_slots[self._current_slot_index].zoom = zoom
 
-    def _on_props_changed(self, pen_color: str, pen_width: int, fill_color: Optional[str]) -> None:
+    def _on_props_changed(self, pen_color: Optional[str], pen_width: int, fill_color: Optional[str]) -> None:
         self._canvas.pen_color = pen_color
         self._canvas.pen_width = pen_width
         self._canvas.fill_color = fill_color
         # 선택된 도형이 있으면 실시간으로 스타일 반영
         self._canvas.apply_style_to_selected(pen_color, pen_width, fill_color)
+
+    def _apply_blur_to_selected(self) -> None:
+        """선택된 도형의 블러를 토글합니다."""
+        if self._canvas._selected_index is None:
+            return
+        shapes = self._canvas._shape_manager.shapes
+        idx = self._canvas._selected_index
+        if idx >= len(shapes):
+            return
+        old = shapes[idx]
+        new_blur = 0 if old.blur_radius > 0 else 10
+        new_shape = Shape(
+            shape_type=old.shape_type,
+            x=old.x, y=old.y,
+            width=old.width, height=old.height,
+            pen_color=old.pen_color,
+            pen_width=old.pen_width,
+            fill_color=old.fill_color,
+            blur_radius=new_blur,
+        )
+        self._canvas._shape_manager.replace(idx, new_shape)
+        self._canvas.update()
+
+    def _copy_selected(self) -> None:
+        """선택된 도형을 클립보드에 복사합니다."""
+        if self._canvas._selected_index is None:
+            return
+        shapes = self._canvas._shape_manager.shapes
+        idx = self._canvas._selected_index
+        if idx >= len(shapes):
+            return
+        self._clipboard_shape = shapes[idx]
+
+    def _paste_shape(self) -> None:
+        """클립보드의 도형을 붙여넣기합니다 (offset +20, +20)."""
+        if self._clipboard_shape is None:
+            return
+        old = self._clipboard_shape
+        new_shape = Shape(
+            shape_type=old.shape_type,
+            x=old.x + 20, y=old.y + 20,
+            width=old.width, height=old.height,
+            pen_color=old.pen_color,
+            pen_width=old.pen_width,
+            fill_color=old.fill_color,
+            blur_radius=old.blur_radius,
+        )
+        self._clipboard_shape = new_shape
+        self._canvas._shape_manager.add(new_shape)
+        new_index = len(self._canvas._shape_manager.shapes) - 1
+        self._canvas._selected_index = new_index
+        self._canvas.selection_changed.emit(new_shape)
+        self._canvas.update()

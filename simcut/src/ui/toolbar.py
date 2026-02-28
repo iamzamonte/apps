@@ -18,7 +18,7 @@ class Toolbar(QWidget):
     open_requested = pyqtSignal()        # 불러오기 버튼 클릭
     export_requested = pyqtSignal()      # 내보내기 버튼 클릭
     batch_export_requested = pyqtSignal()  # 일괄 내보내기 버튼 클릭
-    properties_changed = pyqtSignal(str, int, object)  # pen_color, pen_width, fill_color
+    properties_changed = pyqtSignal(object, int, object)  # pen_color, pen_width, fill_color
     crop_mode_toggled = pyqtSignal(bool)     # 자르기 모드 전환
     crop_undo_requested = pyqtSignal()       # 자르기 되돌리기
     zoom_in_requested = pyqtSignal()
@@ -26,6 +26,7 @@ class Toolbar(QWidget):
     zoom_reset_requested = pyqtSignal()
     save_requested = pyqtSignal()               # 저장 버튼 클릭
     save_undo_requested = pyqtSignal()          # 저장 되돌리기
+    blur_requested = pyqtSignal()              # 블러처리 버튼 클릭
     reset_requested = pyqtSignal()              # 초기화 버튼 클릭
 
     def __init__(self, parent: Optional[QWidget] = None) -> None:
@@ -76,7 +77,7 @@ class Toolbar(QWidget):
         layout.addWidget(self._make_separator())
 
         # 도형 속성 (선 색상, 채움, 굵기) — 도형 버튼 바로 오른쪽
-        self._pen_color: str = DEFAULT_PEN_COLOR
+        self._pen_color: Optional[str] = DEFAULT_PEN_COLOR
         self._fill_color: Optional[str] = None
 
         self._pen_btn = QPushButton("선 색상")
@@ -88,6 +89,11 @@ class Toolbar(QWidget):
         self._fill_btn.clicked.connect(self._pick_fill_color)
         self._fill_btn.setStyleSheet(FILL_NONE_STYLE)
         layout.addWidget(self._fill_btn)
+
+        self._blur_btn = QPushButton("블러처리")
+        self._blur_btn.setStyleSheet(TOOL_BTN_FILE_STYLE)
+        self._blur_btn.clicked.connect(self.blur_requested.emit)
+        layout.addWidget(self._blur_btn)
 
         width_label = QLabel("굵기")
         width_label.setStyleSheet("background: transparent; font-size: 12px;")
@@ -139,7 +145,7 @@ class Toolbar(QWidget):
 
     # ── 속성 접근자 ──────────────────────────────────────────────
     @property
-    def pen_color(self) -> str:
+    def pen_color(self) -> Optional[str]:
         return self._pen_color
 
     @property
@@ -157,12 +163,17 @@ class Toolbar(QWidget):
         """줌 레벨 라벨을 갱신합니다."""
         self._zoom_label.setText(f"{int(zoom * 100)}%")
 
-    def sync_to_shape(self, pen_color: str, pen_width: int, fill_color: Optional[str]) -> None:
+    def sync_to_shape(self, pen_color: Optional[str], pen_width: int, fill_color: Optional[str]) -> None:
         """선택된 도형 속성을 패널에 반영합니다 (시그널 발생 없이)."""
         self._width_spin.blockSignals(True)
         self._pen_color = pen_color
         self._fill_color = fill_color
-        self._pen_btn.setStyleSheet(color_btn_stylesheet(pen_color))
+        if pen_color:
+            self._pen_btn.setText("선 색상")
+            self._pen_btn.setStyleSheet(color_btn_stylesheet(pen_color))
+        else:
+            self._pen_btn.setText("선 없음")
+            self._pen_btn.setStyleSheet(FILL_NONE_STYLE)
         self._width_spin.setValue(pen_width)
         if fill_color:
             self._fill_btn.setText("채움 색상")
@@ -218,9 +229,17 @@ class Toolbar(QWidget):
         self._save_undo_btn.setEnabled(enabled)
 
     def _pick_pen_color(self) -> None:
-        color = QColorDialog.getColor(QColor(self._pen_color), self)
+        if self._pen_color is not None:
+            # 선 색상이 있으면 → 선 없음으로 토글
+            self._pen_color = None
+            self._pen_btn.setText("선 없음")
+            self._pen_btn.setStyleSheet(FILL_NONE_STYLE)
+            self._emit_properties()
+            return
+        color = QColorDialog.getColor(parent=self)
         if color.isValid():
             self._pen_color = color.name()
+            self._pen_btn.setText("선 색상")
             self._pen_btn.setStyleSheet(color_btn_stylesheet(self._pen_color))
             self._emit_properties()
 

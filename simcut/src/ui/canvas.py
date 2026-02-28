@@ -1,8 +1,8 @@
 from __future__ import annotations
 from typing import Optional, Tuple, Dict
 from PyQt6.QtWidgets import QWidget
-from PyQt6.QtGui import QPainter, QPixmap, QColor, QPen, QBrush, QImage
-from PyQt6.QtCore import Qt, QRect, QPoint, pyqtSignal
+from PyQt6.QtGui import QPainter, QPixmap, QColor, QPen, QBrush, QImage, QPainterPath
+from PyQt6.QtCore import Qt, QRect, QRectF, QPoint, pyqtSignal
 from PIL import Image, ImageDraw
 from src.core.shape_manager import ShapeManager, Shape, ShapeType
 from src.core.image_handler import ImageHandler
@@ -69,7 +69,7 @@ class Canvas(QWidget):
 
         # 도형 속성 (private + property 검증)
         self._current_shape_type: ShapeType = ShapeType.RECTANGLE
-        self._pen_color: str = DEFAULT_PEN_COLOR
+        self._pen_color: Optional[str] = DEFAULT_PEN_COLOR
         self._pen_width: int = DEFAULT_PEN_WIDTH
         self._fill_color: Optional[str] = None
 
@@ -141,13 +141,13 @@ class Canvas(QWidget):
         self._current_shape_type = value
 
     @property
-    def pen_color(self) -> str:
+    def pen_color(self) -> Optional[str]:
         return self._pen_color
 
     @pen_color.setter
-    def pen_color(self, value: str) -> None:
-        if not isinstance(value, str) or not value.startswith("#"):
-            raise ValueError(f"pen_color must be a hex color string (e.g. '#FF0000'), got '{value}'")
+    def pen_color(self, value: Optional[str]) -> None:
+        if value is not None and (not isinstance(value, str) or not value.startswith("#")):
+            raise ValueError(f"pen_color must be a hex color string or None, got '{value}'")
         self._pen_color = value
 
     @property
@@ -309,7 +309,6 @@ class Canvas(QWidget):
         if self._image is None:
             return None
         result = self._image.copy()
-        draw = ImageDraw.Draw(result, "RGBA")
         inv = (1.0 / self._base_scale) if self._base_scale > 0 else 1.0
         for shape in self._shape_manager.shapes:
             x = int(shape.x * inv)
@@ -318,11 +317,34 @@ class Canvas(QWidget):
             h = int(shape.height * inv)
             width = max(1, int(shape.pen_width * inv))
             box = [x, y, x + w, y + h]
-            fill = shape.fill_color or None
+            # 모자이크 처리
+            if shape.blur_radius > 0:
+                clamped = [max(0, box[0]), max(0, box[1]),
+                           min(result.width, box[2]), min(result.height, box[3])]
+                if clamped[2] > clamped[0] and clamped[3] > clamped[1]:
+                    region = result.crop(clamped)
+                    factor = max(2, int(shape.blur_radius * inv) * 2 // 5)
+                    rw, rh = region.size
+                    small = region.resize(
+                        (max(1, rw // factor), max(1, rh // factor)), Image.NEAREST,
+                    )
+                    mosaic = small.resize((rw, rh), Image.NEAREST)
+                    if shape.shape_type == ShapeType.ELLIPSE:
+                        mask = Image.new('L', region.size, 0)
+                        ImageDraw.Draw(mask).ellipse(
+                            [0, 0, rw - 1, rh - 1], fill=255,
+                        )
+                        result.paste(mosaic, (clamped[0], clamped[1]), mask)
+                    else:
+                        result.paste(mosaic, (clamped[0], clamped[1]))
+            # 윤곽선 (블러 시 fill 무시)
+            draw = ImageDraw.Draw(result, "RGBA")
+            fill = None if shape.blur_radius > 0 else (shape.fill_color or None)
+            outline = shape.pen_color or None
             if shape.shape_type == ShapeType.RECTANGLE:
-                draw.rectangle(box, fill=fill, outline=shape.pen_color, width=width)
+                draw.rectangle(box, fill=fill, outline=outline, width=width)
             elif shape.shape_type == ShapeType.ELLIPSE:
-                draw.ellipse(box, fill=fill, outline=shape.pen_color, width=width)
+                draw.ellipse(box, fill=fill, outline=outline, width=width)
         return result
 
     def apply_style_to_selected(
@@ -345,6 +367,7 @@ class Canvas(QWidget):
             pen_color=pen_color,
             pen_width=pen_width,
             fill_color=fill_color,
+            blur_radius=old.blur_radius,
         )
         self._shape_manager.replace(self._selected_index, new_shape)
         self.update()
@@ -398,17 +421,56 @@ class Canvas(QWidget):
             self._draw_crop_preview(painter)
 
     def _draw_shape(self, painter: QPainter, shape: Shape, z: float) -> None:
-        pen = QPen(QColor(shape.pen_color), max(1, shape.pen_width * z))
-        painter.setPen(pen)
-        painter.setBrush(QColor(shape.fill_color) if shape.fill_color else Qt.BrushStyle.NoBrush)
         rect = QRect(
             self._to_display(shape.x), self._to_display(shape.y),
             self._to_display(shape.width), self._to_display(shape.height),
         )
+        # 블러 처리
+        if shape.blur_radius > 0 and self._pixmap:
+            clipped = self._pixmap.copy(rect)
+            blurred = self._apply_mosaic(clipped, shape.blur_radius)
+            painter.save()
+            path = QPainterPath()
+            if shape.shape_type == ShapeType.ELLIPSE:
+                path.addEllipse(QRectF(rect))
+            else:
+                path.addRect(QRectF(rect))
+            painter.setClipPath(path)
+            painter.drawPixmap(rect.topLeft(), blurred)
+            painter.restore()
+        # 채움 + 윤곽선
+        if shape.pen_color:
+            pen = QPen(QColor(shape.pen_color), max(1, shape.pen_width * z))
+        else:
+            pen = QPen(Qt.PenStyle.NoPen)
+        painter.setPen(pen)
+        if shape.blur_radius > 0:
+            painter.setBrush(Qt.BrushStyle.NoBrush)
+        else:
+            painter.setBrush(QColor(shape.fill_color) if shape.fill_color else Qt.BrushStyle.NoBrush)
         if shape.shape_type == ShapeType.RECTANGLE:
             painter.drawRect(rect)
         elif shape.shape_type == ShapeType.ELLIPSE:
             painter.drawEllipse(rect)
+
+    def _apply_mosaic(self, pixmap: QPixmap, radius: int) -> QPixmap:
+        """QPixmap을 모자이크(픽셀화) 처리합니다."""
+        img = pixmap.toImage()
+        w, h = img.width(), img.height()
+        if w < 1 or h < 1:
+            return pixmap
+        factor = max(2, radius * 2 // 5)
+        small = img.scaled(
+            max(1, w // factor), max(1, h // factor),
+            Qt.AspectRatioMode.IgnoreAspectRatio,
+            Qt.TransformationMode.FastTransformation,
+        )
+        mosaic = small.scaled(
+            w, h,
+            Qt.AspectRatioMode.IgnoreAspectRatio,
+            Qt.TransformationMode.FastTransformation,
+        )
+        return QPixmap.fromImage(mosaic)
 
     def _draw_selection_indicator(self, painter: QPainter, shape: Shape, z: float) -> None:
         """선택된 도형 주위에 점선 테두리와 8개 리사이즈 핸들을 표시합니다."""
@@ -431,7 +493,8 @@ class Canvas(QWidget):
             painter.drawRect(display_rect)
 
     def _draw_preview_shape(self, painter: QPainter, z: float) -> None:
-        pen = QPen(QColor(self._pen_color), max(1, self._pen_width * z), Qt.PenStyle.DashLine)
+        preview_color = self._pen_color or "#888888"
+        pen = QPen(QColor(preview_color), max(1, self._pen_width * z), Qt.PenStyle.DashLine)
         painter.setPen(pen)
         painter.setBrush(Qt.BrushStyle.NoBrush)
         # _draw_preview는 이미 디스플레이 좌표로 저장됨
@@ -518,6 +581,7 @@ class Canvas(QWidget):
             pen_color=old.pen_color,
             pen_width=old.pen_width,
             fill_color=old.fill_color,
+            blur_radius=old.blur_radius,
         )
         self._shape_manager.replace(self._selected_index, new_shape)
         self.update()
@@ -556,6 +620,7 @@ class Canvas(QWidget):
             pen_color=old.pen_color,
             pen_width=old.pen_width,
             fill_color=old.fill_color,
+            blur_radius=old.blur_radius,
         )
         self._shape_manager.replace(self._selected_index, new_shape)
         self.update()
