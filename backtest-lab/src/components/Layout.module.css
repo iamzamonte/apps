@@ -1,0 +1,33 @@
+.layout {
+  min-height: 100%;
+  background: #020617;
+}
+
+.header {
+  border-bottom: 1px solid #334155;
+  padding: 1rem 1.5rem;
+}
+
+.headerLink {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #f8fafc;
+  text-decoration: none;
+}
+
+.headerLink:hover {
+  text-decoration: none;
+  color: #e2e8f0;
+}
+
+.main {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+@media (max-width: 640px) {
+  .main {
+    padding: 1.5rem 1rem;
+  }
+}

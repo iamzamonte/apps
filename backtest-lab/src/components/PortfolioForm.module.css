@@ -1,0 +1,217 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #94a3b8;
+}
+
+.input {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 0.625rem 0.75rem;
+  color: #f8fafc;
+  font-size: 0.9375rem;
+  transition: border-color 150ms ease;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
+.textarea {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 0.625rem 0.75rem;
+  color: #f8fafc;
+  font-size: 0.9375rem;
+  min-height: 80px;
+  resize: vertical;
+  transition: border-color 150ms ease;
+}
+
+.textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
+.assetList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.assetRow {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.assetInput {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 0.5rem 0.625rem;
+  color: #f8fafc;
+  font-size: 0.875rem;
+  transition: border-color 150ms ease;
+}
+
+.assetInput:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
+.symbolInput {
+  width: 120px;
+}
+
+.nameInput {
+  flex: 1;
+  min-width: 140px;
+}
+
+.marketSelect {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 0.5rem 0.625rem;
+  color: #f8fafc;
+  font-size: 0.875rem;
+  width: 80px;
+}
+
+.weightInput {
+  width: 80px;
+  text-align: right;
+}
+
+.removeButton {
+  background: none;
+  border: none;
+  color: #ef4444;
+  font-size: 0.875rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  transition: color 150ms ease;
+}
+
+.removeButton:hover {
+  color: #f87171;
+}
+
+.addButton {
+  align-self: flex-start;
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  color: #3b82f6;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 150ms ease,
+    border-color 150ms ease;
+}
+
+.addButton:hover {
+  background: #334155;
+  border-color: #475569;
+}
+
+.weightTotal {
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 0.5rem 0;
+}
+
+.weightValid {
+  color: #22c55e;
+}
+
+.weightInvalid {
+  color: #ef4444;
+}
+
+.radioGroup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.radioLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.875rem;
+  color: #94a3b8;
+  cursor: pointer;
+}
+
+.radioLabel input {
+  accent-color: #3b82f6;
+}
+
+.dateGroup {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.dateInput {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 0.5rem 0.625rem;
+  color: #f8fafc;
+  font-size: 0.875rem;
+  color-scheme: dark;
+}
+
+.dateInput:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
+.dateSeparator {
+  color: #64748b;
+  font-size: 0.875rem;
+}
+
+.submitButton {
+  align-self: flex-start;
+  background: #3b82f6;
+  color: #f8fafc;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  padding: 0.75rem 2rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: background 150ms ease;
+}
+
+.submitButton:hover:not(:disabled) {
+  background: #2563eb;
+}
+
+.submitButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

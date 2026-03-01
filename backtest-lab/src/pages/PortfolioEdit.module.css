@@ -1,0 +1,16 @@
+.title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #f8fafc;
+  margin-bottom: 1.5rem;
+}
+
+.loading {
+  color: #94a3b8;
+  padding: 2rem 0;
+}
+
+.error {
+  color: #ef4444;
+  padding: 2rem 0;
+}
